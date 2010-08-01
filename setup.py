@@ -1,11 +1,9 @@
-from setuptools import setup, find_packages
-import os.path
+from setuptools import setup
 
 version = '0.2dev'
 
 long_description = '\n\n'.join([
     open('README.txt').read(),
-    open(os.path.join('checkoutmanager', 'USAGE.txt')).read(),
     open('TODO.txt').read(),
     open('CHANGES.txt').read(),
     ])
