@@ -1,4 +1,7 @@
 TODO
 ====
 
-- Probably a whole lot of things.
+- Wait for windows bug reports and fix a couple of small things.
+
+- Wait for feedback so that I can improve the documentation.
+

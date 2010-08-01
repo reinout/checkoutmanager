@@ -4,10 +4,16 @@ Changelog of vanrees.checkoutmanager
 0.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Small fixes.  It works great in practice.
+
+- Moved from bzr to hg and made it public on bitbucket.org.
+
+- Big documentation update as I'm going to release it.
 
 
 0.1 (2010-05-07)
 ----------------
+
+- First reasonably working version.
 
 - Initial library skeleton created by thaskel.

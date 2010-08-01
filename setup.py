@@ -11,6 +11,7 @@ long_description = '\n\n'.join([
     open('README.txt').read(),
     '\n'.join(['  ' + line.rstrip() for line in sample_config]),
     open('TODO.txt').read(),
+    open('CREDITS.txt').read(),
     open('CHANGES.txt').read(),
     ])
 
