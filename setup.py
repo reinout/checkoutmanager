@@ -1,7 +1,7 @@
 import os
 from setuptools import setup
 
-version = '1.0'
+version = '1.1dev'
 
 sample_config = open(os.path.join('checkoutmanager',
                                   'tests',

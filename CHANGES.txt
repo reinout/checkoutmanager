@@ -1,6 +1,12 @@
 Changelog of vanrees.checkoutmanager
 ====================================
 
+1.1 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 1.0 (2010-08-01)
 ----------------
 
