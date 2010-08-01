@@ -2,7 +2,7 @@
 
 The dirinfo provides a wrapper for info on one directory:
 
-    >>> from vanrees.checkoutmanager import dirinfo
+    >>> from checkoutmanager import dirinfo
 
 Initialise the wrapper with a directory name:
 

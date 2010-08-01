@@ -2,7 +2,7 @@
 
 The config module reads a config file and massages the data.
 
-    >>> from vanrees.checkoutmanager import config
+    >>> from checkoutmanager import config
 
 Instantiation with a non-exising config file raises and error:
 
@@ -15,7 +15,7 @@ Grab the sample config file:
 
     >>> import pkg_resources
     >>> sample_config = pkg_resources.resource_filename(
-    ...     'vanrees.checkoutmanager.tests', 'sample.cfg')
+    ...     'checkoutmanager.tests', 'sample.cfg')
     >>> print open(sample_config).read()
     # Sample config file.  Different sections per base location and version
     # control system.

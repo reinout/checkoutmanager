@@ -28,7 +28,7 @@ def teardown(test):
 
 
 test_suite = z3c.testsetup.register_all_tests(
-    'vanrees.checkoutmanager',
+    'checkoutmanager',
     setup=setup,
     teardown=teardown,
     checker=checker,

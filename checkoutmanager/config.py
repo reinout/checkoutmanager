@@ -2,7 +2,7 @@
 import ConfigParser
 import os
 
-from vanrees.checkoutmanager import dirinfo
+from checkoutmanager import dirinfo
 
 
 DEFAULTS = {'report-missing': 'true',

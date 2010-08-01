@@ -3,7 +3,7 @@ import os
 
 import pkg_resources
 
-from vanrees.checkoutmanager import config
+from checkoutmanager import config
 
 ACTIONS = ['exists', 'up', 'st', 'co', 'missing']
 CONFIGFILE_NAME = '~/.checkoutmanager.cfg'
@@ -24,7 +24,7 @@ def main():
     if not os.path.exists(configfile):
         print "Config file %s does not exist." % configfile
         print "Copy %s as a sample" % pkg_resources.resource_filename(
-            'vanrees.checkoutmanager.tests', 'sample.cfg')
+            'checkoutmanager.tests', 'sample.cfg')
         return
 
     conf = config.Config(configfile)
