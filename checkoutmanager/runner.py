@@ -7,11 +7,21 @@ from checkoutmanager import config
 
 ACTIONS = ['exists', 'up', 'st', 'co', 'missing']
 CONFIGFILE_NAME = '~/.checkoutmanager.cfg'
-
+ACTION_EXPLANATION = {
+    'exists': "Print whether checkouts are present or missing",
+    'up': "Grab latest version from the server.",
+    'st': "Print status of files in the checkouts",
+    'co': "Grab missing checkouts from the server",
+    'missing': "Print directories that are missing from the config file",
+    }
 
 def main():
-    usage = ("Usage: %prog action [group]\n"
-             "  action can be " + '/'.join(ACTIONS))
+    usage = ["Usage: %prog action [group]",
+             "  group (optional) is a heading from your config file.",
+             "  action can be " + '/'.join(ACTIONS) + ":\n"]
+    usage += [action + "\n  " + ACTION_EXPLANATION[action] + "\n"
+              for action in ACTIONS]
+    usage = "\n".join(usage)
     parser = OptionParser(usage=usage)
     (options, args) = parser.parse_args()
     if len(args) < 1:

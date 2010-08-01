@@ -1,9 +1,15 @@
+import os
 from setuptools import setup
 
 version = '0.2dev'
 
+sample_config = open(os.path.join('checkoutmanager',
+                                  'tests',
+                                  'sample.cfg')).readlines()
+
 long_description = '\n\n'.join([
     open('README.txt').read(),
+    '\n'.join(['  ' + line.rstrip() for line in sample_config]),
     open('TODO.txt').read(),
     open('CHANGES.txt').read(),
     ])
