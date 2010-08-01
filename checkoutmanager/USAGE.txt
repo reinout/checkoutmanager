@@ -1,0 +1,10 @@
+Usage of vanrees.checkoutmanager
+===================
+
+.. :doctest:
+
+Usage:
+
+    >>> import vanrees.checkoutmanager
+
+Show how to import the main classes and how to use them.
