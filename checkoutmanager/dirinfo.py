@@ -1,6 +1,7 @@
 """Information on one directory"""
 import os
-import commands
+
+from checkoutmanager.utils import system
 
 # 8-char codes
 #         '12345678'
@@ -54,11 +55,11 @@ class SvnDirInfo(DirInfo):
     def cmd_up(self):
         print self.directory
         os.chdir(self.directory)
-        print commands.getoutput("svn up")
+        print system("svn up")
 
     def cmd_st(self):
         os.chdir(self.directory)
-        output = commands.getoutput("svn st --ignore-externals")
+        output = system("svn st --ignore-externals")
         lines = [line.strip() for line in output.splitlines()
                  if line.strip()
                  and not line.startswith('X')]
@@ -76,7 +77,7 @@ class SvnDirInfo(DirInfo):
         else:
             answer = CREATED
             os.chdir(self.parent)
-            print commands.getoutput("svn co %s %s" % (
+            print system("svn co %s %s" % (
                 self.url, self.directory))
 
         print ' '.join([answer, self.directory])
@@ -89,11 +90,11 @@ class BzrDirInfo(DirInfo):
     def cmd_up(self):
         print self.directory
         os.chdir(self.directory)
-        print commands.getoutput("bzr up")
+        print system("bzr up")
 
     def cmd_st(self):
         os.chdir(self.directory)
-        output = commands.getoutput("bzr st")
+        output = system("bzr st")
         if output.strip():
             print self.directory
             print output
@@ -108,7 +109,7 @@ class BzrDirInfo(DirInfo):
         else:
             answer = CREATED
             os.chdir(self.parent)
-            print commands.getoutput("bzr checkout %s %s" % (
+            print system("bzr checkout %s %s" % (
                 self.url, self.directory))
 
         print ' '.join([answer, self.directory])
@@ -121,11 +122,11 @@ class HgDirInfo(DirInfo):
     def cmd_up(self):
         print self.directory
         os.chdir(self.directory)
-        print commands.getoutput("hg pull -u")
+        print system("hg pull -u")
 
     def cmd_st(self):
         os.chdir(self.directory)
-        output = commands.getoutput("hg st")
+        output = system("hg st")
         if output.strip():
             print self.directory
             print output
@@ -141,7 +142,7 @@ class HgDirInfo(DirInfo):
             answer = CREATED
             os.chdir(self.parent)
             # TODO: check!
-            print commands.getoutput("hg clone %s %s" % (
+            print system("hg clone %s %s" % (
                 self.url, self.directory))
 
         print ' '.join([answer, self.directory])
