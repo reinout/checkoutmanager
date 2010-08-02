@@ -1,7 +1,7 @@
 Changelog of vanrees.checkoutmanager
 ====================================
 
-1.1 (unreleased)
+1.1 (2010-08-02)
 ----------------
 
 - Switched from "commands" module to "subprocesses" for windows
