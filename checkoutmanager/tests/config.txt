@@ -17,8 +17,9 @@ Grab the sample config file:
     >>> sample_config = pkg_resources.resource_filename(
     ...     'checkoutmanager.tests', 'sample.cfg')
     >>> print open(sample_config).read()
-    # Sample config file.  Different sections per base location and version
-    # control system.
+    # Sample config file.  Different sections per base location
+    # and version control system.  Splitting everything all over
+    # the place in multiple directories is fine.
     <BLANKLINE>
     [recipes]
     # Buildout recipes I work on.
@@ -32,6 +33,8 @@ Grab the sample config file:
     <BLANKLINE>
     [dotfolders]
     # Folders that end up as dotted configfolders in the root.
+    # Note that there's a directory name behind the repository
+    # location, separated by a space.
     vcs = bzr
     basedir = ~
     checkouts =
