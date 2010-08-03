@@ -1,7 +1,10 @@
 TODO
 ====
 
-- Wait for windows bug reports and fix a couple of small things.
+- Add --verbose option that shows the commands.
+
+- Also strip "buildout" from url for better names.
 
 - Wait for feedback so that I can improve the documentation.
+
 
