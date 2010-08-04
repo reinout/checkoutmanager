@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.2 (unreleased)
+1.2 (2010-08-04)
 ----------------
 
 - If the config file doesn't exist, just print the config file hints instead
