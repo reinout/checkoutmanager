@@ -4,7 +4,8 @@ Changelog of vanrees.checkoutmanager
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- If the config file doesn't exist, just print the config file hints instead
+  of the generic usage info.
 
 
 1.1 (2010-08-02)

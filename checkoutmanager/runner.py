@@ -15,6 +15,7 @@ ACTION_EXPLANATION = {
     'missing': "Print directories that are missing from the config file",
     }
 
+
 def main():
     usage = ["Usage: %prog action [group]",
              "  group (optional) is a heading from your config file.",
@@ -24,11 +25,6 @@ def main():
     usage = "\n".join(usage)
     parser = OptionParser(usage=usage)
     (options, args) = parser.parse_args()
-    if len(args) < 1:
-        parser.print_help()
-        return
-    action = args[0]
-    # TODO: check actions
 
     configfile = os.path.expanduser(CONFIGFILE_NAME)
     if not os.path.exists(configfile):
@@ -36,6 +32,12 @@ def main():
         print "Copy %s as a sample" % pkg_resources.resource_filename(
             'checkoutmanager.tests', 'sample.cfg')
         return
+
+    if len(args) < 1:
+        parser.print_help()
+        return
+    action = args[0]
+    # TODO: check actions
 
     conf = config.Config(configfile)
 
