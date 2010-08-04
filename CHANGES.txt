@@ -1,5 +1,5 @@
-Changelog of vanrees.checkoutmanager
-====================================
+Changelog of checkoutmanager
+============================
 
 1.2 (unreleased)
 ----------------
@@ -15,6 +15,10 @@ Changelog of vanrees.checkoutmanager
 
 - Reporting on not yet checked out items when running "checkoutmanager
   missing".  Fixes issue #2.
+
+- Checking return code from executed commands.  On error, the command and
+  working directory is printed and also the output.  And the script stops
+  right away.  Fixes #5.
 
 
 1.1 (2010-08-02)
