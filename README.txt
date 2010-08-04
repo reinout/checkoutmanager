@@ -1,7 +1,8 @@
 Checkoutmanager
 ===============
 
-Makes bzr/hg/git/svn checkouts in several places according to a config file.
+Makes bzr/hg/git/svn checkouts in several places according to a
+``.checkoutmanager.cfg`` config file (in your home directory).
 
 The advantage: you've got one command with which you can update all your
 checkouts.  And with which you can ask for a list of uncommitted changes.  And
@@ -12,6 +13,19 @@ to change laptops when I switched jobs...).
 Warning: I only tested it on OSX and linux, so no guarantees for windows.  If
 there are changes needed, they'll probably be minor.  So I welcome bug reports
 and patches.
+
+
+Starting to use it
+------------------
+
+Starting is easy.  Just ``easy_install checkoutmanager`` and run
+``checkoutmanager``.
+
+- The first time, you'll get a sample configuration you can copy from.
+
+- The second time, you'll get a usage message.  (You'll want to do
+  ``checkoutmanager co`` to grab your initial checkouts).
+
 
 Generic usage
 -------------
