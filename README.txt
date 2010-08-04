@@ -10,9 +10,7 @@ you can rebuild your entire checkout structure on a new machine just by
 copying the config file (this was actually the purpose I build it for: I had
 to change laptops when I switched jobs...).
 
-Warning: I only tested it on OSX and linux, so no guarantees for windows.  If
-there are changes needed, they'll probably be minor.  So I welcome bug reports
-and patches.
+Checkoutmanager works on linux, osx and windows.
 
 
 Starting to use it
@@ -21,7 +19,8 @@ Starting to use it
 Starting is easy.  Just ``easy_install checkoutmanager`` and run
 ``checkoutmanager``.
 
-- The first time, you'll get a sample configuration you can copy from.
+- The first time, you'll get a sample configuration you can copy to
+  ``.checkoutmanager.cfg`` in your home directory.
 
 - The second time, you'll get a usage message.  (You'll want to do
   ``checkoutmanager co`` to grab your initial checkouts).
@@ -83,6 +82,9 @@ takes the last part.  One exception: subversion.  It is intelligent there:
 
 - ``https://xxx/yyy/product/branches/experiment`` becomes "product_experiment"
   instead of "experiment"
+
+- ``https://xxx/customername/buildout/trunk`` becomes "customername"
+  instead of "trunk" or "buildout".
 
 If you want something else, just specify a directory name (separated by a
 space) in the configuration file.

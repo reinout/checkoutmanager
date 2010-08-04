@@ -20,6 +20,9 @@ Changelog of checkoutmanager
   working directory is printed and also the output.  And the script stops
   right away.  Fixes #5.
 
+- Updated the documentation, for instance by mentioning the config file name
+  and location.
+
 
 1.1 (2010-08-02)
 ----------------
