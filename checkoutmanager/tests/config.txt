@@ -17,29 +17,8 @@ Grab the sample config file:
     >>> sample_config = pkg_resources.resource_filename(
     ...     'checkoutmanager.tests', 'sample.cfg')
     >>> print open(sample_config).read()
-    # Sample config file.  Different sections per base location
-    # and version control system.  Splitting everything all over
-    # the place in multiple directories is fine.
-    <BLANKLINE>
-    [recipes]
-    # Buildout recipes I work on.
-    vcs = svn
-    basedir = ~/svn/recipes
-    checkouts =
-        svn://svn/blablabla/trunk
-        svn://svn/another/trunk differentname
-        http://host/yetanother/trunk
-        https://host/yetanother/branches/reinout-fix
-    <BLANKLINE>
-    [dotfolders]
-    # Folders that end up as dotted configfolders in the root.
-    # Note that there's a directory name behind the repository
-    # location, separated by a space.
-    vcs = bzr
-    basedir = ~
-    checkouts =
-        lp:emacsconfig/trunk .emacs.d
-        sftp://somwhere/subversion/trunk .subversion
+    # Sample config file.  Should be placed as
+    ...
 
 Instantiate our config object with the config filename:
 
@@ -115,6 +94,7 @@ Base purpose: return the wrapped directories:
     <DirInfo (bzr) for HOMEDIR/.emacs.d>
     <DirInfo (bzr) for HOMEDIR/.subversion>
     <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
+    <DirInfo (svn) for HOMEDIR/svn/recipes/customername>
     <DirInfo (svn) for HOMEDIR/svn/recipes/differentname>
     <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother-reinout-fix>
     <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother>
@@ -124,6 +104,7 @@ We can restrict to a certain group:
     >>> for d in conf.directories(group='recipes'):
     ...     print d
     <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
+    <DirInfo (svn) for HOMEDIR/svn/recipes/customername>
     <DirInfo (svn) for HOMEDIR/svn/recipes/differentname>
     <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother-reinout-fix>
     <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother>

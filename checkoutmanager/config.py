@@ -32,14 +32,22 @@ def extract_spec(spec):
     if directory is None:
         parts = [part for part in vcs.split('/')
                  if part]
+        # Common structure: having a customer folder with a 'buildout'
+        # directory in it.  Don't name it 'buildout'.
+        parts = [part for part in parts if part != 'buildout']
         directory = parts[-1]
+        # Remove /trunk from the end.  We don't want that as a name.
         if parts[-1] == 'trunk':
             parts.pop()
             directory = parts[-1]
+        # If we have an svn branch, name it after the project *and* the
+        # branch.
         if (len(parts) > 3) and (parts[-2] == 'branches'):
             branchname = parts[-1]
             projectname = parts [-3]
             directory = projectname + '-' + branchname
+        # Common for bzr projects hosted on launchpad: they're prefixed with
+        # 'lp:'.  Remove that from the name.
         if directory.startswith('lp:'):
             directory = directory[3:]
     return vcs, directory
