@@ -34,8 +34,13 @@ class DirInfo(object):
     def exists(self):
         return os.path.exists(self.directory)
 
-    def cmd_exists(self):
-        answer = self.exists and PRESENT or MISSING
+    def cmd_exists(self, report_only_missing=False):
+        if self.exists:
+            answer = PRESENT
+            if report_only_missing:
+                return
+        else:
+            answer = MISSING
         print ' '.join([answer, self.directory])
 
     def cmd_up(self):

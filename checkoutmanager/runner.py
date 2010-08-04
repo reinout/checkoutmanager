@@ -55,8 +55,14 @@ def main():
             return
 
     if action == 'missing':
-        # Special case
+        # Special case: report unconfigured items.
         conf.report_missing(group=group)
+        # Also report on not-yet-checked-out items.
+        print
+        print "Looking for yet checked out items..."
+        for dirinfo in conf.directories(group=group):
+            dirinfo.cmd_exists(report_only_missing=True)
+        print "(Run 'checkoutmanager co' if found)"
         return
 
     for dirinfo in conf.directories(group=group):

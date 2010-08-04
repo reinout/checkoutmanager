@@ -13,6 +13,10 @@ Changelog of vanrees.checkoutmanager
 - Added -v option that prints the commands and the directory where you execute
   them.  Fixes issue #3.
 
+- Reporting on not yet checked out items when running "checkoutmanager
+  missing".  Fixes issue #2.
+
+
 1.1 (2010-08-02)
 ----------------
 
