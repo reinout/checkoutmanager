@@ -10,6 +10,8 @@ Changelog of vanrees.checkoutmanager
 - Fixed issue #4: the generic 'buildout' name is stripped from the path.
   svn://somewhere/customername/buildout/trunk is a common pattern.
 
+- Added -v option that prints the commands and the directory where you execute
+  them.  Fixes issue #3.
 
 1.1 (2010-08-02)
 ----------------

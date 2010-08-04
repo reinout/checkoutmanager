@@ -4,6 +4,7 @@ import os
 import pkg_resources
 
 from checkoutmanager import config
+from checkoutmanager import utils
 
 ACTIONS = ['exists', 'up', 'st', 'co', 'missing']
 CONFIGFILE_NAME = '~/.checkoutmanager.cfg'
@@ -24,7 +25,12 @@ def main():
               for action in ACTIONS]
     usage = "\n".join(usage)
     parser = OptionParser(usage=usage)
+    parser.add_option("-v", "--verbose",
+                      action="store_true", dest="verbose", default=False,
+                      help="Show debug output")
     (options, args) = parser.parse_args()
+    if options.verbose:
+        utils.VERBOSE = True
 
     configfile = os.path.expanduser(CONFIGFILE_NAME)
     if not os.path.exists(configfile):

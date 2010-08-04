@@ -1,8 +1,11 @@
+import os
 import subprocess
 import sys
 
 # For zc.buildout's system() method:
 MUST_CLOSE_FDS = not sys.platform.startswith('win')
+# When you set '-v', this constant is changed.  A bit hacky.
+VERBOSE = False
 
 
 def system(command, input=''):
@@ -11,6 +14,8 @@ def system(command, input=''):
     Code copied from zc.buildout.
 
     """
+    if VERBOSE:
+        print '[%s] %s' % (os.getcwd(), command)
     p = subprocess.Popen(command,
                          shell=True,
                          stdin=subprocess.PIPE,
