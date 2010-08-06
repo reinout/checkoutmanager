@@ -1,8 +1,8 @@
 Changelog of checkoutmanager
 ============================
 
-1.3 (unreleased)
-----------------
+1.2.1 (2010-08-06)
+------------------
 
 - Bugfix: when reporting an error, the os.getcwd method itself would get
   printed instead of the *output* of os.getcwd()...
