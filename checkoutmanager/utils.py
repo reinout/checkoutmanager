@@ -29,7 +29,7 @@ def system(command, input=None):
         print "Something went wrong when executing:"
         print "    %s" % command
         print "while in directory:"
-        print "    %s" % os.getcwd
+        print "    %s" % os.getcwd()
         print "Output:"
         print result
         sys.exit(1)
