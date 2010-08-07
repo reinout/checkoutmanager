@@ -131,7 +131,7 @@ class HgDirInfo(DirInfo):
     def cmd_up(self):
         print self.directory
         os.chdir(self.directory)
-        print system("hg pull -u")
+        print system("hg pull -u %s" % self.url)
 
     def cmd_st(self):
         os.chdir(self.directory)
@@ -159,11 +159,11 @@ class HgDirInfo(DirInfo):
     def cmd_out(self):
         os.chdir(self.directory)
         try:
-            print system("hg out")
+            print system("hg out %s" % self.url)
         except CalledProcessError as e:
             # hg returns 1 if there is no outgoing changes!
             if e.returncode == 1:
-                print "No changes found in %s" % self.directory
+                print "No changes found between %s and %s" % (self.directory, self.url)
             else:
                 raise
 
