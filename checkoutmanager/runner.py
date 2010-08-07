@@ -1,12 +1,14 @@
 from optparse import OptionParser
 import os
+import sys
+from subprocess import CalledProcessError
 
 import pkg_resources
 
 from checkoutmanager import config
 from checkoutmanager import utils
 
-ACTIONS = ['exists', 'up', 'st', 'co', 'missing']
+ACTIONS = ['exists', 'up', 'st', 'co', 'missing', 'out']
 CONFIGFILE_NAME = '~/.checkoutmanager.cfg'
 ACTION_EXPLANATION = {
     'exists': "Print whether checkouts are present or missing",
@@ -14,6 +16,7 @@ ACTION_EXPLANATION = {
     'st': "Print status of files in the checkouts",
     'co': "Grab missing checkouts from the server",
     'missing': "Print directories that are missing from the config file",
+    'out': "Show changesets not found in the default push location",
     }
 
 
@@ -66,4 +69,14 @@ def main():
         return
 
     for dirinfo in conf.directories(group=group):
-        getattr(dirinfo, 'cmd_' + action)()
+        try:
+            getattr(dirinfo, 'cmd_' + action)()
+        except CalledProcessError as e:
+            #     # An error occured!  Notify and bail out directly.
+            print "Something went wrong when executing:"
+            print "    %s" % e.cmd
+            print "while in directory:"
+            print "    %s" % dirinfo.directory
+            print "Returncode:"
+            print "    %s" % e.returncode
+            sys.exit(1)

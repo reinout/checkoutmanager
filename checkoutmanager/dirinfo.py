@@ -1,5 +1,6 @@
 """Information on one directory"""
 import os
+from subprocess import CalledProcessError
 
 from checkoutmanager.utils import system
 
@@ -50,6 +51,9 @@ class DirInfo(object):
         raise NotImplementedError()
 
     def cmd_co(self):
+        raise NotImplementedError()
+
+    def cmd_out(self):
         raise NotImplementedError()
 
 
@@ -151,3 +155,15 @@ class HgDirInfo(DirInfo):
                 self.url, self.directory))
 
         print ' '.join([answer, self.directory])
+
+    def cmd_out(self):
+        os.chdir(self.directory)
+        try:
+            print system("hg out")
+        except CalledProcessError as e:
+            # hg returns 1 if there is no outgoing changes!
+            if e.returncode == 1:
+                print "No changes found in %s" % self.directory
+            else:
+                raise
+
