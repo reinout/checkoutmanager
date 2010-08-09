@@ -1,7 +1,7 @@
 Checkoutmanager
 ===============
 
-Makes bzr/hg/git/svn checkouts in several places according to a
+Makes bzr/hg/svn checkouts in several places according to a
 ``.checkoutmanager.cfg`` config file (in your home directory).
 
 The advantage: you've got one command with which you can update all your

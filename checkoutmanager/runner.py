@@ -1,7 +1,6 @@
 from optparse import OptionParser
 import os
 import sys
-from subprocess import CalledProcessError
 
 import pkg_resources
 
@@ -71,12 +70,7 @@ def main():
     for dirinfo in conf.directories(group=group):
         try:
             getattr(dirinfo, 'cmd_' + action)()
-        except CalledProcessError as e:
-            #     # An error occured!  Notify and bail out directly.
-            print "Something went wrong when executing:"
-            print "    %s" % e.cmd
-            print "while in directory:"
-            print "    %s" % dirinfo.directory
-            print "Returncode:"
-            print "    %s" % e.returncode
+        except utils.CommandError as e:
+            # An error occured!  Notify and bail out directly.
+            e.print_msg()
             sys.exit(1)

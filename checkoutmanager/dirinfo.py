@@ -1,14 +1,14 @@
 """Information on one directory"""
 import os
-from subprocess import CalledProcessError
 
 from checkoutmanager.utils import system
+from checkoutmanager.utils import CommandError
 
 # 8-char codes
 #         '12345678'
-CREATED  = 'created '
-MISSING  = 'missing '
-PRESENT  = 'present '
+CREATED = 'created '
+MISSING = 'missing '
+PRESENT = 'present '
 
 
 class DirInfo(object):
@@ -91,6 +91,10 @@ class SvnDirInfo(DirInfo):
 
         print ' '.join([answer, self.directory])
 
+    def cmd_out(self):
+        # Outgoing changes?  We're svn, not some new-fangled dvcs :-)
+        pass
+
 
 class BzrDirInfo(DirInfo):
 
@@ -122,6 +126,13 @@ class BzrDirInfo(DirInfo):
                 self.url, self.directory))
 
         print ' '.join([answer, self.directory])
+
+    def cmd_out(self):
+        os.chdir(self.directory)
+        output = system("bzr missing %s" % self.url)
+        if not 'Branches are up to date' in output:
+            print "Unpushed outgoing changes in %s:" % self.directory
+            print output
 
 
 class HgDirInfo(DirInfo):
@@ -159,11 +170,15 @@ class HgDirInfo(DirInfo):
     def cmd_out(self):
         os.chdir(self.directory)
         try:
-            print system("hg out %s" % self.url)
-        except CalledProcessError as e:
-            # hg returns 1 if there is no outgoing changes!
+            output = system("hg out %s" % self.url)
+        except CommandError as e:
             if e.returncode == 1:
-                print "No changes found between %s and %s" % (self.directory, self.url)
+                # hg returns 1 if there are no outgoing changes!
+                # Checkoutmanager is as quiet as possible, so we print
+                # nothing.
+                return
             else:
                 raise
-
+        # No errors means we have genuine outgoing changes.
+        print "Unpushed outgoing changes in %s:" % self.directory
+        print output
