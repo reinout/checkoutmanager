@@ -15,7 +15,7 @@ ACTION_EXPLANATION = {
     'st': "Print status of files in the checkouts",
     'co': "Grab missing checkouts from the server",
     'missing': "Print directories that are missing from the config file",
-    'out': "Show changesets not found in the default push location",
+    'out': "Show changesets you haven't pushed to the server yet",
     }
 
 

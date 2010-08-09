@@ -4,9 +4,10 @@ Changelog of checkoutmanager
 1.3 (unreleased)
 ----------------
 
-- Added new "out" action that show changesets not found in the default push
+- Added new "out" action that shows changesets not found in the default push
   location of a repository for a dvcs (hg, bzr).  The action doesn't make
-  sense for svn, so it is ignored for svn checkouts.  Fixes issue #1.
+  sense for svn, so it is ignored for svn checkouts.  Fixes issue #1.  Thanks
+  Dmitrii Miliaev for this fix!
 
 
 1.2.1 (2010-08-06)
