@@ -61,7 +61,7 @@ def main():
         conf.report_missing(group=group)
         # Also report on not-yet-checked-out items.
         print
-        print "Looking for yet checked out items..."
+        print "Looking for not yet checked out items..."
         for dirinfo in conf.directories(group=group):
             dirinfo.cmd_exists(report_only_missing=True)
         print "(Run 'checkoutmanager co' if found)"
