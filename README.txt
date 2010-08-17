@@ -1,7 +1,7 @@
 Checkoutmanager
 ===============
 
-Makes bzr/hg/svn checkouts in several places according to a
+Makes bzr/hg/git/svn checkouts in several places according to a
 ``.checkoutmanager.cfg`` config file (in your home directory).
 
 The advantage: you've got one command with which you can update all your
@@ -76,7 +76,7 @@ Output directory naming
 -----------------------
 
 If you don't specify an output directory name for your checkout url, it just
-takes the last part.  One exception: subversion.  It is intelligent there:
+takes the last part.  Some exceptions, most for subversion:
 
 - ``https://xxx/yyy/product/trunk`` becomes "product" instead of "trunk".
 
@@ -85,6 +85,11 @@ takes the last part.  One exception: subversion.  It is intelligent there:
 
 - ``https://xxx/customername/buildout/trunk`` becomes "customername"
   instead of "trunk" or "buildout".
+
+- Bzr checkouts that start with "lp:" (special launchpad urls) get their "lp:"
+  stripped.
+
+- Git checkouts lose the ".git" at the end of the url.
 
 If you want something else, just specify a directory name (separated by a
 space) in the configuration file.
