@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.4 (unreleased)
+1.4 (2010-08-17)
 ----------------
 
 - Added git support (patch by Robert Kern: thanks!)  Fixes issue #6.
