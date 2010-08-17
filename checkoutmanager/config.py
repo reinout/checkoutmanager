@@ -50,6 +50,8 @@ def extract_spec(spec):
         # 'lp:'.  Remove that from the name.
         if directory.startswith('lp:'):
             directory = directory[3:]
+        if directory.endswith('.git'):
+            directory = directory[:-4]
     return vcs, directory
 
 
@@ -83,6 +85,8 @@ class Config(object):
                 dirinfoclass = dirinfo.BzrDirInfo
             if vcs == 'hg':
                 dirinfoclass = dirinfo.HgDirInfo
+            if vcs == 'git':
+                dirinfoclass = dirinfo.GitDirInfo
             checkouts = linesstring_as_list(
                 self.parser.get(section, 'checkouts'))
             for checkout in checkouts:

@@ -182,3 +182,43 @@ class HgDirInfo(DirInfo):
         # No errors means we have genuine outgoing changes.
         print "Unpushed outgoing changes in %s:" % self.directory
         print output
+
+
+class GitDirInfo(DirInfo):
+
+    vcs = 'git'
+
+    def cmd_up(self):
+        print self.directory
+        os.chdir(self.directory)
+        print system("git pull")
+
+    def cmd_st(self):
+        os.chdir(self.directory)
+        output = system("git status --short")
+        if output.strip():
+            print self.directory
+            print output
+            print
+
+    def cmd_co(self):
+        if not os.path.exists(self.parent):
+            print "Creating parent dir %s" % self.parent
+            os.makedirs(self.parent)
+        if self.exists:
+            answer = PRESENT
+        else:
+            answer = CREATED
+            os.chdir(self.parent)
+            # TODO: check!
+            print system("git clone %s %s" % (
+                self.url, self.directory))
+
+        print ' '.join([answer, self.directory])
+
+    def cmd_out(self):
+        os.chdir(self.directory)
+        output = system("git log origin/master..HEAD")
+        if output.strip():
+            print "Unpushed outgoing changes in %s:" % self.directory
+            print output
