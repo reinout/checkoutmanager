@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.5 (unreleased)
+1.5 (2010-09-14)
 ----------------
 
 - Using ``except CommandError, e`` instead of ``except CommandError as e`` for
