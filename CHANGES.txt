@@ -4,7 +4,8 @@ Changelog of checkoutmanager
 1.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Using ``except CommandError, e`` instead of ``except CommandError as e`` for
+  python2.4 compatibility.
 
 
 1.4 (2010-08-17)

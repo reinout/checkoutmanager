@@ -70,7 +70,7 @@ def main():
     for dirinfo in conf.directories(group=group):
         try:
             getattr(dirinfo, 'cmd_' + action)()
-        except utils.CommandError as e:
+        except utils.CommandError, e:
             # An error occured!  Notify and bail out directly.
             e.print_msg()
             sys.exit(1)

@@ -171,7 +171,7 @@ class HgDirInfo(DirInfo):
         os.chdir(self.directory)
         try:
             output = system("hg out %s" % self.url)
-        except CommandError as e:
+        except CommandError, e:
             if e.returncode == 1:
                 # hg returns 1 if there are no outgoing changes!
                 # Checkoutmanager is as quiet as possible, so we print
