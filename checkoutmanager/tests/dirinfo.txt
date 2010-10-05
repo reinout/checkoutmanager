@@ -25,3 +25,7 @@ Make a directory in there and use that:
     >>> info = dirinfo.DirInfo(os.path.join(homedir, 'exists'), 'some/url')
     >>> info.exists
     True
+    >>> print info.directory
+    HOMEDIR/exists
+    >>> print info.parent
+    HOMEDIR
