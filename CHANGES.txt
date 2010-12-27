@@ -4,6 +4,10 @@ Changelog of checkoutmanager
 1.6 (unreleased)
 ----------------
 
+- Full fix for #7: checkoutmanager doesn't stop on the first error, but
+  continues.  And it reports all errors afterwards.  This helps when just one
+  of your svn/hg/whatever servers is down: the rest will just keep working.
+
 - Partial fix for #7: ``svn up`` runs with ``--non-interactive`` now, so
   conflict errors errors are reported instead of pretty much silently waiting
   for interactive input that will never come.

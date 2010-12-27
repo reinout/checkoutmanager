@@ -67,10 +67,19 @@ def main():
         print "(Run 'checkoutmanager co' if found)"
         return
 
+    errors = []
     for dirinfo in conf.directories(group=group):
         try:
             getattr(dirinfo, 'cmd_' + action)()
         except utils.CommandError, e:
-            # An error occured!  Notify and bail out directly.
+            # An error occured!  Don't bail out directly but collect errors.
+            errors.append(e)
             e.print_msg()
-            sys.exit(1)
+
+    if errors:
+        print
+        print "### %s ERRORS OCCURED ###" % len(errors)
+        for error in errors:
+            print
+            error.print_msg()
+        sys.exit(1)
