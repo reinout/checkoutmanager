@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.6 (unreleased)
+1.6 (2010-12-27)
 ----------------
 
 - Full fix for #7: checkoutmanager doesn't stop on the first error, but
