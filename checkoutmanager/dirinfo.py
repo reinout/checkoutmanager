@@ -64,7 +64,7 @@ class SvnDirInfo(DirInfo):
     def cmd_up(self):
         print self.directory
         os.chdir(self.directory)
-        print system("svn up")
+        print system("svn up --non-interactive")
 
     def cmd_st(self):
         os.chdir(self.directory)

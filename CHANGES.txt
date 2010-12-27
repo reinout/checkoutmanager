@@ -4,7 +4,9 @@ Changelog of checkoutmanager
 1.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Partial fix for #7: ``svn up`` runs with ``--non-interactive`` now, so
+  conflict errors errors are reported instead of pretty much silently waiting
+  for interactive input that will never come.
 
 
 1.5 (2010-09-14)
