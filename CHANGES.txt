@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.7 (unreleased)
+1.7 (2011-10-06)
 ----------------
 
 - Added --configfile option. Useful when you want to use checkoutmanager to
