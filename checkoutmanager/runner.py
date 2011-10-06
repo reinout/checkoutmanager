@@ -23,6 +23,7 @@ def main():
     usage = ["Usage: %prog action [group]",
              "  group (optional) is a heading from your config file.",
              "  action can be " + '/'.join(ACTIONS) + ":\n"]
+    # Add automatic action explanations.
     usage += [action + "\n  " + ACTION_EXPLANATION[action] + "\n"
               for action in ACTIONS]
     usage = "\n".join(usage)
@@ -30,11 +31,18 @@ def main():
     parser.add_option("-v", "--verbose",
                       action="store_true", dest="verbose", default=False,
                       help="Show debug output")
+    parser.add_option("-c", "--configfile",
+                      action="store",
+                      dest="configfile",
+                      default=CONFIGFILE_NAME,
+                      help="Name of config file [%s]" % CONFIGFILE_NAME)
     (options, args) = parser.parse_args()
     if options.verbose:
         utils.VERBOSE = True
 
-    configfile = os.path.expanduser(CONFIGFILE_NAME)
+    configfile = os.path.expanduser(options.configfile)
+    if utils.VERBOSE:
+        print "Using config file %s" % configfile
     if not os.path.exists(configfile):
         print "Config file %s does not exist." % configfile
         print "Copy %s as a sample" % pkg_resources.resource_filename(
