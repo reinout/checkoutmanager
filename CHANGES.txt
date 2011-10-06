@@ -4,7 +4,9 @@ Changelog of checkoutmanager
 1.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added --configfile option. Useful when you want to use checkoutmanager to
+  manage checkouts for something else than your regular development projects.
+  In practice: I want to use it for an 'sdistmaker' that works with git.
 
 
 1.6 (2010-12-27)
