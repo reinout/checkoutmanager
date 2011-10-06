@@ -1,0 +1,39 @@
+.. :doctest:
+
+Initial import (and setting it all to verbose):
+
+    >>> from checkoutmanager import utils
+
+Very basic testing of utils.py: basically just a command line runner:
+
+    >>> print utils.system('echo "hello"')
+    hello
+
+    >>> utils.system('non_existing_command')
+    Traceback (most recent call last):
+    ...
+    CommandError
+
+    >>> try:
+    ...     utils.system('non_existing_command')
+    ... except utils.CommandError, e:
+    ...     e.print_msg()
+    Something went wrong when executing:
+        non_existing_command
+    while in directory:
+        /Users/reinout/hg/checkoutmanager/parts/test
+    Returncode:
+        127
+    Output:
+    ... command not found
+
+More verbose output:
+
+    >>> utils.VERBOSE = True
+    >>> print utils.system('echo "hello"')
+    [...] echo "hello"
+    hello
+
+Teardown:
+
+    >>> utils.VERBOSE = False
