@@ -4,7 +4,8 @@ Changelog of checkoutmanager
 1.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Using ``git push --dry-run`` now to detect not-yet-pushed outgoing changes
+  with ``checkoutmanager out``. Fixes #9 (reported by Maurits van Rees).
 
 
 1.7 (2011-10-06)

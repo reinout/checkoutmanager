@@ -218,7 +218,11 @@ class GitDirInfo(DirInfo):
 
     def cmd_out(self):
         os.chdir(self.directory)
-        output = system("git log origin/master..HEAD")
-        if output.strip():
-            print "Unpushed outgoing changes in %s:" % self.directory
+        output = system("git push --dry-run")
+        output = output.strip()
+        output_lines = output.split('\n')
+        if len(output_lines) > 1:
+            # More than the 'everything up-to-date' one-liner.
+            print "'git push --dry-run' reports possible actions in %s:" % (
+                self.directory)
             print output
