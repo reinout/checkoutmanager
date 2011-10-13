@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.8 (unreleased)
+1.8 (2011-10-13)
 ----------------
 
 - Using ``git push --dry-run`` now to detect not-yet-pushed outgoing changes
