@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.9 (unreleased)
+1.9 (2011-11-08)
 ----------------
 
 - Added ``upgrade`` command that upgrades your subversion checkouts to
