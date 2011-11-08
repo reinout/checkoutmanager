@@ -71,6 +71,14 @@ co
 missing
   Print directories that are missing from the config file
 
+Note that there is also the ``upgrade`` command, but this is only
+useful for subversion.  It upgrades the working copy to the new
+subversion 1.7 layout of the .svn directory.  This should be done once
+after you have upgraded your subversion to 1.7.  Note that when you
+accidentally run this twice you get an error, but nothing breaks.
+Since this command is so rarely needed, it is not advertised in the
+command line help.
+
 
 Output directory naming
 -----------------------

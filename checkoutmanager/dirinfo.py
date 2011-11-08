@@ -56,6 +56,10 @@ class DirInfo(object):
     def cmd_out(self):
         raise NotImplementedError()
 
+    def cmd_upgrade(self):
+        # This is only useful for subversion.
+        pass
+
 
 class SvnDirInfo(DirInfo):
 
@@ -94,6 +98,19 @@ class SvnDirInfo(DirInfo):
     def cmd_out(self):
         # Outgoing changes?  We're svn, not some new-fangled dvcs :-)
         pass
+
+    def cmd_upgrade(self):
+        # Run 'svn upgrade'.  This upgrades the working copy to the
+        # new subversion 1.7 layout of the .svn directory.
+        os.chdir(self.directory)
+        output = system("svn upgrade --quiet")
+        lines = [line.strip() for line in output.splitlines()
+                 if line.strip()
+                 and not line.startswith('X')]
+        print self.directory
+        if lines:
+            print output
+            print
 
 
 class BzrDirInfo(DirInfo):

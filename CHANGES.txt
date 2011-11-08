@@ -4,7 +4,9 @@ Changelog of checkoutmanager
 1.9 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added ``upgrade`` command that upgrades your subversion checkouts to
+  the new 1.7 layout of the ``.svn`` directory.
+  [maurits]
 
 
 1.8 (2011-10-13)
