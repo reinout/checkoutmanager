@@ -1,2 +1,2 @@
-include *.txt
+include *.rst
 recursive-include checkoutmanager *.txt *.py *.cfg

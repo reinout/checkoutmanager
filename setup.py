@@ -8,11 +8,11 @@ sample_config = open(os.path.join('checkoutmanager',
                                   'sample.cfg')).readlines()
 
 long_description = '\n\n'.join([
-    open('README.txt').read(),
+    open('README.rst').read(),
     '\n'.join(['  ' + line.rstrip() for line in sample_config]),
-    open('TODO.txt').read(),
-    open('CREDITS.txt').read(),
-    open('CHANGES.txt').read(),
+    open('TODO.rst').read(),
+    open('CREDITS.rst').read(),
+    open('CHANGES.rst').read(),
     ])
 
 setup(name='checkoutmanager',
