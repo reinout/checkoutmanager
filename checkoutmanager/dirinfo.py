@@ -60,6 +60,10 @@ class DirInfo(object):
         # This is only useful for subversion.
         pass
 
+    def cmd_info(self):
+        # This is only known to be useful for subversion.
+        pass
+
 
 class SvnDirInfo(DirInfo):
 
@@ -111,6 +115,19 @@ class SvnDirInfo(DirInfo):
         if lines:
             print output
             print
+
+    def cmd_info(self):
+        # This is useful when your svn program has been updated and
+        # the security mechanisms on your OS now require you to
+        # explictly allow access to the stored credentials.  The other
+        # commands either do not access the internet or are
+        # non-interactive (like command up).  In fact, the reason for
+        # adding this command is that a non-interactive 'svn update'
+        # will fail when you have not granted access to your
+        # credentials yet for this new svn program.  This has happened
+        # a bit too often for me (Maurits).
+        os.chdir(self.directory)
+        print system("svn info %s" % self.url)
 
 
 class BzrDirInfo(DirInfo):

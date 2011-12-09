@@ -71,13 +71,30 @@ co
 missing
   Print directories that are missing from the config file
 
-Note that there is also the ``upgrade`` command, but this is only
-useful for subversion.  It upgrades the working copy to the new
-subversion 1.7 layout of the .svn directory.  This should be done once
-after you have upgraded your subversion to 1.7.  Note that when you
-accidentally run this twice you get an error, but nothing breaks.
-Since this command is so rarely needed, it is not advertised in the
-command line help.
+
+Hidden commands
+---------------
+
+A few commands are hidden because they are seldom used and are only
+useful for subversion.
+
+upgrade
+  This upgrades the working copy to the new subversion 1.7 layout of
+  the .svn directory.  This should be done once after you have
+  upgraded your subversion to 1.7.  Note that when you accidentally
+  run this twice you get an error, but nothing breaks.  Since this
+  command is so rarely needed, it is not advertised in the command
+  line help.
+
+info
+  Display the svn info for the remote url.  This is useful when your
+  svn program has been updated and the security mechanisms on your OS
+  now require you to explictly allow access to the stored credentials.
+  The other commands either do not access the internet or are
+  non-interactive (like command up).  In fact, the reason for adding
+  this command is that a non-interactive 'svn update' will fail when
+  you have not granted access to your credentials yet for this new svn
+  program.  This has happened a bit too often for me (Maurits).
 
 
 Output directory naming

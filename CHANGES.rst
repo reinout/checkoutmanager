@@ -4,7 +4,10 @@ Changelog of checkoutmanager
 1.10 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added hidden info command.  Should be only useful for subversion if
+  your svn program is updated and your OS requires you to give svn
+  access to your stored credentials again, for each repository.
+  [maurits]
 
 
 1.9 (2011-11-08)
