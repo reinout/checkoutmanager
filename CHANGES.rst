@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.10 (unreleased)
+1.10 (2012-01-16)
 -----------------
 
 - Using --mine-only option to ``bzr missing`` to only show our outgoing
