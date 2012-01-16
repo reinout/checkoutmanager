@@ -4,6 +4,9 @@ Changelog of checkoutmanager
 1.10 (unreleased)
 -----------------
 
+- Using --mine-only option to ``bzr missing`` to only show our outgoing
+  changesets when running checkoutmanager's "out" command for bzr.
+
 - Copying sample .cfg file if it doesn't exist instead of only suggesting the
   copy. Fixes #12.
 
