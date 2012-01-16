@@ -1,5 +1,6 @@
 from optparse import OptionParser
 import os
+import shutil
 import sys
 
 import pkg_resources
@@ -45,8 +46,11 @@ def main():
         print "Using config file %s" % configfile
     if not os.path.exists(configfile):
         print "Config file %s does not exist." % configfile
-        print "Copy %s as a sample" % pkg_resources.resource_filename(
-            'checkoutmanager.tests', 'sample.cfg')
+        sample = pkg_resources.resource_filename('checkoutmanager.tests',
+                                                 'sample.cfg')
+        shutil.copy(sample, configfile)
+        print "Copied %s as a sample to %s" % (sample, configfile)
+        print "Open it and adjust it to what you need."
         return
 
     if len(args) < 1:
