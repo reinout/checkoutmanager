@@ -138,6 +138,7 @@ class Config(object):
                         continue
                     real_missing.append(full)
                 if real_missing:
-                    print "Unconfigured items in %s:" % basedir
+                    print "Unconfigured items in %s [%s]:" % (
+                        basedir, self.parser.get(section, 'vcs'))
                     for full in real_missing:
                         print "    " + full
