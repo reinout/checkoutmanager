@@ -44,7 +44,7 @@ def extract_spec(spec):
         # branch.
         if (len(parts) > 3) and (parts[-2] == 'branches'):
             branchname = parts[-1]
-            projectname = parts [-3]
+            projectname = parts[-3]
             directory = projectname + '-' + branchname
         # Common for bzr projects hosted on launchpad: they're prefixed with
         # 'lp:'.  Remove that from the name.
@@ -59,7 +59,7 @@ class Config(object):
     """Wrapper around config file for returning DirInfo objects"""
 
     def __init__(self, config_filename):
-        assert os.path.exists(config_filename) # Just for me atm...
+        assert os.path.exists(config_filename)  # Just for me atm...
         self.config_filename = config_filename
         self.parser = ConfigParser.SafeConfigParser(DEFAULTS)
         self.parser.read(config_filename)
@@ -126,7 +126,3 @@ class Config(object):
                     if os.path.isfile(full):
                         continue
                     print "    " + full
-
-
-
-
