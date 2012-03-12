@@ -101,24 +101,33 @@ class Config(object):
             sections = [group]
         else:
             sections = self.groupings
+        # First get the currently configured items.  Note that one
+        # directory can now contain checkouts from more than one vcs.
+        base_configured = {}
         for section in sections:
-            if not self.parser.getboolean(section, 'report-missing'):
-                continue
             basedir = self.parser.get(section, 'basedir')
             checkouts = linesstring_as_list(
                 self.parser.get(section, 'checkouts'))
-            ignore = linesstring_as_list(
-                self.parser.get(section, 'ignore'))
-
-            present = set(os.listdir(os.path.expanduser(basedir)))
             configured = []
             for checkout in checkouts:
                 url, directory = extract_spec(checkout)
                 configured.append(directory)
-            configured = set(configured)
+            if basedir not in base_configured:
+                base_configured[basedir] = []
+            base_configured[basedir] += configured
+
+        # Now get present and missing items.
+        for section in sections:
+            if not self.parser.getboolean(section, 'report-missing'):
+                continue
+            basedir = self.parser.get(section, 'basedir')
+            present = set(os.listdir(os.path.expanduser(basedir)))
+            configured = set(base_configured[basedir])
             missing = present - configured
             if missing:
                 print "Unconfigured items in %s:" % basedir
+                ignore = linesstring_as_list(
+                    self.parser.get(section, 'ignore'))
                 for directory in missing:
                     if directory in ignore:
                         continue

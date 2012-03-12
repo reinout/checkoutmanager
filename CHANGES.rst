@@ -4,7 +4,11 @@ Changelog of checkoutmanager
 1.11 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Allow more than one vcs in a directory.  This was already possible
+  before, but now known you no longer need to list all the checkouts
+  of the competing vcs in the ignore option.
+  Fixes #11.
+  [maurits]
 
 
 1.10 (2012-01-16)
