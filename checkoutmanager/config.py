@@ -105,13 +105,14 @@ class Config(object):
         # directory can now contain checkouts from more than one vcs.
         base_configured = {}
         for section in sections:
-            basedir = self.parser.get(section, 'basedir')
             checkouts = linesstring_as_list(
                 self.parser.get(section, 'checkouts'))
             configured = []
             for checkout in checkouts:
                 url, directory = extract_spec(checkout)
                 configured.append(directory)
+            basedir = self.parser.get(section, 'basedir')
+            basedir = os.path.realpath(os.path.expanduser(basedir))
             if basedir not in base_configured:
                 base_configured[basedir] = []
             base_configured[basedir] += configured
@@ -121,7 +122,8 @@ class Config(object):
             if not self.parser.getboolean(section, 'report-missing'):
                 continue
             basedir = self.parser.get(section, 'basedir')
-            present = set(os.listdir(os.path.expanduser(basedir)))
+            basedir = os.path.realpath(os.path.expanduser(basedir))
+            present = set(os.listdir(basedir))
             configured = set(base_configured[basedir])
             missing = present - configured
             if missing:
