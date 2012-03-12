@@ -127,13 +127,17 @@ class Config(object):
             configured = set(base_configured[basedir])
             missing = present - configured
             if missing:
-                print "Unconfigured items in %s:" % basedir
                 ignore = linesstring_as_list(
                     self.parser.get(section, 'ignore'))
+                real_missing = []
                 for directory in missing:
                     if directory in ignore:
                         continue
                     full = os.path.join(basedir, directory)
                     if os.path.isfile(full):
                         continue
-                    print "    " + full
+                    real_missing.append(full)
+                if real_missing:
+                    print "Unconfigured items in %s:" % basedir
+                    for full in real_missing:
+                        print "    " + full
