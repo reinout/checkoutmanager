@@ -104,6 +104,7 @@ class Config(object):
         # First get the currently configured items.  Note that one
         # directory can now contain checkouts from more than one vcs.
         base_configured = {}
+        base_ignored = {}
         for section in sections:
             checkouts = linesstring_as_list(
                 self.parser.get(section, 'checkouts'))
@@ -116,6 +117,11 @@ class Config(object):
             if basedir not in base_configured:
                 base_configured[basedir] = []
             base_configured[basedir] += configured
+            ignore = linesstring_as_list(
+                self.parser.get(section, 'ignore'))
+            if basedir not in base_ignored:
+                base_ignored[basedir] = []
+            base_ignored[basedir] += ignore
 
         # Now get present and missing items.
         for section in sections:
@@ -127,8 +133,7 @@ class Config(object):
             configured = set(base_configured[basedir])
             missing = present - configured
             if missing:
-                ignore = linesstring_as_list(
-                    self.parser.get(section, 'ignore'))
+                ignore = base_ignored[basedir]
                 real_missing = []
                 for directory in missing:
                     if directory in ignore:

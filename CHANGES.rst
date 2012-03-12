@@ -6,7 +6,9 @@ Changelog of checkoutmanager
 
 - Allow more than one vcs in a directory.  This was already possible
   before, but now known you no longer need to list all the checkouts
-  of the competing vcs in the ignore option.
+  of the competing vcs in the ignore option.  Also, items that are
+  ignored in one section are now also ignored in other sections for
+  the same directory.
   Fixes #11.
   [maurits]
 
