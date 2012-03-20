@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.11 (unreleased)
+1.11 (2012-03-20)
 -----------------
 
 - Allow more than one vcs in a directory.  This was already possible
