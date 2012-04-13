@@ -163,10 +163,16 @@ class BzrDirInfo(DirInfo):
 
     def cmd_out(self):
         os.chdir(self.directory)
-        output = system("bzr missing %s --mine-only" % self.url)
-        if not 'Branches are up to date' in output:
-            print "Unpushed outgoing changes in %s:" % self.directory
-            print output
+        try:
+            output = system("bzr missing %s --mine-only" % self.url)
+        except CommandError, e:
+            if e.returncode == 1:
+                # bzr returns 1 if there are outgoing changes!
+                print "Unpushed outgoing changes in %s:" % self.directory
+                print e.output
+                return
+            else:
+                raise
 
 
 class HgDirInfo(DirInfo):
