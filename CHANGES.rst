@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.12 (unreleased)
+1.12 (2012-04-14)
 -----------------
 
 - For bzr, the "out" command uses the exit code instead of the command output
