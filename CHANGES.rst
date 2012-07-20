@@ -4,7 +4,10 @@ Changelog of checkoutmanager
 1.13 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Not using the sample config file as the test config file anymore. This means
+  there's a much nicer and more useful sample config file now.
+
+  (Thanks Craig Blaszczyk for his pull request that was the basis for this!)
 
 
 1.12 (2012-04-14)
