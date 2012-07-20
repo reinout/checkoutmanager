@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.13 (unreleased)
+1.13 (2012-07-20)
 -----------------
 
 - Not using the sample config file as the test config file anymore. This means
