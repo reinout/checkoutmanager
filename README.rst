@@ -124,6 +124,6 @@ Config file
 -----------
 
 .. Comment: the config file is included into the long description by setup.py,
-   it is in checkoutmanager/tests/sample.cfg!
+   it is in checkoutmanager/sample.cfg!
 
 Sample configuration file::

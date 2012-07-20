@@ -4,7 +4,6 @@ from setuptools import setup
 version = '1.13.dev0'
 
 sample_config = open(os.path.join('checkoutmanager',
-                                  'tests',
                                   'sample.cfg')).readlines()
 
 long_description = '\n\n'.join([
