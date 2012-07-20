@@ -15,7 +15,7 @@ Grab the sample config file:
 
     >>> import pkg_resources
     >>> sample_config = pkg_resources.resource_filename(
-    ...     'checkoutmanager.tests', 'sample.cfg')
+    ...     'checkoutmanager.tests', 'testconfig.cfg')
     >>> print open(sample_config).read()
     # Sample config file.  Should be placed as
     ...
