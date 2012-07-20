@@ -3,8 +3,7 @@ omit =
     */migrations/*
     */test*
     /Library/*
-    /Users/*/.buildout/eggs/*
-    /home/*/.buildout/eggs/*
+    *buildout/eggs/*
     /usr/*
     /var/lib/hudson/.buildout/*
     /var/lib/jenkins/.buildout/*
