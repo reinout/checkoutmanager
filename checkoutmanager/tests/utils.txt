@@ -25,7 +25,7 @@ Very basic testing of utils.py: basically just a command line runner:
     Returncode:
         127
     Output:
-    ... command not found
+    ... not found
 
 More verbose output:
 
