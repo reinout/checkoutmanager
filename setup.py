@@ -16,7 +16,8 @@ long_description = '\n\n'.join([
 
 setup(name='checkoutmanager',
       version=version,
-      description="",
+      description=("Gives you overview and control over your " +
+                   "git/hg/bzr/svn checkouts/clones."),
       long_description=long_description,
       # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[],
