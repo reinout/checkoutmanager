@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.14 (unreleased)
+1.14 (2013-08-12)
 -----------------
 
 - Added ``--force-interactive`` to ``svn info`` for svn version 1.8
