@@ -127,7 +127,18 @@ class SvnDirInfo(DirInfo):
         # credentials yet for this new svn program.  This has happened
         # a bit too often for me (Maurits).
         os.chdir(self.directory)
-        print system("svn info %s" % self.url)
+        # Determine the version.
+        output = system("svn --version --quiet")
+        try:
+            version = float(output[:3])
+        except (ValueError, TypeError, IndexError):
+            version = 0.0
+        # Since version 1.8 we must use --force-interactive, which is
+        # unavailable in earlier versions.
+        if version < 1.8:
+            print system("svn info %s" % self.url)
+        else:
+            print system("svn info --force-interactive %s" % self.url)
 
 
 class BzrDirInfo(DirInfo):
@@ -137,7 +148,7 @@ class BzrDirInfo(DirInfo):
     def cmd_up(self):
         print self.directory
         os.chdir(self.directory)
-        print system("bzr up")
+        print system("bzr pull")
 
     def cmd_st(self):
         os.chdir(self.directory)
