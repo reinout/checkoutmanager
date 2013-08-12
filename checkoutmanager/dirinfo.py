@@ -148,7 +148,7 @@ class BzrDirInfo(DirInfo):
     def cmd_up(self):
         print self.directory
         os.chdir(self.directory)
-        print system("bzr pull")
+        print system("bzr up")
 
     def cmd_st(self):
         os.chdir(self.directory)
