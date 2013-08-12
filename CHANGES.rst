@@ -4,7 +4,11 @@ Changelog of checkoutmanager
 1.14 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Added ``--force-interactive`` to ``svn info`` for svn version 1.8
+  and higher. This is for the "hidden" ``instancemanager info``
+  command that is handy for updating your repositories when you've
+  switched svn versions. (See the changelog entry for 1.10). Patch by
+  Maurits.
 
 
 1.13 (2012-07-20)
