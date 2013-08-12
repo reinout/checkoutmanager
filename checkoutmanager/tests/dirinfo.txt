@@ -1,0 +1,31 @@
+.. :doctest:
+
+The dirinfo provides a wrapper for info on one directory:
+
+    >>> from checkoutmanager import dirinfo
+
+Initialise the wrapper with a directory name:
+
+    >>> info = dirinfo.DirInfo('/non/existing', 'some/url')
+
+Ask if it exists:
+
+    >>> info.exists
+    False
+
+The testsetup prepared a mock home directory for us:
+
+    >>> print homedir
+    HOMEDIR
+
+Make a directory in there and use that:
+
+    >>> import os
+    >>> os.mkdir(os.path.join(homedir, 'exists'))
+    >>> info = dirinfo.DirInfo(os.path.join(homedir, 'exists'), 'some/url')
+    >>> info.exists
+    True
+    >>> print info.directory
+    HOMEDIR/exists
+    >>> print info.parent
+    HOMEDIR

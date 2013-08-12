@@ -1,0 +1,111 @@
+.. :doctest:
+
+The config module reads a config file and massages the data.
+
+    >>> from checkoutmanager import config
+
+Instantiation with a non-exising config file raises and error:
+
+    >>> config.Config('non/existing/configfile')
+    Traceback (most recent call last):
+    ...
+    AssertionError
+
+Grab the sample config file:
+
+    >>> import pkg_resources
+    >>> sample_config = pkg_resources.resource_filename(
+    ...     'checkoutmanager.tests', 'testconfig.cfg')
+    >>> print open(sample_config).read()
+    # Sample config file.  Should be placed as
+    ...
+
+Instantiate our config object with the config filename:
+
+    >>> conf = config.Config(sample_config)
+
+The config file is loaded into a ConfigParser instance:
+
+    >>> conf.parser
+    <ConfigParser.SafeConfigParser instance at ...>
+
+Query for found sections (which we call groupings).  Sorted, btw:
+
+    >>> conf.groupings
+    ['dotfolders', 'recipes']
+
+
+Determine vcs url and directory name
+------------------------------------
+
+There's a helper method for extracting a vcs url and directory name from a
+spec.  A spec is an url followed by an optional directory name:
+
+    >>> config.extract_spec('aaa bbb')
+    ('aaa', 'bbb')
+    >>> config.extract_spec('aaa     bbb')
+    ('aaa', 'bbb')
+
+More than three parts raises an error:
+
+    >>> config.extract_spec('aaa bbb ccc')
+    Traceback (most recent call last):
+    ...
+    AssertionError: aaa bbb ccc
+
+If no second part is given, a directory name is extracted from the last path
+part of the spec:
+
+    >>> config.extract_spec('aaa')
+    ('aaa', 'aaa')
+    >>> config.extract_spec('aaa/bbb')
+    ('aaa/bbb', 'bbb')
+    >>> config.extract_spec('aaa/bbb/')
+    ('aaa/bbb/', 'bbb')
+
+/trunk is splitted off:
+
+    >>> config.extract_spec('aaa/bbb/trunk')
+    ('aaa/bbb/trunk', 'bbb')
+
+Unless we specify a directory ourselves:
+
+    >>> config.extract_spec('aaa/bbb/trunk somewhere')
+    ('aaa/bbb/trunk', 'somewhere')
+
+And a branch gets named after the branch:
+
+    >>> config.extract_spec('aaa/bbb/branches/reinout-fix')
+    ('aaa/bbb/branches/reinout-fix', 'bbb-reinout-fix')
+
+Launchpad is also recognized:
+
+    >>> config.extract_spec('lp:myproject')
+    ('lp:myproject', 'myproject')
+
+
+Find directories
+----------------
+
+Base purpose: return the wrapped directories:
+
+    >>> for d in conf.directories():
+    ...     print d
+    <DirInfo (bzr) for HOMEDIR/.emacs.d>
+    <DirInfo (bzr) for HOMEDIR/.subversion>
+    <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
+    <DirInfo (svn) for HOMEDIR/svn/recipes/customername>
+    <DirInfo (svn) for HOMEDIR/svn/recipes/differentname>
+    <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother-reinout-fix>
+    <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother>
+
+We can restrict to a certain group:
+
+    >>> for d in conf.directories(group='recipes'):
+    ...     print d
+    <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
+    <DirInfo (svn) for HOMEDIR/svn/recipes/customername>
+    <DirInfo (svn) for HOMEDIR/svn/recipes/differentname>
+    <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother-reinout-fix>
+    <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother>
+
