@@ -4,7 +4,7 @@ Changelog of checkoutmanager
 1.15 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Handle corner case in determining directory name for a git clone.
 
 
 1.14 (2013-08-12)

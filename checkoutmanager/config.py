@@ -52,6 +52,9 @@ def extract_spec(spec):
             directory = directory[3:]
         if directory.endswith('.git'):
             directory = directory[:-4]
+        if ':' in directory:
+            # For example git@git.example.org:projectname
+            directory = directory.split(':')[-1]
     return vcs, directory
 
 
