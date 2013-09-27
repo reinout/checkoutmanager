@@ -83,6 +83,13 @@ Launchpad is also recognized:
     >>> config.extract_spec('lp:myproject')
     ('lp:myproject', 'myproject')
 
+Git has some special cases too:
+
+    >>> config.extract_spec('git@github.com:collective/Products.Poi.git')
+    ('git@github.com:collective/Products.Poi.git', 'Products.Poi')
+    >>> config.extract_spec('git@git.example.org:projectname')
+    ('git@git.example.org:projectname', 'projectname')
+
 
 Find directories
 ----------------
