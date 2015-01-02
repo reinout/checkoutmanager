@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.16 (unreleased)
+1.16 (2015-01-02)
 -----------------
 
 - Add globbing support for ignores.
