@@ -136,20 +136,26 @@ class Config(object):
             present = set(os.listdir(basedir))
             configured = set(base_configured[basedir])
             missing = present - configured
-            if missing:
-                ignores = base_ignored[basedir]
-                real_missing = []
-                for directory in missing:
-                    full = os.path.join(basedir, directory)
-                    for ignore in ignores:
-                        if full in glob.glob(os.path.join(basedir, ignore)):
-                            break
-                    else:
-                        if os.path.isfile(full):
-                            continue
-                        real_missing.append(full)
-                if real_missing:
-                    print "Unconfigured items in %s [%s]:" % (
-                        basedir, self.parser.get(section, 'vcs'))
-                    for full in real_missing:
-                        print "    " + full
+            if not missing:
+                continue
+
+            ignores = base_ignored[basedir]
+            full_paths_to_ignore = []
+            for ignore in ignores:
+                full_paths_to_ignore += glob.glob(
+                    os.path.join(basedir, ignore))
+            real_missing = []
+            for directory in missing:
+                full = os.path.join(basedir, directory)
+                if full in full_paths_to_ignore:
+                    continue
+                if os.path.isfile(full):
+                    # Files cannot be checkouts, so we ignore
+                    # them. We only deal with directories.
+                    continue
+                real_missing.append(full)
+            if real_missing:
+                print "Unconfigured items in %s [%s]:" % (
+                    basedir, self.parser.get(section, 'vcs'))
+                for full in real_missing:
+                    print "    " + full
