@@ -7,6 +7,7 @@ Credits
 
 - Git support by Robert Kern.
 
+- Globbing support for the ignores by Patrick Gerken.
 
 Source code is on bitbucket at http://bitbucket.org/reinout/checkoutmanager.
 
