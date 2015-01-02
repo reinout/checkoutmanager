@@ -116,3 +116,13 @@ We can restrict to a certain group:
     <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother-reinout-fix>
     <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother>
 
+We can ignore certain directories and support globbing to do so:
+
+    >>> import os
+    >>> os.mkdir(os.path.join(homedir, 'svn'))
+    >>> os.mkdir(os.path.join(homedir, 'svn', 'recipes'))
+    >>> os.mkdir(os.path.join(homedir, 'svn', 'recipes', 'missing'))
+    >>> os.mkdir(os.path.join(homedir, 'svn', 'recipes', 'ignored_missing'))
+    >>> conf.report_missing(group='recipes') # doctest: +ELLIPSIS
+    Unconfigured items in HOMEDIR/svn/recipes [svn]:
+        HOMEDIR/svn/recipes/missing
