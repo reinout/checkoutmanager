@@ -1,5 +1,6 @@
 """Config file parsing and massaging"""
 import ConfigParser
+import glob
 import os
 
 from checkoutmanager import dirinfo
@@ -136,15 +137,17 @@ class Config(object):
             configured = set(base_configured[basedir])
             missing = present - configured
             if missing:
-                ignore = base_ignored[basedir]
+                ignores = base_ignored[basedir]
                 real_missing = []
                 for directory in missing:
-                    if directory in ignore:
-                        continue
                     full = os.path.join(basedir, directory)
-                    if os.path.isfile(full):
-                        continue
-                    real_missing.append(full)
+                    for ignore in ignores:
+                        if full in glob.glob(os.path.join(basedir, ignore)):
+                            break
+                    else:
+                        if os.path.isfile(full):
+                            continue
+                        real_missing.append(full)
                 if real_missing:
                     print "Unconfigured items in %s [%s]:" % (
                         basedir, self.parser.get(section, 'vcs'))
