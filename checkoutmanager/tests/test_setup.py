@@ -6,13 +6,19 @@ import tempfile
 import z3c.testsetup
 from zope.testing import renormalizing
 
+_tempdir = os.path.join(tempfile.gettempdir(), 'homedir')
 checker = renormalizing.RENormalizing([
-    # Mock homedir in temp.
+    # Mock homedir in temp (with weird /private prefix for OSX).
     (re.compile(
         '%s[^/]+' % re.escape(
-            os.path.join(tempfile.gettempdir(), 'homedir'))),
+            '/private' + _tempdir)),
      'HOMEDIR'),
-    ])
+    # Mock homedir in temp (regular one).
+    (re.compile(
+        '%s[^/]+' % re.escape(
+            _tempdir)),
+     'HOMEDIR'),
+])
 
 
 def setup(test):
