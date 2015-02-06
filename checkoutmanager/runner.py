@@ -8,6 +8,8 @@ import pkg_resources
 from checkoutmanager import config
 from checkoutmanager import utils
 
+from functools import partial
+
 ACTIONS = ['exists', 'up', 'st', 'co', 'missing', 'out']
 CONFIGFILE_NAME = '~/.checkoutmanager.cfg'
 ACTION_EXPLANATION = {
@@ -18,6 +20,52 @@ ACTION_EXPLANATION = {
     'missing': "Print directories that are missing from the config file",
     'out': "Show changesets you haven't pushed to the server yet",
     }
+
+
+def parse_action_name(action_name):
+    """Parse an action name possibly containing arguments.
+
+    Given an `action_name` in the form "name:arg1=val1,arg2=val2" return a tuple
+    (name, args_dict), where `args_dict` maps from arguments names to values.
+    """
+    parts = action_name.split(':')
+    name = parts[0]
+    args_str = ''
+    if len(parts) >= 2:
+        args_str = parts[1]
+
+    if not args_str:
+        args_dict = {}
+    else:
+        args_list = [a.split('=') for a in args_str.split(',')]
+        args_dict = dict((a[0], a[1]) for a in args_list)
+
+    return (name, args_dict)
+
+
+def get_action(dirinfo, custom_actions, action_name):
+    """Return a tuple (action_func, kwargs) or raise RuntimeError if the action is not found."""
+    (action_name, args_dict) = parse_action_name(action_name)
+
+    action_func = getattr(dirinfo, 'cmd_' + action_name, None)
+    if action_func is not None:
+        return (action_func, args_dict)
+
+    custom_action_func = custom_actions.get(action_name, None)
+    if custom_action_func is not None:
+        action_func = partial(custom_action_func, dirinfo)
+        return (action_func, args_dict)
+
+    raise RuntimeError('Invalid action: ' + action_name)
+
+
+def get_custom_actions():
+    return dict(
+        (entrypoint.name, entrypoint.load())
+        for entrypoint in pkg_resources.iter_entry_points(
+            group='checkoutmanager.custom_actions'
+        )
+    )
 
 
 def main():
@@ -79,10 +127,13 @@ def main():
         print "(Run 'checkoutmanager co' if found)"
         return
 
+    custom_actions = get_custom_actions()
+
     errors = []
     for dirinfo in conf.directories(group=group):
+        (action_func, args_dict) = get_action(dirinfo, custom_actions, action)
         try:
-            getattr(dirinfo, 'cmd_' + action)()
+            action_func(**args_dict)
         except utils.CommandError, e:
             # An error occured!  Don't bail out directly but collect errors.
             errors.append(e)

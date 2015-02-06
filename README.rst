@@ -120,6 +120,37 @@ If you want something else, just specify a directory name (separated by a
 space) in the configuration file.
 
 
+Custom commands
+---------------
+
+You can write your custom commands. To do that you need to create a Python
+package and register an entry point in your ``setup.py`` for the
+``checkoutmanager.custom_actions`` target.
+
+A ``test`` command is included with ``checkoutmanager`` and can serve as an
+example. It is registered like that in ``setup.py``:
+
+.. code:: python
+
+   entry_points={
+       'checkoutmanager.custom_actions': [
+           'test = checkoutmanager.tests.custom_actions:test_action'
+        ]
+   }
+
+The entry point function must take one positional argument which will be the
+``checkoutmanager.dirinfo.DirInfo`` instance associated with the directroy
+for which the command is being executed. The function can also take optional
+keyword arguments. See ``checkoutmanager.tests.custom_actions.test_action`` for
+an example.
+
+Arguments are passed to the custom command using the following syntax:
+
+.. code:: bash
+
+   checkoutmanager action:arg1=val1,arg2=val2
+
+
 Config file
 -----------
 

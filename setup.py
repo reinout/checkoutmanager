@@ -41,5 +41,9 @@ setup(name='checkoutmanager',
       entry_points={
           'console_scripts': [
               'checkoutmanager = checkoutmanager.runner:main',
-          ]},
+          ],
+          'checkoutmanager.custom_actions': [
+              'test = checkoutmanager.tests.custom_actions:test_action',
+          ],
+      },
       )
