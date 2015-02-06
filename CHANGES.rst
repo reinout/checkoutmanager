@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-1.17 (unreleased)
+1.17 (2015-02-06)
 -----------------
 
 - Added support for custom commands: now you can write an extension for
