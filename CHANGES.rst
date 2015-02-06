@@ -4,7 +4,7 @@ Changelog of checkoutmanager
 1.17 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Add support for custom commands.
 
 
 1.16 (2015-01-02)

@@ -1,0 +1,55 @@
+.. :doctest:
+
+Initial imports:
+
+    >>> from checkoutmanager.runner import get_custom_actions, get_action
+    >>> from checkoutmanager.dirinfo import DirInfo
+
+We have a custom action for testing registered in setup.py.
+
+Check if it is recognized by the program runner:
+
+    >>> custom_actions = get_custom_actions()
+    >>> func = custom_actions['test']
+    >>> callable(func)
+    True
+
+Check if this action is selected when we pass its name on the command line:
+
+    >>> dirinfo = DirInfo('/some/directory', 'http://some.url')
+    >>> (action, kwargs) = get_action(dirinfo, custom_actions, 'test')
+    >>> callable(action)
+    True
+    >>> kwargs
+    {}
+
+Call the action function:
+
+    >>> action()
+    Test action
+    dirinfo: <DirInfo (xxx) for /some/directory>
+    arguments:
+    echo command executed.
+
+Check if arguments are parsed correctly:
+
+    >>> (action, kwargs) = get_action(dirinfo, custom_actions, 'test:arg1=val1,arg2=val2')
+    >>> callable(action)
+    True
+    >>> sorted(kwargs.items())
+    [('arg1', 'val1'), ('arg2', 'val2')]
+
+Call the action function with the arguments:
+
+    >>> action(**kwargs)
+    Test action
+    dirinfo: <DirInfo (xxx) for /some/directory>
+    arguments: arg1: val1, arg2: val2
+    echo command executed.
+
+Check if an exception is raised when an invalid action name is given:
+
+    >>> get_action(dirinfo, custom_actions, 'invalid_action_name')
+    Traceback (most recent call last):
+    ...
+    RuntimeError: Invalid action: invalid_action_name
