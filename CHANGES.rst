@@ -4,13 +4,16 @@ Changelog of checkoutmanager
 1.17 (unreleased)
 -----------------
 
-- Add support for custom commands.
+- Added support for custom commands: now you can write an extension for
+  checkoutmanager so that you can run ``checkoutmanager
+  your_custom_command``. See the README for documentation. Patch by Rafael
+  Oliveira.
 
 
 1.16 (2015-01-02)
 -----------------
 
-- Add globbing support for ignores.
+- Added globbing support for ignores.
 
 
 1.15 (2013-09-27)

@@ -123,12 +123,12 @@ space) in the configuration file.
 Custom commands
 ---------------
 
-You can write your custom commands. To do that you need to create a Python
+You can write your own custom commands. To do that you need to create a Python
 package and register an entry point in your ``setup.py`` for the
 ``checkoutmanager.custom_actions`` target.
 
 A ``test`` command is included with ``checkoutmanager`` and can serve as an
-example. It is registered like that in ``setup.py``:
+example. It is registered like this in checkoutmanager's own ``setup.py``:
 
 .. code:: python
 
