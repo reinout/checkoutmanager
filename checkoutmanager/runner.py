@@ -1,3 +1,4 @@
+from multiprocessing.pool import Pool
 from optparse import OptionParser
 import os
 import shutil
@@ -68,6 +69,36 @@ def get_custom_actions():
     )
 
 
+def execute_action(dirinfo, custom_actions, action, errors):
+    (action_func, args_dict) = get_action(dirinfo, custom_actions, action)
+    try:
+        action_func(**args_dict)
+    except utils.CommandError, e:
+        # An error occured!  Don't bail out directly but collect errors.
+        errors.append(e)
+        e.print_msg()
+
+
+class SingleExecutor(object):
+    def apply(self, func, args):
+        apply(func, args)
+
+    def finish(self):
+        pass
+
+
+class MultiExecutor(object):
+    def __init__(self):
+        self.pool = Pool()
+
+    def apply(self, func, args):
+        self.pool.apply_async(func, args)
+
+    def finish(self):
+        self.pool.close()
+        self.pool.join()
+
+
 def main():
     usage = ["Usage: %prog action [group]",
              "  group (optional) is a heading from your config file.",
@@ -85,6 +116,9 @@ def main():
                       dest="configfile",
                       default=CONFIGFILE_NAME,
                       help="Name of config file [%s]" % CONFIGFILE_NAME)
+    parser.add_option("-s", "--single",
+                      action="store_true", dest="single", default=False,
+                      help="Execute actions in a single process")
     (options, args) = parser.parse_args()
     if options.verbose:
         utils.VERBOSE = True
@@ -129,15 +163,11 @@ def main():
 
     custom_actions = get_custom_actions()
 
+    executor = SingleExecutor() if options.single else MultiExecutor()
     errors = []
     for dirinfo in conf.directories(group=group):
-        (action_func, args_dict) = get_action(dirinfo, custom_actions, action)
-        try:
-            action_func(**args_dict)
-        except utils.CommandError, e:
-            # An error occured!  Don't bail out directly but collect errors.
-            errors.append(e)
-            e.print_msg()
+        executor.apply(execute_action, (dirinfo, custom_actions, action, errors))
+    executor.finish()
 
     if errors:
         print
