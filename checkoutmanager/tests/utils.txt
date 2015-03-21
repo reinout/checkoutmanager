@@ -17,7 +17,7 @@ Very basic testing of utils.py: basically just a command line runner:
     >>> try:
     ...     utils.system('non_existing_command')
     ... except utils.CommandError, e:
-    ...     e.print_msg()
+    ...     print e.format_msg()
     Something went wrong when executing:
         non_existing_command
     while in directory:
@@ -26,6 +26,19 @@ Very basic testing of utils.py: basically just a command line runner:
         127
     Output:
     ... not found
+
+CommandError needs to be pickleable:
+
+    >>> import pickle
+
+    >>> e1 = utils.CommandError(1, "cmd", "out")
+    >>> e2 = pickle.loads(pickle.dumps(e1))
+    >>> for attr in ("returncode", "command", "output", "working_dir"):
+    ...     print getattr(e1, attr) == getattr(e2, attr)
+    True
+    True
+    True
+    True
 
 More verbose output:
 

@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from multiprocessing.pool import Pool
 from optparse import OptionParser
 import os
@@ -5,6 +7,7 @@ import shutil
 import sys
 
 import pkg_resources
+import time
 
 from checkoutmanager import config
 from checkoutmanager import utils
@@ -69,33 +72,52 @@ def get_custom_actions():
     )
 
 
-def execute_action(dirinfo, custom_actions, action, errors):
+def execute_action(dirinfo, custom_actions, action):
     (action_func, args_dict) = get_action(dirinfo, custom_actions, action)
     try:
-        action_func(**args_dict)
+        return action_func(**args_dict)
     except utils.CommandError, e:
-        # An error occured!  Don't bail out directly but collect errors.
-        errors.append(e)
-        e.print_msg()
+        return e
 
 
-class SingleExecutor(object):
+class Executor(object):
+    def __init__(self):
+        self.errors = []
+        self.children = 0
+
     def apply(self, func, args):
-        apply(func, args)
+        self.children += 1
+
+    def collector(self, result):
+        self.children -= 1
+        if isinstance(result, utils.CommandError):
+            self.errors.append(result)
+            result = result.format_msg()
+        print(result)
+
+
+class SingleExecutor(Executor):
+    def apply(self, func, args):
+        super(SingleExecutor, self).apply(func, args)
+        self.collector(apply(func, args))
 
     def finish(self):
         pass
 
 
-class MultiExecutor(object):
+class MultiExecutor(Executor):
     def __init__(self):
+        super(MultiExecutor, self).__init__()
         self.pool = Pool()
 
     def apply(self, func, args):
-        self.pool.apply_async(func, args)
+        super(MultiExecutor, self).apply(func, args)
+        self.pool.apply_async(func, args, callback=self.collector)
 
     def finish(self):
         self.pool.close()
+        while self.children > 0:
+            time.sleep(0.001)
         self.pool.join()
 
 
@@ -125,14 +147,14 @@ def main():
 
     configfile = os.path.expanduser(options.configfile)
     if utils.VERBOSE:
-        print "Using config file %s" % configfile
+        print("Using config file %s" % configfile)
     if not os.path.exists(configfile):
-        print "Config file %s does not exist." % configfile
+        print("Config file %s does not exist." % configfile)
         sample = pkg_resources.resource_filename('checkoutmanager',
                                                  'sample.cfg')
         shutil.copy(sample, configfile)
-        print "Copied %s as a sample to %s" % (sample, configfile)
-        print "Open it and adjust it to what you need."
+        print("Copied %s as a sample to %s" % (sample, configfile))
+        print("Open it and adjust it to what you need.")
         return
 
     if len(args) < 1:
@@ -147,32 +169,31 @@ def main():
     if len(args) > 1:
         group = args[1]
         if group not in conf.groupings:
-            print "Group %s not in %r" % (group, conf.groupings)
+            print("Group %s not in %r" % (group, conf.groupings))
             return
 
     if action == 'missing':
         # Special case: report unconfigured items.
         conf.report_missing(group=group)
         # Also report on not-yet-checked-out items.
-        print
-        print "Looking for not yet checked out items..."
+        print()
+        print("Looking for not yet checked out items...")
         for dirinfo in conf.directories(group=group):
             dirinfo.cmd_exists(report_only_missing=True)
-        print "(Run 'checkoutmanager co' if found)"
+        print("(Run 'checkoutmanager co' if found)")
         return
 
     custom_actions = get_custom_actions()
 
     executor = SingleExecutor() if options.single else MultiExecutor()
-    errors = []
     for dirinfo in conf.directories(group=group):
-        executor.apply(execute_action, (dirinfo, custom_actions, action, errors))
+        executor.apply(execute_action, (dirinfo, custom_actions, action))
     executor.finish()
 
-    if errors:
-        print
-        print "### %s ERRORS OCCURED ###" % len(errors)
-        for error in errors:
-            print
-            error.print_msg()
+    if executor.errors:
+        print()
+        print("### %s ERRORS OCCURED ###" % len(executor.errors))
+        for error in executor.errors:
+            print()
+            print(error.format_msg())
         sys.exit(1)
