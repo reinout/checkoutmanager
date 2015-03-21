@@ -2,6 +2,7 @@
 import os
 
 from checkoutmanager.utils import system
+from checkoutmanager.utils import capture_stdout
 from checkoutmanager.utils import CommandError
 
 # 8-char codes
@@ -35,6 +36,7 @@ class DirInfo(object):
     def exists(self):
         return os.path.exists(self.directory)
 
+    @capture_stdout
     def cmd_exists(self, report_only_missing=False):
         if self.exists:
             answer = PRESENT
@@ -69,11 +71,13 @@ class SvnDirInfo(DirInfo):
 
     vcs = 'svn'
 
+    @capture_stdout
     def cmd_up(self):
         print self.directory
         os.chdir(self.directory)
         print system("svn up --non-interactive")
 
+    @capture_stdout
     def cmd_st(self):
         os.chdir(self.directory)
         output = system("svn st --ignore-externals")
@@ -85,6 +89,7 @@ class SvnDirInfo(DirInfo):
             print output
             print
 
+    @capture_stdout
     def cmd_co(self):
         if not os.path.exists(self.parent):
             print "Creating parent dir %s" % self.parent
@@ -99,10 +104,12 @@ class SvnDirInfo(DirInfo):
 
         print ' '.join([answer, self.directory])
 
+    @capture_stdout
     def cmd_out(self):
         # Outgoing changes?  We're svn, not some new-fangled dvcs :-)
         pass
 
+    @capture_stdout
     def cmd_upgrade(self):
         # Run 'svn upgrade'.  This upgrades the working copy to the
         # new subversion 1.7 layout of the .svn directory.
@@ -116,6 +123,7 @@ class SvnDirInfo(DirInfo):
             print output
             print
 
+    @capture_stdout
     def cmd_info(self):
         # This is useful when your svn program has been updated and
         # the security mechanisms on your OS now require you to
@@ -145,11 +153,13 @@ class BzrDirInfo(DirInfo):
 
     vcs = 'bzr'
 
+    @capture_stdout
     def cmd_up(self):
         print self.directory
         os.chdir(self.directory)
         print system("bzr up")
 
+    @capture_stdout
     def cmd_st(self):
         os.chdir(self.directory)
         output = system("bzr st")
@@ -158,6 +168,7 @@ class BzrDirInfo(DirInfo):
             print output
             print
 
+    @capture_stdout
     def cmd_co(self):
         if not os.path.exists(self.parent):
             print "Creating parent dir %s" % self.parent
@@ -172,6 +183,7 @@ class BzrDirInfo(DirInfo):
 
         print ' '.join([answer, self.directory])
 
+    @capture_stdout
     def cmd_out(self):
         os.chdir(self.directory)
         try:
@@ -190,11 +202,13 @@ class HgDirInfo(DirInfo):
 
     vcs = 'hg'
 
+    @capture_stdout
     def cmd_up(self):
         print self.directory
         os.chdir(self.directory)
         print system("hg pull -u %s" % self.url)
 
+    @capture_stdout
     def cmd_st(self):
         os.chdir(self.directory)
         output = system("hg st")
@@ -203,6 +217,7 @@ class HgDirInfo(DirInfo):
             print output
             print
 
+    @capture_stdout
     def cmd_co(self):
         if not os.path.exists(self.parent):
             print "Creating parent dir %s" % self.parent
@@ -218,6 +233,7 @@ class HgDirInfo(DirInfo):
 
         print ' '.join([answer, self.directory])
 
+    @capture_stdout
     def cmd_out(self):
         os.chdir(self.directory)
         try:
@@ -239,11 +255,13 @@ class GitDirInfo(DirInfo):
 
     vcs = 'git'
 
+    @capture_stdout
     def cmd_up(self):
         print self.directory
         os.chdir(self.directory)
         print system("git pull")
 
+    @capture_stdout
     def cmd_st(self):
         os.chdir(self.directory)
         output = system("git status --short")
@@ -252,6 +270,7 @@ class GitDirInfo(DirInfo):
             print output
             print
 
+    @capture_stdout
     def cmd_co(self):
         if not os.path.exists(self.parent):
             print "Creating parent dir %s" % self.parent
@@ -267,6 +286,7 @@ class GitDirInfo(DirInfo):
 
         print ' '.join([answer, self.directory])
 
+    @capture_stdout
     def cmd_out(self):
         os.chdir(self.directory)
         output = system("git push --dry-run")

@@ -1,6 +1,8 @@
+from functools import wraps
 import os
 import subprocess
 import sys
+from cStringIO import StringIO
 
 # For zc.buildout's system() method:
 MUST_CLOSE_FDS = not sys.platform.startswith('win')
@@ -10,21 +12,23 @@ VERBOSE = False
 
 class CommandError(Exception):
 
-    def __init__(self, returncode, command, output):
+    def __init__(self, returncode=0, command="", output=""):
         self.returncode = returncode
         self.command = command
         self.output = output
         self.working_dir = os.getcwd()
 
-    def print_msg(self):
-        print "Something went wrong when executing:"
-        print "    %s" % self.command
-        print "while in directory:"
-        print "    %s" % self.working_dir
-        print "Returncode:"
-        print "    %s" % self.returncode
-        print "Output:"
-        print self.output
+    def format_msg(self):
+        lines = []
+        lines.append("Something went wrong when executing:")
+        lines.append("    %s" % self.command)
+        lines.append("while in directory:")
+        lines.append("    %s" % self.working_dir)
+        lines.append("Returncode:")
+        lines.append("    %s" % self.returncode)
+        lines.append("Output:")
+        lines.append(self.output)
+        return "\n".join(lines)
 
 
 def system(command, input=None):
@@ -47,3 +51,17 @@ def system(command, input=None):
         raise CommandError(p.returncode, command, result)
 
     return result
+
+
+def capture_stdout(func):
+    import sys
+
+    @wraps(func)
+    def newfunc(*args, **kwargs):
+        sys.stdout = StringIO()
+        try:
+            func(*args, **kwargs)
+            return sys.stdout.getvalue()
+        finally:
+            sys.stdout = sys.__stdout__
+    return newfunc
