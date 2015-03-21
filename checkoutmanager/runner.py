@@ -1,18 +1,17 @@
 from __future__ import print_function
 
-from multiprocessing.pool import Pool
-from optparse import OptionParser
-import os
 import shutil
 import sys
+from optparse import OptionParser
+from functools import partial
 
+import os
 import pkg_resources
-import time
 
 from checkoutmanager import config
 from checkoutmanager import utils
+from checkoutmanager.executors import SingleExecutor, MultiExecutor
 
-from functools import partial
 
 ACTIONS = ['exists', 'up', 'st', 'co', 'missing', 'out']
 CONFIGFILE_NAME = '~/.checkoutmanager.cfg'
@@ -78,47 +77,6 @@ def execute_action(dirinfo, custom_actions, action):
         return action_func(**args_dict)
     except utils.CommandError, e:
         return e
-
-
-class Executor(object):
-    def __init__(self):
-        self.errors = []
-        self.children = 0
-
-    def apply(self, func, args):
-        self.children += 1
-
-    def collector(self, result):
-        self.children -= 1
-        if isinstance(result, utils.CommandError):
-            self.errors.append(result)
-            result = result.format_msg()
-        print(result)
-
-
-class SingleExecutor(Executor):
-    def apply(self, func, args):
-        super(SingleExecutor, self).apply(func, args)
-        self.collector(apply(func, args))
-
-    def finish(self):
-        pass
-
-
-class MultiExecutor(Executor):
-    def __init__(self):
-        super(MultiExecutor, self).__init__()
-        self.pool = Pool()
-
-    def apply(self, func, args):
-        super(MultiExecutor, self).apply(func, args)
-        self.pool.apply_async(func, args, callback=self.collector)
-
-    def finish(self):
-        self.pool.close()
-        while self.children > 0:
-            time.sleep(0.001)
-        self.pool.join()
 
 
 def main():
