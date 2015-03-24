@@ -3,45 +3,68 @@
 
 import time
 from multiprocessing.pool import Pool
+
 from checkoutmanager import utils
 
 
-class Executor(object):
+def get_executor(single):
+    """Return a suitable executor, based on the given flag"""
+    if single:
+        return _SingleExecutor()
+    else:
+        return _MultiExecutor()
+
+
+class _Executor(object):
     def __init__(self):
         self.errors = []
-        self.children = 0
 
-    def apply(self, func, args):
-        self.children += 1
+    def _collector(self, result):
+        """Collect a result.
 
-    def collector(self, result):
-        self.children -= 1
+        If the result is a CommandError, save it for later, and print it's message.
+        else, just print the result directly.
+        """
         if isinstance(result, utils.CommandError):
             self.errors.append(result)
             result = result.format_msg()
         print(result)
 
+    def execute(self, func, args):
+        """Execute the given function"""
+        raise NotImplementedError("Sub-classes must implement this")
 
-class SingleExecutor(Executor):
-    def apply(self, func, args):
-        super(SingleExecutor, self).apply(func, args)
-        self.collector(apply(func, args))
-
-    def finish(self):
+    def wait_for_results(self):
+        """Make sure all results have been collected"""
         pass
 
 
-class MultiExecutor(Executor):
+class _SingleExecutor(_Executor):
+    """Execute functions in the same thread and process (sync)"""
+    def execute(self, func, args):
+        self._collector(func(*args))
+
+
+class _MultiExecutor(_Executor):
+    """Execute functions async in a process pool"""
     def __init__(self):
-        super(MultiExecutor, self).__init__()
+        super(_MultiExecutor, self).__init__()
+        self._children = 0
         self.pool = Pool()
 
-    def apply(self, func, args):
-        super(MultiExecutor, self).apply(func, args)
-        self.pool.apply_async(func, args, callback=self.collector)
+    def _collector(self, result):
+        super(_MultiExecutor, self)._collector(result)
+        self._children -= 1
 
-    def finish(self):
+    def execute(self, func, args):
+        self._children += 1
+        self.pool.apply_async(func, args, callback=self._collector)
+
+    def wait_for_results(self):
         self.pool.close()
-        while self.children > 0:
+        # One would have hoped joining the pool would take care of this, but apparently
+        # you need to first make sure that all your launched tasks has returned their
+        # results properly, before calling join, or you risk a deadlock.
+        while self._children > 0:
             time.sleep(0.001)
         self.pool.join()

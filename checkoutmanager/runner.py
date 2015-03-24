@@ -10,7 +10,7 @@ import pkg_resources
 
 from checkoutmanager import config
 from checkoutmanager import utils
-from checkoutmanager.executors import SingleExecutor, MultiExecutor
+from checkoutmanager.executors import get_executor
 
 
 ACTIONS = ['exists', 'up', 'st', 'co', 'missing', 'out']
@@ -143,10 +143,10 @@ def main():
 
     custom_actions = get_custom_actions()
 
-    executor = SingleExecutor() if options.single else MultiExecutor()
+    executor = get_executor(options.single)
     for dirinfo in conf.directories(group=group):
-        executor.apply(execute_action, (dirinfo, custom_actions, action))
-    executor.finish()
+        executor.execute(execute_action, (dirinfo, custom_actions, action))
+    executor.wait_for_results()
 
     if executor.errors:
         print()
