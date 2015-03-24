@@ -30,6 +30,9 @@ class CommandError(Exception):
         lines.append(self.output)
         return "\n".join(lines)
 
+    def print_msg(self):
+        print self.format_msg()
+
 
 def system(command, input=None):
     """commands.getoutput() replacement that also works on windows
@@ -54,6 +57,10 @@ def system(command, input=None):
 
 
 def capture_stdout(func):
+    """Decorator to capture stdout and return it as a string.
+
+    NOTE: The return value of the wrapped function is discarded.
+    """
     import sys
 
     @wraps(func)
