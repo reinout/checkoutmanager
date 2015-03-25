@@ -28,6 +28,9 @@ class _Executor(object):
         if isinstance(result, utils.CommandError):
             self.errors.append(result)
             result = result.format_msg()
+        if not result:
+            # Don't print empty lines
+            return
         print(result)
 
     def execute(self, func, args):
