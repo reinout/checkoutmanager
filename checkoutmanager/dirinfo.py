@@ -44,7 +44,7 @@ class DirInfo(object):
                 return
         else:
             answer = MISSING
-        print ' '.join([answer, self.directory])
+        print(' '.join([answer, self.directory]))
 
     def cmd_up(self):
         raise NotImplementedError()
@@ -73,9 +73,9 @@ class SvnDirInfo(DirInfo):
 
     @capture_stdout
     def cmd_up(self):
-        print self.directory
+        print(self.directory)
         os.chdir(self.directory)
-        print system("svn up --non-interactive")
+        print(system("svn up --non-interactive"))
 
     @capture_stdout
     def cmd_st(self):
@@ -85,24 +85,24 @@ class SvnDirInfo(DirInfo):
                  if line.strip()
                  and not line.startswith('X')]
         if lines:
-            print self.directory
-            print output
-            print
+            print(self.directory)
+            print(output)
+            print()
 
     @capture_stdout
     def cmd_co(self):
         if not os.path.exists(self.parent):
-            print "Creating parent dir %s" % self.parent
+            print("Creating parent dir %s" % self.parent)
             os.makedirs(self.parent)
         if self.exists:
             answer = PRESENT
         else:
             answer = CREATED
             os.chdir(self.parent)
-            print system("svn co %s %s" % (
-                self.url, self.directory))
+            print(system("svn co %s %s" % (
+                self.url, self.directory)))
 
-        print ' '.join([answer, self.directory])
+        print(' '.join([answer, self.directory]))
 
     @capture_stdout
     def cmd_out(self):
@@ -118,10 +118,10 @@ class SvnDirInfo(DirInfo):
         lines = [line.strip() for line in output.splitlines()
                  if line.strip()
                  and not line.startswith('X')]
-        print self.directory
+        print(self.directory)
         if lines:
-            print output
-            print
+            print(output)
+            print()
 
     @capture_stdout
     def cmd_info(self):
@@ -144,9 +144,9 @@ class SvnDirInfo(DirInfo):
         # Since version 1.8 we must use --force-interactive, which is
         # unavailable in earlier versions.
         if version < 1.8:
-            print system("svn info %s" % self.url)
+            print(system("svn info %s" % self.url))
         else:
-            print system("svn info --force-interactive %s" % self.url)
+            print(system("svn info --force-interactive %s" % self.url))
 
 
 class BzrDirInfo(DirInfo):
@@ -155,33 +155,33 @@ class BzrDirInfo(DirInfo):
 
     @capture_stdout
     def cmd_up(self):
-        print self.directory
+        print(self.directory)
         os.chdir(self.directory)
-        print system("bzr up")
+        print(system("bzr up"))
 
     @capture_stdout
     def cmd_st(self):
         os.chdir(self.directory)
         output = system("bzr st")
         if output.strip():
-            print self.directory
-            print output
-            print
+            print(self.directory)
+            print(output)
+            print()
 
     @capture_stdout
     def cmd_co(self):
         if not os.path.exists(self.parent):
-            print "Creating parent dir %s" % self.parent
+            print("Creating parent dir %s" % self.parent)
             os.makedirs(self.parent)
         if self.exists:
             answer = PRESENT
         else:
             answer = CREATED
             os.chdir(self.parent)
-            print system("bzr checkout %s %s" % (
-                self.url, self.directory))
+            print(system("bzr checkout %s %s" % (
+                self.url, self.directory)))
 
-        print ' '.join([answer, self.directory])
+        print(' '.join([answer, self.directory]))
 
     @capture_stdout
     def cmd_out(self):
@@ -191,8 +191,8 @@ class BzrDirInfo(DirInfo):
         except CommandError, e:
             if e.returncode == 1:
                 # bzr returns 1 if there are outgoing changes!
-                print "Unpushed outgoing changes in %s:" % self.directory
-                print e.output
+                print("Unpushed outgoing changes in %s:" % self.directory)
+                print(e.output)
                 return
             else:
                 raise
@@ -205,23 +205,23 @@ class HgDirInfo(DirInfo):
 
     @capture_stdout
     def cmd_up(self):
-        print self.directory
+        print(self.directory)
         os.chdir(self.directory)
-        print system("hg pull -u %s" % self.url)
+        print(system("hg pull -u %s" % self.url))
 
     @capture_stdout
     def cmd_st(self):
         os.chdir(self.directory)
         output = system("hg st")
         if output.strip():
-            print self.directory
-            print output
-            print
+            print(self.directory)
+            print(output)
+            print()
 
     @capture_stdout
     def cmd_co(self):
         if not os.path.exists(self.parent):
-            print "Creating parent dir %s" % self.parent
+            print("Creating parent dir %s" % self.parent)
             os.makedirs(self.parent)
         if self.exists:
             answer = PRESENT
@@ -229,10 +229,10 @@ class HgDirInfo(DirInfo):
             answer = CREATED
             os.chdir(self.parent)
             # TODO: check!
-            print system("hg clone %s %s" % (
-                self.url, self.directory))
+            print(system("hg clone %s %s" % (
+                self.url, self.directory)))
 
-        print ' '.join([answer, self.directory])
+        print(' '.join([answer, self.directory]))
 
     @capture_stdout
     def cmd_out(self):
@@ -248,8 +248,8 @@ class HgDirInfo(DirInfo):
             else:
                 raise
         # No errors means we have genuine outgoing changes.
-        print "Unpushed outgoing changes in %s:" % self.directory
-        print output
+        print("Unpushed outgoing changes in %s:" % self.directory)
+        print(output)
 
 
 class GitDirInfo(DirInfo):
@@ -258,23 +258,23 @@ class GitDirInfo(DirInfo):
 
     @capture_stdout
     def cmd_up(self):
-        print self.directory
+        print(self.directory)
         os.chdir(self.directory)
-        print system("git pull")
+        print(system("git pull"))
 
     @capture_stdout
     def cmd_st(self):
         os.chdir(self.directory)
         output = system("git status --short")
         if output.strip():
-            print self.directory
-            print output
-            print
+            print(self.directory)
+            print(output)
+            print()
 
     @capture_stdout
     def cmd_co(self):
         if not os.path.exists(self.parent):
-            print "Creating parent dir %s" % self.parent
+            print("Creating parent dir %s" % self.parent)
             os.makedirs(self.parent)
         if self.exists:
             answer = PRESENT
@@ -282,10 +282,10 @@ class GitDirInfo(DirInfo):
             answer = CREATED
             os.chdir(self.parent)
             # TODO: check!
-            print system("git clone %s %s" % (
-                self.url, self.directory))
+            print(system("git clone %s %s" % (
+                self.url, self.directory)))
 
-        print ' '.join([answer, self.directory])
+        print(' '.join([answer, self.directory]))
 
     @capture_stdout
     def cmd_out(self):
@@ -295,6 +295,6 @@ class GitDirInfo(DirInfo):
         output_lines = output.split('\n')
         if len(output_lines) > 1:
             # More than the 'everything up-to-date' one-liner.
-            print "'git push --dry-run' reports possible actions in %s:" % (
-                self.directory)
-            print output
+            print("'git push --dry-run' reports possible actions in %s:" % (
+                self.directory))
+            print(output)
