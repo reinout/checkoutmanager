@@ -196,6 +196,7 @@ class BzrDirInfo(DirInfo):
                 return
             else:
                 raise
+        print(output)
 
 
 class HgDirInfo(DirInfo):
