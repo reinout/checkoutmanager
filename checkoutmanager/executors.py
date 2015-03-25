@@ -22,8 +22,9 @@ class _Executor(object):
     def _collector(self, result):
         """Collect a result.
 
-        If the result is a CommandError, save it for later, and print it's message.
-        else, just print the result directly.
+        If the result is a CommandError, save it for later, and print it's
+        message.  else, just print the result directly.
+
         """
         if isinstance(result, utils.CommandError):
             self.errors.append(result)
@@ -65,9 +66,10 @@ class _MultiExecutor(_Executor):
 
     def wait_for_results(self):
         self.pool.close()
-        # One would have hoped joining the pool would take care of this, but apparently
-        # you need to first make sure that all your launched tasks has returned their
-        # results properly, before calling join, or you risk a deadlock.
+        # One would have hoped joining the pool would take care of this, but
+        # apparently you need to first make sure that all your launched tasks
+        # has returned their results properly, before calling join, or you
+        # risk a deadlock.
         while self._children > 0:
             time.sleep(0.001)
         self.pool.join()
