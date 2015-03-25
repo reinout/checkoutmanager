@@ -1,8 +1,8 @@
 Changelog of checkoutmanager
 ============================
 
-1.18 (unreleased)
------------------
+2.0 (2015-03-25)
+----------------
 
 - Huge speed increase because commands are now run in parallel instead of
   sequentially. Great fix by Morten Lied Johansen. For me, "checkoutmanager
