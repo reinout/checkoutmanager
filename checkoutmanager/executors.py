@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8
-
-import time
+from __future__ import print_function
 from multiprocessing.pool import Pool
+import time
 
 from checkoutmanager import utils
 

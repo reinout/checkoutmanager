@@ -1,9 +1,10 @@
 """Information on one directory"""
+from __future__ import print_function
 import os
 
-from checkoutmanager.utils import system
-from checkoutmanager.utils import capture_stdout
 from checkoutmanager.utils import CommandError
+from checkoutmanager.utils import capture_stdout
+from checkoutmanager.utils import system
 
 # 8-char codes
 #         '12345678'
