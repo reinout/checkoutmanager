@@ -4,7 +4,9 @@ Changelog of checkoutmanager
 1.18 (unreleased)
 -----------------
 
-- Nothing changed yet.
+- Huge speed increase because commands are now run in parallel instead of
+  sequentially. Great fix by Morten Lied Johansen. For me, "checkoutmanager
+  up" now takes 19 seconds instead of 105 seconds!
 
 
 1.17 (2015-02-06)
