@@ -1,11 +1,10 @@
 from __future__ import print_function
-
+from functools import partial
+from optparse import OptionParser
+import os
 import shutil
 import sys
-from optparse import OptionParser
-from functools import partial
 
-import os
 import pkg_resources
 
 from checkoutmanager import config

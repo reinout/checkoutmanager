@@ -1,4 +1,5 @@
 """Config file parsing and massaging"""
+from __future__ import print_function
 import ConfigParser
 import glob
 import os

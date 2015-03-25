@@ -1,8 +1,9 @@
+from __future__ import print_function
+from cStringIO import StringIO
 from functools import wraps
 import os
 import subprocess
 import sys
-from cStringIO import StringIO
 
 # For zc.buildout's system() method:
 MUST_CLOSE_FDS = not sys.platform.startswith('win')
@@ -31,7 +32,7 @@ class CommandError(Exception):
         return "\n".join(lines)
 
     def print_msg(self):
-        print self.format_msg()
+        print(self.format_msg())
 
 
 def system(command, input=None):
@@ -41,7 +42,7 @@ def system(command, input=None):
 
     """
     if VERBOSE:
-        print '[%s] %s' % (os.getcwd(), command)
+        print('[%s] %s' % (os.getcwd(), command))
     p = subprocess.Popen(command,
                          shell=True,
                          stdin=subprocess.PIPE,
