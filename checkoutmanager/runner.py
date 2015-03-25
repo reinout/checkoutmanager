@@ -28,8 +28,10 @@ ACTION_EXPLANATION = {
 def parse_action_name(action_name):
     """Parse an action name possibly containing arguments.
 
-    Given an `action_name` in the form "name:arg1=val1,arg2=val2" return a tuple
-    (name, args_dict), where `args_dict` maps from arguments names to values.
+    Given an `action_name` in the form "name:arg1=val1,arg2=val2" return a
+    tuple (name, args_dict), where `args_dict` maps from arguments names to
+    values.
+
     """
     parts = action_name.split(':')
     name = parts[0]
@@ -47,7 +49,8 @@ def parse_action_name(action_name):
 
 
 def get_action(dirinfo, custom_actions, action_name):
-    """Return a tuple (action_func, kwargs) or raise RuntimeError if the action is not found."""
+    """Return a tuple (action_func, kwargs) or raise RuntimeError if the action is
+    not found."""
     (action_name, args_dict) = parse_action_name(action_name)
 
     action_func = getattr(dirinfo, 'cmd_' + action_name, None)
