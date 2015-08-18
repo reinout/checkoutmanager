@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-2.1 (unreleased)
+2.1 (2015-08-18)
 ----------------
 
 - Fixed ``missing`` command: do not swallow the output when 
