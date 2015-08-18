@@ -139,7 +139,9 @@ def main():
         print()
         print("Looking for not yet checked out items...")
         for dirinfo in conf.directories(group=group):
-            dirinfo.cmd_exists(report_only_missing=True)
+            output = dirinfo.cmd_exists(report_only_missing=True)
+            if output:
+                print(output)
         print("(Run 'checkoutmanager co' if found)")
         return
 

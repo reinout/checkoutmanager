@@ -4,7 +4,9 @@ Changelog of checkoutmanager
 2.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed ``missing`` command: do not swallow the output when 
+  looking for not yet checked out items.  Fixes issue #24.
+  [maurits]
 
 
 2.0 (2015-03-25)
