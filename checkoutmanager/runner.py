@@ -133,6 +133,7 @@ def main():
             return
 
     if action == 'missing':
+        print("Looking for items missing in the config file...")
         # Special case: report unconfigured items.
         conf.report_missing(group=group)
         # Also report on not-yet-checked-out items.
