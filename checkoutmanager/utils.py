@@ -1,4 +1,5 @@
 from __future__ import print_function
+from __future__ import unicode_literals
 from cStringIO import StringIO
 from functools import wraps
 import os

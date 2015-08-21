@@ -1,5 +1,6 @@
 """Information on one directory"""
 from __future__ import print_function
+from __future__ import unicode_literals
 import os
 
 from checkoutmanager.utils import CommandError
