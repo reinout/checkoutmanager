@@ -4,13 +4,15 @@ Changelog of checkoutmanager
 2.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Moved from bitbucket (https://bitbucket.org/reinout/checkoutmanager) to
+  github (https://github.com/reinout/checkoutmanager).
+  [reinout]
 
 
 2.1 (2015-08-18)
 ----------------
 
-- Fixed ``missing`` command: do not swallow the output when 
+- Fixed ``missing`` command: do not swallow the output when
   looking for not yet checked out items.  Fixes issue #24.
   [maurits]
 
