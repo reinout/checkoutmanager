@@ -31,6 +31,7 @@ setup(name='checkoutmanager',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'six',
           ],
       extras_require = {
           'test': [
