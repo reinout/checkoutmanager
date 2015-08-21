@@ -1,0 +1,14 @@
+language: python
+sudo: false
+python:
+  - 2.7
+  - 3.4
+notifications:
+  irc:
+    channels: "irc.freenode.org#vanrees"
+    on_success: change
+install:
+  - python bootstrap.py
+  - bin/buildout
+script:
+  - bin/test
