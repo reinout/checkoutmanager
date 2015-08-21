@@ -190,7 +190,7 @@ class BzrDirInfo(DirInfo):
         os.chdir(self.directory)
         try:
             output = system("bzr missing %s --mine-only" % self.url)
-        except CommandError, e:
+        except CommandError as e:
             if e.returncode == 1:
                 # bzr returns 1 if there are outgoing changes!
                 print("Unpushed outgoing changes in %s:" % self.directory)
@@ -241,7 +241,7 @@ class HgDirInfo(DirInfo):
         os.chdir(self.directory)
         try:
             output = system("hg out %s" % self.url)
-        except CommandError, e:
+        except CommandError as e:
             if e.returncode == 1:
                 # hg returns 1 if there are no outgoing changes!
                 # Checkoutmanager is as quiet as possible, so we print
