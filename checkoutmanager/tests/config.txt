@@ -16,7 +16,7 @@ Grab the sample config file:
     >>> import pkg_resources
     >>> sample_config = pkg_resources.resource_filename(
     ...     'checkoutmanager.tests', 'testconfig.cfg')
-    >>> print open(sample_config).read()
+    >>> print(open(sample_config).read())
     # Sample config file.  Should be placed as
     ...
 
@@ -97,7 +97,7 @@ Find directories
 Base purpose: return the wrapped directories:
 
     >>> for d in conf.directories():
-    ...     print d
+    ...     print(d)
     <DirInfo (bzr) for HOMEDIR/.emacs.d>
     <DirInfo (bzr) for HOMEDIR/.subversion>
     <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
@@ -109,7 +109,7 @@ Base purpose: return the wrapped directories:
 We can restrict to a certain group:
 
     >>> for d in conf.directories(group='recipes'):
-    ...     print d
+    ...     print(d)
     <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
     <DirInfo (svn) for HOMEDIR/svn/recipes/customername>
     <DirInfo (svn) for HOMEDIR/svn/recipes/differentname>

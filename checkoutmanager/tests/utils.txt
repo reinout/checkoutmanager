@@ -6,7 +6,7 @@ Initial import (and setting it all to verbose):
 
 Very basic testing of utils.py: basically just a command line runner:
 
-    >>> print utils.system('echo "hello"')
+    >>> print(utils.system('echo "hello"'))
     hello
 
     >>> utils.system('non_existing_command')
@@ -17,7 +17,7 @@ Very basic testing of utils.py: basically just a command line runner:
     >>> try:
     ...     utils.system('non_existing_command')
     ... except utils.CommandError, e:
-    ...     print e.format_msg()
+    ...     print(e.format_msg())
     Something went wrong when executing:
         non_existing_command
     while in directory:
@@ -34,7 +34,7 @@ CommandError needs to be pickleable:
     >>> e1 = utils.CommandError(1, "cmd", "out")
     >>> e2 = pickle.loads(pickle.dumps(e1))
     >>> for attr in ("returncode", "command", "output", "working_dir"):
-    ...     print getattr(e1, attr) == getattr(e2, attr)
+    ...     print(getattr(e1, attr) == getattr(e2, attr))
     True
     True
     True
@@ -43,7 +43,7 @@ CommandError needs to be pickleable:
 More verbose output:
 
     >>> utils.VERBOSE = True
-    >>> print utils.system('echo "hello"')
+    >>> print(utils.system('echo "hello"'))
     [...] echo "hello"
     hello
 
