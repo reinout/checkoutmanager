@@ -13,7 +13,7 @@ Credits
 
 - Parallelism code by Morten Lied Johansen.
 
-Source code is on bitbucket at http://bitbucket.org/reinout/checkoutmanager.
+Source code is on github at https://github.com/reinout/checkoutmanager .
 
-Report bugs and feature requests can be reported at
-http://bitbucket.org/reinout/checkoutmanager/issues .
+Bugs and feature requests can be reported at
+https://github.com/reinout/checkoutmanager/issues .
