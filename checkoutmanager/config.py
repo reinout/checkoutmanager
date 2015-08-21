@@ -1,7 +1,7 @@
 """Config file parsing and massaging"""
 from __future__ import print_function
 from __future__ import unicode_literals
-import ConfigParser
+from six.moves import configparser
 import glob
 import os
 
@@ -67,7 +67,7 @@ class Config(object):
     def __init__(self, config_filename):
         assert os.path.exists(config_filename)  # Just for me atm...
         self.config_filename = config_filename
-        self.parser = ConfigParser.SafeConfigParser(DEFAULTS)
+        self.parser = configparser.SafeConfigParser(DEFAULTS)
         self.parser.read(config_filename)
 
     @property
