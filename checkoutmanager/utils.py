@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import unicode_literals
-from cStringIO import StringIO
+from six.moves import cStringIO
 from functools import wraps
 import os
 import subprocess
@@ -67,7 +67,7 @@ def capture_stdout(func):
 
     @wraps(func)
     def newfunc(*args, **kwargs):
-        sys.stdout = StringIO()
+        sys.stdout = cStringIO()
         try:
             func(*args, **kwargs)
             return sys.stdout.getvalue()
