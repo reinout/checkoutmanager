@@ -1,0 +1,16 @@
+*.pyc
+*.pyo
+.Python
+.installed.cfg
+bin
+coverage
+develop-eggs
+dist
+eggs
+include
+lib
+parts
+checkoutmanager.egg-info
+.coverage
+htmlcov
+doc/build/
