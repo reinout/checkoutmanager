@@ -23,17 +23,17 @@ def linesstring_as_list(string):
 
 def extract_spec(spec):
     """Extract vcs spec into vcs url and directoryname"""
-    vcs = None
+    vcs_url = None
     directory = None
     parts = spec.split()
     assert len(parts) <= 2, spec
     if len(parts) == 2:
-        vcs = parts[0]
+        vcs_url = parts[0]
         directory = parts[1]
     if len(parts) == 1:
-        vcs = parts[0]
+        vcs_url = parts[0]
     if directory is None:
-        parts = [part for part in vcs.split('/')
+        parts = [part for part in vcs_url.split('/')
                  if part]
         # Common structure: having a customer folder with a 'buildout'
         # directory in it.  Don't name it 'buildout'.
@@ -58,7 +58,7 @@ def extract_spec(spec):
         if ':' in directory:
             # For example git@git.example.org:projectname
             directory = directory.split(':')[-1]
-    return vcs, directory
+    return vcs_url, directory
 
 
 class Config(object):
