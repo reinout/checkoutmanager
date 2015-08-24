@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-2.2 (unreleased)
+2.2 (2015-08-24)
 ----------------
 
 - Checkoutmanager now also runs **on python 3**!
