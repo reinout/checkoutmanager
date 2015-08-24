@@ -50,8 +50,11 @@ def system(command, input=None):
                          stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE,
                          close_fds=MUST_CLOSE_FDS)
+    if input:
+        input = input.encode()
     stdoutdata, stderrdata = p.communicate(input=input)
     result = stdoutdata + stderrdata
+    result = result.decode()
     if p.returncode:
         raise CommandError(p.returncode, command, result)
 
