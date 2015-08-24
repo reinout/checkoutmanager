@@ -6,8 +6,9 @@ Initial import (and setting it all to verbose):
 
 Very basic testing of utils.py: basically just a command line runner:
 
-    >>> print(utils.system('echo "hello"'))
-    hello
+    >>> output = utils.system('echo "hello"')
+    >>> 'hello' in str(output)
+    True
 
     >>> try:
     ...     utils.system('non_existing_command')
@@ -47,6 +48,8 @@ More verbose output:
     >>> utils.VERBOSE = True
     >>> output = utils.system('echo "hello"')
     [...] echo "hello"
+    >>> 'hello' in str(output)
+    True
 
 Teardown:
 
