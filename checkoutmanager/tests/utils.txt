@@ -45,9 +45,8 @@ CommandError needs to be pickleable:
 More verbose output:
 
     >>> utils.VERBOSE = True
-    >>> print(utils.system('echo "hello"'))
+    >>> output = utils.system('echo "hello"')
     [...] echo "hello"
-    hello
 
 Teardown:
 
