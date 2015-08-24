@@ -26,9 +26,9 @@ class DirInfo(object):
     def __repr__(self):
         return '<DirInfo (%s) for %s>' % (self.vcs, self.directory)
 
-    def __cmp__(self, other):
+    def __lt__(self, other):
         # Easy sorting in tests
-        return cmp(self.__repr__(), other.__repr__())
+        return self.__repr__() < other.__repr__()
 
     @property
     def parent(self):
