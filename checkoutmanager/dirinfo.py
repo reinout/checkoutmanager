@@ -1,5 +1,6 @@
 """Information on one directory"""
 from __future__ import print_function
+from __future__ import unicode_literals
 import os
 
 from checkoutmanager.utils import CommandError
@@ -25,9 +26,9 @@ class DirInfo(object):
     def __repr__(self):
         return '<DirInfo (%s) for %s>' % (self.vcs, self.directory)
 
-    def __cmp__(self, other):
+    def __lt__(self, other):
         # Easy sorting in tests
-        return cmp(self.__repr__(), other.__repr__())
+        return self.__repr__() < other.__repr__()
 
     @property
     def parent(self):
@@ -189,7 +190,7 @@ class BzrDirInfo(DirInfo):
         os.chdir(self.directory)
         try:
             output = system("bzr missing %s --mine-only" % self.url)
-        except CommandError, e:
+        except CommandError as e:
             if e.returncode == 1:
                 # bzr returns 1 if there are outgoing changes!
                 print("Unpushed outgoing changes in %s:" % self.directory)
@@ -240,7 +241,7 @@ class HgDirInfo(DirInfo):
         os.chdir(self.directory)
         try:
             output = system("hg out %s" % self.url)
-        except CommandError, e:
+        except CommandError as e:
             if e.returncode == 1:
                 # hg returns 1 if there are no outgoing changes!
                 # Checkoutmanager is as quiet as possible, so we print

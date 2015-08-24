@@ -2,6 +2,8 @@
 
 The config module reads a config file and massages the data.
 
+    >>> from __future__ import print_function
+    >>> from __future__ import unicode_literals
     >>> from checkoutmanager import config
 
 Instantiation with a non-exising config file raises and error:
@@ -16,7 +18,7 @@ Grab the sample config file:
     >>> import pkg_resources
     >>> sample_config = pkg_resources.resource_filename(
     ...     'checkoutmanager.tests', 'testconfig.cfg')
-    >>> print open(sample_config).read()
+    >>> print(open(sample_config).read())
     # Sample config file.  Should be placed as
     ...
 
@@ -24,10 +26,10 @@ Instantiate our config object with the config filename:
 
     >>> conf = config.Config(sample_config)
 
-The config file is loaded into a ConfigParser instance:
+The config file is loaded into a configparser instance:
 
     >>> conf.parser
-    <ConfigParser.SafeConfigParser instance at ...>
+    <...SafeConfigParser ...>
 
 Query for found sections (which we call groupings).  Sorted, btw:
 
@@ -56,40 +58,43 @@ More than three parts raises an error:
 If no second part is given, a directory name is extracted from the last path
 part of the spec:
 
-    >>> config.extract_spec('aaa')
-    ('aaa', 'aaa')
-    >>> config.extract_spec('aaa/bbb')
-    ('aaa/bbb', 'bbb')
-    >>> config.extract_spec('aaa/bbb/')
-    ('aaa/bbb/', 'bbb')
+    >>> config.extract_spec('aaa') == ('aaa', 'aaa')
+    True
+    >>> config.extract_spec('aaa/bbb') == ('aaa/bbb', 'bbb')
+    True
+    >>> config.extract_spec('aaa/bbb/') == ('aaa/bbb/', 'bbb')
+    True
 
 /trunk is splitted off:
 
-    >>> config.extract_spec('aaa/bbb/trunk')
-    ('aaa/bbb/trunk', 'bbb')
+    >>> config.extract_spec('aaa/bbb/trunk') == ('aaa/bbb/trunk', 'bbb')
+    True
 
 Unless we specify a directory ourselves:
 
-    >>> config.extract_spec('aaa/bbb/trunk somewhere')
-    ('aaa/bbb/trunk', 'somewhere')
+    >>> config.extract_spec('aaa/bbb/trunk somewhere') == (
+    ... 'aaa/bbb/trunk', 'somewhere')
+    True
 
 And a branch gets named after the branch:
 
-    >>> config.extract_spec('aaa/bbb/branches/reinout-fix')
-    ('aaa/bbb/branches/reinout-fix', 'bbb-reinout-fix')
+    >>> config.extract_spec('aaa/bbb/branches/reinout-fix') == (
+    ... 'aaa/bbb/branches/reinout-fix', 'bbb-reinout-fix')
+    True
 
 Launchpad is also recognized:
 
-    >>> config.extract_spec('lp:myproject')
-    ('lp:myproject', 'myproject')
+    >>> config.extract_spec('lp:myproject') == ('lp:myproject', 'myproject')
+    True
 
 Git has some special cases too:
 
-    >>> config.extract_spec('git@github.com:collective/Products.Poi.git')
-    ('git@github.com:collective/Products.Poi.git', 'Products.Poi')
-    >>> config.extract_spec('git@git.example.org:projectname')
-    ('git@git.example.org:projectname', 'projectname')
-
+    >>> config.extract_spec('git@github.com:collective/Products.Poi.git') == (
+    ... 'git@github.com:collective/Products.Poi.git', 'Products.Poi')
+    True
+    >>> config.extract_spec('git@git.example.org:projectname') == (
+    ... 'git@git.example.org:projectname', 'projectname')
+    True
 
 Find directories
 ----------------
@@ -97,7 +102,7 @@ Find directories
 Base purpose: return the wrapped directories:
 
     >>> for d in conf.directories():
-    ...     print d
+    ...     print(d)
     <DirInfo (bzr) for HOMEDIR/.emacs.d>
     <DirInfo (bzr) for HOMEDIR/.subversion>
     <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
@@ -109,7 +114,7 @@ Base purpose: return the wrapped directories:
 We can restrict to a certain group:
 
     >>> for d in conf.directories(group='recipes'):
-    ...     print d
+    ...     print(d)
     <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
     <DirInfo (svn) for HOMEDIR/svn/recipes/customername>
     <DirInfo (svn) for HOMEDIR/svn/recipes/differentname>

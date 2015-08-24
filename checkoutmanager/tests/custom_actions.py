@@ -1,4 +1,7 @@
 """Custom actions for testing."""
+from __future__ import print_function
+from __future__ import unicode_literals
+
 from checkoutmanager import utils
 
 

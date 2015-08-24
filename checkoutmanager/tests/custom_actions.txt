@@ -2,12 +2,15 @@
 
 Initial imports:
 
+    >>> from __future__ import print_function
+    >>> from __future__ import unicode_literals
     >>> from checkoutmanager.runner import get_custom_actions, get_action
     >>> from checkoutmanager.dirinfo import DirInfo
 
-We have a custom action for testing registered in setup.py.
+In our own ``setup.py``, we have registered an entry point called "test". It
+is registerd as a "custom action" entry point.
 
-Check if it is recognized by the program runner:
+Check if abovementioned entry point is recognized by the program runner:
 
     >>> custom_actions = get_custom_actions()
     >>> func = custom_actions['test']
@@ -36,8 +39,10 @@ Check if arguments are parsed correctly:
     >>> (action, kwargs) = get_action(dirinfo, custom_actions, 'test:arg1=val1,arg2=val2')
     >>> callable(action)
     True
-    >>> sorted(kwargs.items())
-    [('arg1', 'val1'), ('arg2', 'val2')]
+    >>> kwargs['arg1'] == 'val1'
+    True
+    >>> kwargs['arg2'] == 'val2'
+    True
 
 Call the action function with the arguments:
 

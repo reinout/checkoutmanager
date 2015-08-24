@@ -1,4 +1,5 @@
 from __future__ import print_function
+from __future__ import unicode_literals
 from functools import partial
 from optparse import OptionParser
 import os
@@ -77,7 +78,7 @@ def execute_action(dirinfo, custom_actions, action):
     (action_func, args_dict) = get_action(dirinfo, custom_actions, action)
     try:
         return action_func(**args_dict)
-    except utils.CommandError, e:
+    except utils.CommandError as e:
         return e
 
 

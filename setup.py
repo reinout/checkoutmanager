@@ -20,7 +20,16 @@ setup(name='checkoutmanager',
                    "git/hg/bzr/svn checkouts/clones."),
       long_description=long_description,
       # Get strings from http://www.python.org/pypi?%3Aaction=list_classifiers
-      classifiers=[],
+      classifiers=[
+          "Development Status :: 6 - Mature",
+          "Environment :: Console",
+          "License :: OSI Approved :: GNU General Public License (GPL)",
+          "Operating System :: MacOS :: MacOS X",
+          "Operating System :: Microsoft :: Windows",
+          "Operating System :: POSIX",
+          "Programming Language :: Python :: 2.7",
+          "Programming Language :: Python :: 3",
+      ],
       keywords=[],
       author='Reinout van Rees',
       author_email='reinout@vanrees.org',
@@ -31,6 +40,7 @@ setup(name='checkoutmanager',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'six',
           ],
       extras_require = {
           'test': [

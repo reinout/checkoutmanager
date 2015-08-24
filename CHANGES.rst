@@ -4,6 +4,9 @@ Changelog of checkoutmanager
 2.2 (unreleased)
 ----------------
 
+- Checkoutmanager now also runs **on python 3**!
+  [reinout]
+
 - Moved from bitbucket (https://bitbucket.org/reinout/checkoutmanager) to
   github (https://github.com/reinout/checkoutmanager).
   [reinout]
