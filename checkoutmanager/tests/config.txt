@@ -72,12 +72,14 @@ part of the spec:
 
 Unless we specify a directory ourselves:
 
-    >>> config.extract_spec('aaa/bbb/trunk somewhere') == ('aaa/bbb/trunk', 'somewhere')
+    >>> config.extract_spec('aaa/bbb/trunk somewhere') == (
+    ... 'aaa/bbb/trunk', 'somewhere')
     True
 
 And a branch gets named after the branch:
 
-    >>> config.extract_spec('aaa/bbb/branches/reinout-fix') == ('aaa/bbb/branches/reinout-fix', 'bbb-reinout-fix')
+    >>> config.extract_spec('aaa/bbb/branches/reinout-fix') == (
+    ... 'aaa/bbb/branches/reinout-fix', 'bbb-reinout-fix')
     True
 
 Launchpad is also recognized:
@@ -87,9 +89,11 @@ Launchpad is also recognized:
 
 Git has some special cases too:
 
-    >>> config.extract_spec('git@github.com:collective/Products.Poi.git') == ('git@github.com:collective/Products.Poi.git', 'Products.Poi')
+    >>> config.extract_spec('git@github.com:collective/Products.Poi.git') == (
+    ... 'git@github.com:collective/Products.Poi.git', 'Products.Poi')
     True
-    >>> config.extract_spec('git@git.example.org:projectname') == ('git@git.example.org:projectname', 'projectname')
+    >>> config.extract_spec('git@git.example.org:projectname') == (
+    ... 'git@git.example.org:projectname', 'projectname')
     True
 
 Find directories
