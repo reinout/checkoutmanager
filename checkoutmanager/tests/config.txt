@@ -24,10 +24,10 @@ Instantiate our config object with the config filename:
 
     >>> conf = config.Config(sample_config)
 
-The config file is loaded into a ConfigParser instance:
+The config file is loaded into a configparser instance:
 
     >>> conf.parser
-    <ConfigParser.SafeConfigParser instance at ...>
+    <...SafeConfigParser ...>
 
 Query for found sections (which we call groupings).  Sorted, btw:
 
