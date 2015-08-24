@@ -39,8 +39,10 @@ Check if arguments are parsed correctly:
     >>> (action, kwargs) = get_action(dirinfo, custom_actions, 'test:arg1=val1,arg2=val2')
     >>> callable(action)
     True
-    >>> sorted(kwargs.items())
-    [('arg1', 'val1'), ('arg2', 'val2')]
+    >>> kwargs['arg1'] == 'val1'
+    True
+    >>> kwargs['arg2'] == 'val2'
+    True
 
 Call the action function with the arguments:
 
