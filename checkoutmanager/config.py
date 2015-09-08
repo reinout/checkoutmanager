@@ -116,6 +116,12 @@ class Config(object):
                 result.append(dirinfoclass(directory, url))
         return sorted(result)
 
+    def directory_from_url(self, url):
+        return [x for x in self.directories() if x.url == url][0]
+
+    def directory_from_path(self, abspath):
+        return [x for x in self.directories() if x.directory == abspath][0]
+
     def report_missing(self, group=None):
         if group:
             sections = [group]
