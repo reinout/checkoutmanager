@@ -82,13 +82,10 @@ def execute_action(dirinfo, custom_actions, action):
         return e
 
 
-def run(action, group=None, custom_actions=None, conf=None, single=False):
-
+def run(action, group=None, conf=None, single=False):
+    custom_actions = get_custom_actions()
     if not conf:
         conf = config.Config(os.path.expanduser(CONFIGFILE_NAME))
-    if not custom_actions:
-        custom_actions = get_custom_actions()
-
     executor = get_executor(single)
     for dirinfo in conf.directories(group=group):
         executor.execute(execute_action, (dirinfo, custom_actions, action))
@@ -162,8 +159,10 @@ def main():
         print("(Run 'checkoutmanager co' if found)")
         return
 
-    custom_actions = get_custom_actions()
-    executor = run(action, group, custom_actions, conf, options.single, False)
+    executor = run(action,
+                   group=group,
+                   conf=conf,
+                   single=options.single)
 
     if executor.errors:
         print()
