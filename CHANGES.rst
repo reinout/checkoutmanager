@@ -1,6 +1,12 @@
 Changelog of checkoutmanager
 ============================
 
+2.4 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 2.3 (2015-09-08)
 ----------------
 
