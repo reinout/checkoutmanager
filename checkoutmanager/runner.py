@@ -82,6 +82,21 @@ def execute_action(dirinfo, custom_actions, action):
         return e
 
 
+def run(action, group=None, custom_actions=None, conf=None, single=False):
+
+    if not conf:
+        conf = config.Config(os.path.expanduser(CONFIGFILE_NAME))
+    if not custom_actions:
+        custom_actions = get_custom_actions()
+
+    executor = get_executor(single)
+    for dirinfo in conf.directories(group=group):
+        executor.execute(execute_action, (dirinfo, custom_actions, action))
+    executor.wait_for_results()
+
+    return executor
+
+
 def main():
     usage = ["Usage: %prog action [group]",
              "  group (optional) is a heading from your config file.",
@@ -148,11 +163,7 @@ def main():
         return
 
     custom_actions = get_custom_actions()
-
-    executor = get_executor(options.single)
-    for dirinfo in conf.directories(group=group):
-        executor.execute(execute_action, (dirinfo, custom_actions, action))
-    executor.wait_for_results()
+    executor = run(action, group, custom_actions, conf, options.single, False)
 
     if executor.errors:
         print()
