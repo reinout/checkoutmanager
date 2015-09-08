@@ -101,36 +101,41 @@ Output directory naming
 -----------------------
 
 If you don't specify an output directory name for your checkout url, it just
-takes the last part.  Some exceptions, most for subversion:
+takes the last part.  To make life easier, we do have some adjustments we
+make:
 
-- ``https://xxx/yyy/product/trunk`` becomes "product" instead of "trunk".
+- ``https://xxx/yyy/product/trunk`` becomes ``product`` instead of
+  ``trunk``. (Handy for subversion).
 
-- ``https://xxx/yyy/product/branches/experiment`` becomes "product_experiment"
-  instead of "experiment"
+- ``https://xxx/yyy/product/branches/experiment`` becomes
+  ``product_experiment`` instead of ``experiment`` (Handy for subversion).
 
-- ``https://xxx/customername/buildout/trunk`` becomes "customername"
-  instead of "trunk" or "buildout".
+- ``https://xxx/customername/buildout/trunk`` becomes ``customername``
+  instead of "trunk" or "buildout". (Old convention we still support).
 
 - Bzr checkouts that start with "lp:" (special launchpad urls) get their "lp:"
   stripped.
 
 - Git checkouts lose the ".git" at the end of the url.
 
-Optionally, a "preserve_tree" option may be set for each group in the
-configuration. The "preserve_tree" option, if used, should contain one or more
-base checkout urls (one per line). If the "preserve_tree" option is set, then
-the default output directory is chosen using the following rules:
+- If you want to preserve the directory configuration of your version control
+  system, add the ``preserve_tree`` option to a group. It should contain one
+  or more base checkout urls (one per line). If the checkout url starts with
+  one of the ``preserve_tree`` urls, the folder structure after it is
+  preserved.
 
-- If the checkout url starts with one of the strings specified in the
-  "preserve_tree" configuration option, then this string is stripped and the
-  rest of the checkout url is used as is, thereby preserving any folder
-  structure that may exist under the base checkout url.
+  With a ``preserve_tree`` of ``https://github.com``,
+  ``https://github.com/reinout/checkoutmanager`` becomes
+  ``reinout/checkoutmanager`` instead of ``checkoutmanager``. Also handy for
+  subversion, which often has nested directories.
 
-- If a matching server root is not found, the standard rules which would have
-  been used if "preserve_tree" was left unset will be used instead.
+  If the ``preserve_tree`` base url isn't found, the standard rules are used,
+  so you won't get an error.
 
-If you want something else, just specify a directory name (separated by a
-space) in the configuration file.
+If you want different behaviour from the defaults above, just specify a
+directory name (separated by a space) in the configuration file after the
+url. So ``https://github.com/reinout/checkoutmanager bla_bla`` becomes
+``bla_bla`` instead of ``checkoutmanager``
 
 
 Custom commands

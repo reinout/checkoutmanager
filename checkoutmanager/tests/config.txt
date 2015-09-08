@@ -103,6 +103,21 @@ Preserved tree type checkouts:
     ... 'folder1/folder1a/repo1')
     True
 
+The default rules like "strip the ``.git`` from the name" still apply to preserved_tree:
+
+    >>> config.extract_spec('git@github.com:reinout/checkoutmanager.git',
+    ... preserve_tree=["git@github.com"]) == ('git@github.com:reinout/checkoutmanager.git',
+    ... 'reinout/checkoutmanager')
+    True
+
+If not found, preserve_tree doesn't give an error:
+
+    >>> config.extract_spec('git@github.com:reinout/checkoutmanager.git',
+    ... preserve_tree=["svn://some.svn.server/"]) == ('git@github.com:reinout/checkoutmanager.git',
+    ... 'checkoutmanager')
+    True
+
+
 Find directories
 ----------------
 
