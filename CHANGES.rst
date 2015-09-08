@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-2.3 (unreleased)
+2.3 (2015-09-08)
 ----------------
 
 - Added a preserve_tree option to config files to allow structured
