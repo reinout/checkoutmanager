@@ -116,6 +116,19 @@ takes the last part.  Some exceptions, most for subversion:
 
 - Git checkouts lose the ".git" at the end of the url.
 
+Optionally, a "preserve_tree" option may be set for each group in the
+configuration. The "preserve_tree" option, if used, should contain one or more
+base checkout urls (one per line). If the "preserve_tree" option is set, then
+the default output directory is chosen using the following rules:
+
+- If the checkout url starts with one of the strings specified in the
+  "preserve_tree" configuration option, then this string is stripped and the
+  rest of the checkout url is used as is, thereby preserving any folder
+  structure that may exist under the base checkout url.
+
+- If a matching server root is not found, the standard rules which would have
+  been used if "preserve_tree" was left unset will be used instead.
+
 If you want something else, just specify a directory name (separated by a
 space) in the configuration file.
 

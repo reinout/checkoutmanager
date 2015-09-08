@@ -9,7 +9,9 @@ from checkoutmanager import dirinfo
 
 
 DEFAULTS = {'report-missing': 'true',
-            'ignore': ''}
+            'ignore': '',
+            'preserve_tree': '',
+            }
 
 
 def linesstring_as_list(string):
@@ -21,7 +23,7 @@ def linesstring_as_list(string):
     return lines
 
 
-def extract_spec(spec):
+def extract_spec(spec, preserve_tree=None):
     """Extract vcs spec into vcs url and directoryname"""
     vcs_url = None
     directory = None
@@ -33,22 +35,32 @@ def extract_spec(spec):
     if len(parts) == 1:
         vcs_url = parts[0]
     if directory is None:
-        parts = [part for part in vcs_url.split('/')
-                 if part]
-        # Common structure: having a customer folder with a 'buildout'
-        # directory in it.  Don't name it 'buildout'.
-        parts = [part for part in parts if part != 'buildout']
-        directory = parts[-1]
-        # Remove /trunk from the end.  We don't want that as a name.
-        if parts[-1] == 'trunk':
-            parts.pop()
+        # preserve_tree provides a list of server_roots.
+        # If there are no defined server_roots, this effectively
+        # disables te preserve_tree option and the directoy is
+        # obtained per usual
+        server_roots = preserve_tree or []
+        for server_root in server_roots:
+            if vcs_url.startswith(server_root):
+                directory = vcs_url[len(server_root):]
+                break
+        if directory is None:
+            parts = [part for part in vcs_url.split('/')
+                     if part]
+            # Common structure: having a customer folder with a 'buildout'
+            # directory in it.  Don't name it 'buildout'.
+            parts = [part for part in parts if part != 'buildout']
             directory = parts[-1]
-        # If we have an svn branch, name it after the project *and* the
-        # branch.
-        if (len(parts) > 3) and (parts[-2] == 'branches'):
-            branchname = parts[-1]
-            projectname = parts[-3]
-            directory = projectname + '-' + branchname
+            # Remove /trunk from the end.  We don't want that as a name.
+            if parts[-1] == 'trunk':
+                parts.pop()
+                directory = parts[-1]
+            # If we have an svn branch, name it after the project *and* the
+            # branch.
+            if (len(parts) > 3) and (parts[-2] == 'branches'):
+                branchname = parts[-1]
+                projectname = parts[-3]
+                directory = projectname + '-' + branchname
         # Common for bzr projects hosted on launchpad: they're prefixed with
         # 'lp:'.  Remove that from the name.
         if directory.startswith('lp:'):
@@ -84,6 +96,8 @@ class Config(object):
         for section in sections:
             basedir = self.parser.get(section, 'basedir')
             vcs = self.parser.get(section, 'vcs')
+            preserve_tree = linesstring_as_list(
+                self.parser.get(section, 'preserve_tree'))
             dirinfoclass = dirinfo.DirInfo
             if vcs == 'svn':
                 dirinfoclass = dirinfo.SvnDirInfo
@@ -96,7 +110,7 @@ class Config(object):
             checkouts = linesstring_as_list(
                 self.parser.get(section, 'checkouts'))
             for checkout in checkouts:
-                url, directory = extract_spec(checkout)
+                url, directory = extract_spec(checkout, preserve_tree)
                 directory = os.path.join(basedir, directory)
                 directory = os.path.expanduser(directory)
                 result.append(dirinfoclass(directory, url))

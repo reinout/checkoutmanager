@@ -96,6 +96,13 @@ Git has some special cases too:
     ... 'git@git.example.org:projectname', 'projectname')
     True
 
+Preserved tree type checkouts:
+
+    >>> config.extract_spec('svn://some.svn.server/folder1/folder1a/repo1',
+    ... preserve_tree=["svn://some.svn.server/"]) == ('svn://some.svn.server/folder1/folder1a/repo1',
+    ... 'folder1/folder1a/repo1')
+    True
+
 Find directories
 ----------------
 

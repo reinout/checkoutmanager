@@ -4,7 +4,9 @@ Changelog of checkoutmanager
 2.3 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added a preserve_tree option to config files to allow structured
+  checkouts mirroring the repository tree.
+  [chintal]
 
 
 2.2 (2015-08-24)
