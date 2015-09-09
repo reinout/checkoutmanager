@@ -12,6 +12,8 @@ from checkoutmanager import config
 from checkoutmanager import utils
 from checkoutmanager.executors import get_executor
 
+from checkoutmanager.dirinfo import DirInfo
+
 
 ACTIONS = ['exists', 'up', 'st', 'co', 'missing', 'out', 'in', 'rev']
 CONFIGFILE_NAME = '~/.checkoutmanager.cfg'
@@ -82,6 +84,26 @@ def execute_action(dirinfo, custom_actions, action):
         return action_func(**args_dict)
     except utils.CommandError as e:
         return e
+
+
+def run_one(action, directory=None, url=None, conf=None, allow_ancestors=True):
+    custom_actions = get_custom_actions()
+    if not conf:
+        conf = config.Config(os.path.expanduser(CONFIGFILE_NAME))
+    dir_info = None
+    if url:
+        dir_info = conf.directory_from_url(url)
+    if directory:
+        if isinstance(directory, DirInfo):
+            dir_info = directory
+        else:
+            dir_info = conf.directory_from_path(directory, allow_ancestors)
+    if not dir_info:
+        raise RuntimeError('Could not find the repository!')
+    executor = get_executor(single=True)
+    executor.execute(execute_action, (directory, custom_actions, action))
+    executor.wait_for_results()
+    return executor
 
 
 def run(action, group=None, conf=None, single=False):
