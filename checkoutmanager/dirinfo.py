@@ -52,7 +52,7 @@ class DirInfo(object):
     def cmd_rev(self):
         raise NotImplementedError()
 
-    def cmd_cu(self):
+    def cmd_in(self):
         raise NotImplementedError()
 
     def cmd_up(self):
@@ -80,24 +80,35 @@ class SvnDirInfo(DirInfo):
 
     vcs = 'svn'
 
+    rex_last_changed = re.compile('Last Changed Rev: (?P<rev>\d+)')
+
+    def _parse_last_changed(self, output):
+        lines = [line.strip() for line in output.splitlines()
+                 if line.strip()]
+        for line in lines:
+            m = self.rex_last_changed.match(line)
+            if m:
+                return m.group('rev')
+
     @capture_stdout
     def cmd_rev(self):
         print(self.directory)
         os.chdir(self.directory)
-        print(system("svn info | grep -i \"Last Changed Rev\""))
+        output = system("svn info")
+        print(self._parse_last_changed(output))
 
     @capture_stdout
-    def cmd_cu(self):
+    def cmd_in(self):
         os.chdir(self.directory)
-        output = system("svn info | grep -i \"Last Changed Rev\"")
-        local_rev = int(re.findall('\d+', output)[0])
+        output = system("svn info")
+        local_rev = self._parse_last_changed(output)
         try:
-            output = system("svn info -r HEAD| grep -i \"Last Changed Rev\"")
-            remote_rev = int(re.findall('\d+', output)[0])
+            output = system("svn info -r HEAD")
+            remote_rev = self._parse_last_changed(output)
             if remote_rev > local_rev:
                 print(self.directory)
                 print("Incoming changes : "
-                      "Rev {0} to {1}".format(local_rev, remote_rev))
+                      "Revision {0} to {1}".format(local_rev, remote_rev))
         except CommandError:
             print("Could not connect to repository for " + self.directory)
             return
@@ -188,19 +199,26 @@ class BzrDirInfo(DirInfo):
     def cmd_rev(self):
         print(self.directory)
         os.chdir(self.directory)
-        print(system("bzr log -r-1"))
+        print(system("bzr revno"))
 
     @capture_stdout
-    def cmd_cu(self):
-        output = system("bzr missing")
-        output = output.strip()
-        output_lines = output.split('\n')
-        if "Branches are up to date." in output_lines:
-            return
-        if len(output_lines):
-            print("'bzr missing' reports possible actions in %s:" % (
-                self.directory))
-            print(output)
+    def cmd_in(self):
+        os.chdir(self.directory)
+        try:
+            system("bzr missing --theirs-only")
+        except CommandError as e:
+            if e.returncode == 1:
+                # bzr returns 1 if there are incoming changes!
+                print(self.directory)
+                print("'bzr missing' reports incoming changsets : ")
+                print(e.output)
+                return
+            if e.returncode == 3:
+                # bzr returns 3 if there is no parent
+                pass
+            else:
+                raise
+        return
 
     @capture_stdout
     def cmd_up(self):
@@ -252,23 +270,40 @@ class HgDirInfo(DirInfo):
 
     vcs = 'hg'
 
+    rex_changeset = re.compile('changeset:\s+((?P<num>\d+):(?P<digest>[0-9a-fA-F]+))')
+
     @capture_stdout
     def cmd_rev(self):
         print(self.directory)
         os.chdir(self.directory)
-        print(system("hg log -l1"))
+        output = system("hg log -l1")
+        lines = [line.strip() for line in output.splitlines()
+                 if line.strip()]
+        for line in lines:
+            m = self.rex_changeset.match(line)
+            if m:
+                print("{0}:{1}".format(m.group('num'), m.group('digest')))
+                return
 
     @capture_stdout
-    def cmd_cu(self):
-        output = system("hg incoming")
-        output = output.strip()
-        output_lines = output.split('\n')
-        if "no changes found" in output_lines:
-            return
-        if len(output_lines):
-            print("'hg incoming' reports possible actions in %s:" % (
-                self.directory))
+    def cmd_in(self):
+        os.chdir(self.directory)
+        try:
+            output = system("hg incoming")
+            print(self.directory)
+            print("'hg incoming' reports incoming changesets :" % (
+                  self.directory))
             print(output)
+        except CommandError as e:
+            if e.returncode == 1:
+                # hg returns 1 if there are no incoming changes.
+                return
+            elif e.returncode == 255:
+                # hg returns 255 if there is no default parent.
+                pass
+            else:
+                raise
+        return
 
     @capture_stdout
     def cmd_up(self):
@@ -323,14 +358,23 @@ class GitDirInfo(DirInfo):
 
     vcs = 'git'
 
+    rex_commit_digest = re.compile('commit (?P<digest>[0-9a-fA-F]+)')
+
     @capture_stdout
     def cmd_rev(self):
         print(self.directory)
         os.chdir(self.directory)
-        print(system("git show -q"))
+        output = system("git show -q")
+        lines = [line.strip() for line in output.splitlines()
+                 if line.strip()]
+        for line in lines:
+            m = self.rex_commit_digest.match(line)
+            if m:
+                print(m.group('object'))
+                return
 
     @capture_stdout
-    def cmd_cu(self):
+    def cmd_in(self):
         output = system("git pull --dry-run")
         output = output.strip()
         output_lines = output.split('\n')
