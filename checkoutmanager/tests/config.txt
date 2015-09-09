@@ -153,3 +153,10 @@ We can ignore certain directories and support globbing to do so:
     >>> conf.report_missing(group='recipes') # doctest: +ELLIPSIS
     Unconfigured items in HOMEDIR/svn/recipes [svn]:
         HOMEDIR/svn/recipes/missing
+
+When used as a python module, DirInfo objects can be obtained programmatically:
+
+    >>> conf.directory_from_url('svn://svn/blablabla/trunk')
+    <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
+    >>> conf.directory_from_path('HOMEDIR/svn/recipes/blablabla')
+    <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
