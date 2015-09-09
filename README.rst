@@ -71,6 +71,15 @@ co
 missing
   Print directories that are missing from the config file
 
+out
+  Show changesets you haven't pushed to the server yet
+
+in
+  Show incoming changesets that would be pulled in with 'up'. For some
+  version control systems, this depends on the English output of the
+  respective commands and is therefore inherently fragile.
+
+
 
 Hidden commands
 ---------------
