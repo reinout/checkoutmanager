@@ -210,7 +210,7 @@ class BzrDirInfo(DirInfo):
             if e.returncode == 1:
                 # bzr returns 1 if there are incoming changes!
                 print(self.directory)
-                print("'bzr missing' reports incoming changsets : ")
+                print("'bzr missing' reports incoming changesets : ")
                 print(e.output)
                 return
             if e.returncode == 3:
