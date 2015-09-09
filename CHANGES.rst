@@ -4,7 +4,19 @@ Changelog of checkoutmanager
 2.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added ``in`` command that reports incoming changes (so: the changes you'd
+  get by running ``checkoutmanager up``). Due to differences between versions
+  of git/svn/hg/bzr, the reporting might not be entirely accurate. It is
+  *very* hard to get right. So: please `report an issue
+  <https://github.com/reinout/checkoutmanager/issues>`_ if something is not
+  quite right.
+  [chintal]
+
+- Added better support for using checkoutmanager as a library. Provided you
+  first load a config file, you can now programmatically run actions on
+  individual directories or urls. See the source code for the
+  `checkoutmanager.runner.run_one()` function.
+  [chintal]
 
 
 2.3 (2015-09-08)
