@@ -13,7 +13,7 @@ from checkoutmanager import utils
 from checkoutmanager.executors import get_executor
 
 
-ACTIONS = ['exists', 'up', 'st', 'co', 'missing', 'out']
+ACTIONS = ['exists', 'up', 'st', 'co', 'missing', 'out', 'cu', 'rev']
 CONFIGFILE_NAME = '~/.checkoutmanager.cfg'
 ACTION_EXPLANATION = {
     'exists': "Print whether checkouts are present or missing",
@@ -22,6 +22,8 @@ ACTION_EXPLANATION = {
     'co': "Grab missing checkouts from the server",
     'missing': "Print directories that are missing from the config file",
     'out': "Show changesets you haven't pushed to the server yet",
+    'cu': "Check for updates that will be pulled in with 'up'",
+    'rev': "Get the current revision information",
     }
 
 

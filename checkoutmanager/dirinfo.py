@@ -2,6 +2,7 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 import os
+import re
 
 from checkoutmanager.utils import CommandError
 from checkoutmanager.utils import capture_stdout
@@ -48,6 +49,12 @@ class DirInfo(object):
             answer = MISSING
         print(' '.join([answer, self.directory]))
 
+    def cmd_rev(self):
+        raise NotImplementedError()
+
+    def cmd_cu(self):
+        raise NotImplementedError()
+
     def cmd_up(self):
         raise NotImplementedError()
 
@@ -72,6 +79,28 @@ class DirInfo(object):
 class SvnDirInfo(DirInfo):
 
     vcs = 'svn'
+
+    @capture_stdout
+    def cmd_rev(self):
+        print(self.directory)
+        os.chdir(self.directory)
+        print(system("svn info | grep -i \"Last Changed Rev\""))
+
+    @capture_stdout
+    def cmd_cu(self):
+        os.chdir(self.directory)
+        output = system("svn info | grep -i \"Last Changed Rev\"")
+        local_rev = int(re.findall('\d+', output)[0])
+        try:
+            output = system("svn info -r HEAD| grep -i \"Last Changed Rev\"")
+            remote_rev = int(re.findall('\d+', output)[0])
+            if remote_rev > local_rev:
+                print(self.directory)
+                print("Incoming changes : "
+                      "Rev {0} to {1}".format(local_rev, remote_rev))
+        except CommandError:
+            print("Could not connect to repository for " + self.directory)
+            return
 
     @capture_stdout
     def cmd_up(self):
@@ -156,6 +185,24 @@ class BzrDirInfo(DirInfo):
     vcs = 'bzr'
 
     @capture_stdout
+    def cmd_rev(self):
+        print(self.directory)
+        os.chdir(self.directory)
+        print(system("bzr log -r-1"))
+
+    @capture_stdout
+    def cmd_cu(self):
+        output = system("bzr missing")
+        output = output.strip()
+        output_lines = output.split('\n')
+        if "Branches are up to date." in output_lines:
+            return
+        if len(output_lines):
+            print("'bzr missing' reports possible actions in %s:" % (
+                self.directory))
+            print(output)
+
+    @capture_stdout
     def cmd_up(self):
         print(self.directory)
         os.chdir(self.directory)
@@ -204,6 +251,24 @@ class BzrDirInfo(DirInfo):
 class HgDirInfo(DirInfo):
 
     vcs = 'hg'
+
+    @capture_stdout
+    def cmd_rev(self):
+        print(self.directory)
+        os.chdir(self.directory)
+        print(system("hg log -l1"))
+
+    @capture_stdout
+    def cmd_cu(self):
+        output = system("hg incoming")
+        output = output.strip()
+        output_lines = output.split('\n')
+        if "no changes found" in output_lines:
+            return
+        if len(output_lines):
+            print("'hg incoming' reports possible actions in %s:" % (
+                self.directory))
+            print(output)
 
     @capture_stdout
     def cmd_up(self):
@@ -257,6 +322,22 @@ class HgDirInfo(DirInfo):
 class GitDirInfo(DirInfo):
 
     vcs = 'git'
+
+    @capture_stdout
+    def cmd_rev(self):
+        print(self.directory)
+        os.chdir(self.directory)
+        print(system("git show -q"))
+
+    @capture_stdout
+    def cmd_cu(self):
+        output = system("git pull --dry-run")
+        output = output.strip()
+        output_lines = output.split('\n')
+        if len(output_lines):
+            print("'git pull --dry-run' reports possible actions in %s:" % (
+                self.directory))
+            print(output)
 
     @capture_stdout
     def cmd_up(self):
