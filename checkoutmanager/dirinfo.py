@@ -80,13 +80,13 @@ class SvnDirInfo(DirInfo):
 
     vcs = 'svn'
 
-    rex_last_changed = re.compile('Last Changed Rev: (?P<rev>\d+)')
+    regex_last_changed = re.compile('Last Changed Rev: (?P<rev>\d+)')
 
     def _parse_last_changed(self, output):
         lines = [line.strip() for line in output.splitlines()
                  if line.strip()]
         for line in lines:
-            m = self.rex_last_changed.match(line)
+            m = self.regex_last_changed.match(line)
             if m:
                 return m.group('rev')
 
@@ -270,7 +270,7 @@ class HgDirInfo(DirInfo):
 
     vcs = 'hg'
 
-    rex_changeset = re.compile('changeset:\s+((?P<num>\d+):(?P<digest>[0-9a-fA-F]+))')
+    regex_changeset = re.compile('changeset:\s+((?P<num>\d+):(?P<digest>[0-9a-fA-F]+))')
 
     @capture_stdout
     def cmd_rev(self):
@@ -280,7 +280,7 @@ class HgDirInfo(DirInfo):
         lines = [line.strip() for line in output.splitlines()
                  if line.strip()]
         for line in lines:
-            m = self.rex_changeset.match(line)
+            m = self.regex_changeset.match(line)
             if m:
                 print("{0}:{1}".format(m.group('num'), m.group('digest')))
                 return
@@ -358,7 +358,7 @@ class GitDirInfo(DirInfo):
 
     vcs = 'git'
 
-    rex_commit_digest = re.compile('commit (?P<digest>[0-9a-fA-F]+)')
+    regex_commit_digest = re.compile('commit (?P<digest>[0-9a-fA-F]+)')
 
     @capture_stdout
     def cmd_rev(self):
@@ -368,7 +368,7 @@ class GitDirInfo(DirInfo):
         lines = [line.strip() for line in output.splitlines()
                  if line.strip()]
         for line in lines:
-            m = self.rex_commit_digest.match(line)
+            m = self.regex_commit_digest.match(line)
             if m:
                 print(m.group('object'))
                 return
