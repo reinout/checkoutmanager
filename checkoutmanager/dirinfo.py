@@ -80,13 +80,13 @@ class SvnDirInfo(DirInfo):
 
     vcs = 'svn'
 
-    regex_last_changed = re.compile('Last Changed Rev: (?P<rev>\d+)')
+    regex_last_changed = re.compile('last changed rev: (?P<rev>\d+)')
 
     def _parse_last_changed(self, output):
         lines = [line.strip() for line in output.splitlines()
                  if line.strip()]
         for line in lines:
-            m = self.regex_last_changed.match(line)
+            m = self.regex_last_changed.match(line.lower())
             if m:
                 return m.group('rev')
 
@@ -280,7 +280,7 @@ class HgDirInfo(DirInfo):
         lines = [line.strip() for line in output.splitlines()
                  if line.strip()]
         for line in lines:
-            m = self.regex_changeset.match(line)
+            m = self.regex_changeset.match(line.lower())
             if m:
                 print("{0}:{1}".format(m.group('num'), m.group('digest')))
                 return
@@ -368,7 +368,7 @@ class GitDirInfo(DirInfo):
         lines = [line.strip() for line in output.splitlines()
                  if line.strip()]
         for line in lines:
-            m = self.regex_commit_digest.match(line)
+            m = self.regex_commit_digest.match(line.lower())
             if m:
                 print(m.group('object'))
                 return
