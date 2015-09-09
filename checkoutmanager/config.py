@@ -126,7 +126,7 @@ class Config(object):
             if dir_info.directory == abspath:
                 return dir_info
         if allow_ancestors:
-            parent = os.path.split(abspath)[0]
+            parent = os.path.dirname(abspath)
             if parent:
                 return self.directory_from_path(parent)
 
