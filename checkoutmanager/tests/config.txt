@@ -158,5 +158,7 @@ When used as a python module, DirInfo objects can be obtained programmatically:
 
     >>> conf.directory_from_url('svn://svn/blablabla/trunk')
     <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
-    >>> conf.directory_from_path('HOMEDIR/svn/recipes/blablabla')
+    >>> conf.directory_from_path('%s/svn/recipes/blablabla' % homedir)
+    <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
+    >>> conf.directory_from_path('%s/svn/recipes/blablabla/somefolder' % homedir)
     <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
