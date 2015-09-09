@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-2.4 (unreleased)
+2.4 (2015-09-09)
 ----------------
 
 - Added ``in`` command that reports incoming changes (so: the changes you'd
