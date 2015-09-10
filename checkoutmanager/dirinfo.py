@@ -49,30 +49,57 @@ class DirInfo(object):
             answer = MISSING
         print(' '.join([answer, self.directory]))
 
+    def parse_exists(self, output):
+        pass
+
     def cmd_rev(self):
         raise NotImplementedError()
+
+    def parse_rev(self, output):
+        pass
 
     def cmd_in(self):
         raise NotImplementedError()
 
+    def parse_in(self, output):
+        pass
+
     def cmd_up(self):
         raise NotImplementedError()
+
+    def parse_up(self, output):
+        pass
 
     def cmd_st(self):
         raise NotImplementedError()
 
+    def parse_st(self, output):
+        pass
+
     def cmd_co(self):
         raise NotImplementedError()
 
+    def parse_co(self, output):
+        pass
+
     def cmd_out(self):
         raise NotImplementedError()
+
+    def parse_out(self, output):
+        pass
 
     def cmd_upgrade(self):
         # This is only useful for subversion.
         pass
 
+    def parse_upgrade(self, output):
+        pass
+
     def cmd_info(self):
         # This is only known to be useful for subversion.
+        pass
+
+    def parse_info(self, output):
         pass
 
 
@@ -411,7 +438,6 @@ class GitDirInfo(DirInfo):
             # TODO: check!
             print(system("git clone %s %s" % (
                 self.url, self.directory)))
-
         print(' '.join([answer, self.directory]))
 
     @capture_stdout
