@@ -4,7 +4,8 @@ Changelog of checkoutmanager
 2.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Bugfix for the 2.4-introduced ``run_one()`` function.
+  [chintal]
 
 
 2.4 (2015-09-09)
@@ -21,7 +22,7 @@ Changelog of checkoutmanager
 - Added better support for using checkoutmanager as a library. Provided you
   first load a config file, you can now programmatically run actions on
   individual directories or urls. See the source code for the
-  `checkoutmanager.runner.run_one()` function.
+  ``checkoutmanager.runner.run_one()`` function.
   [chintal]
 
 
