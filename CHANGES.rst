@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-2.5 (unreleased)
+2.5 (2015-09-10)
 ----------------
 
 - Bugfix for the 2.4-introduced ``run_one()`` function.
