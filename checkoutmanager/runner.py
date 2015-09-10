@@ -102,7 +102,7 @@ def run_one(action, directory=None, url=None, conf=None, allow_ancestors=True):
         raise RuntimeError(
             'Could not find the repository for %s!' % (directory or url))
     executor = get_executor(single=True)
-    executor.execute(execute_action, (directory, custom_actions, action))
+    executor.execute(execute_action, (dir_info, custom_actions, action))
     executor.wait_for_results()
     return executor
 
