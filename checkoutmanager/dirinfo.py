@@ -7,6 +7,7 @@ import re
 from checkoutmanager.utils import CommandError
 from checkoutmanager.utils import capture_stdout
 from checkoutmanager.utils import system
+from checkoutmanager import reports
 
 # 8-char codes
 #         '12345678'
@@ -50,7 +51,13 @@ class DirInfo(object):
         print(' '.join([answer, self.directory]))
 
     def parse_exists(self, output):
-        pass
+        parts = output.split(' ', 1)
+        parts = [x.strip() for x in parts]
+        if parts[1] == self.directory:
+            if parts[0].upper() == 'PRESENT':
+                return reports.ReportExists(self, True)
+            if parts[0].upper() == 'ABSENT':
+                return reports.ReportExists(self, False)
 
     def cmd_rev(self):
         raise NotImplementedError()

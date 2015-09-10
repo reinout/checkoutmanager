@@ -10,6 +10,7 @@ import pkg_resources
 
 from checkoutmanager import config
 from checkoutmanager import utils
+from checkoutmanager import reports
 from checkoutmanager.executors import get_executor
 
 from checkoutmanager.dirinfo import DirInfo
@@ -69,6 +70,24 @@ def get_action(dirinfo, custom_actions, action_name):
     raise RuntimeError('Invalid action: ' + action_name)
 
 
+def get_parser(dirinfo, custom_actions, action_name):
+    """Return a tuple (parser_func, kwargs) or raise RuntimeError if the action is
+    not found."""
+    (parser_name, args_dict) = parse_action_name(action_name)
+
+    parser_func = getattr(dirinfo, 'parse_' + action_name, None)
+    if parser_func is not None:
+        return (parser_func, args_dict)
+
+    # TODO deal with parsers for custom_actions
+    custom_parser_func = custom_actions.get(action_name, None)
+    if custom_parser_func is not None:
+        parser_func = partial(custom_parser_func, dirinfo)
+        return (parser_func, args_dict)
+
+    raise RuntimeError('Invalid action: ' + action_name)
+
+
 def get_custom_actions():
     return dict(
         (entrypoint.name, entrypoint.load())
@@ -79,11 +98,17 @@ def get_custom_actions():
 
 
 def execute_action(dirinfo, custom_actions, action):
-    (action_func, args_dict) = get_action(dirinfo, custom_actions, action)
+    (action_func, action_args_dict) = get_action(dirinfo, custom_actions, action)
+    (parser_func, parser_args_dict) = get_parser(dirinfo, custom_actions, action)
     try:
-        return action_func(**args_dict)
+        output = action_func(**action_args_dict)
     except utils.CommandError as e:
-        return e
+        return e, None
+    try:
+        result = parser_func(output=output, **parser_args_dict)
+        return output, result
+    except reports.ParseError as e:
+        return output, e
 
 
 def run_one(action, directory=None, url=None, conf=None, allow_ancestors=True):

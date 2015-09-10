@@ -6,6 +6,7 @@ from multiprocessing.pool import Pool
 import time
 
 from checkoutmanager import utils
+from checkoutmanager import reports
 
 
 def get_executor(single):
@@ -19,17 +20,24 @@ def get_executor(single):
 class _Executor(object):
     def __init__(self):
         self.errors = []
+        self.reports = []
+        self.parse_errors = []
 
-    def _collector(self, result):
+    def _collector(self, returned):
         """Collect a result.
 
         If the result is a CommandError, save it for later, and print it's
         message.  else, just print the result directly.
 
         """
+        result, report = returned
         if isinstance(result, utils.CommandError):
             self.errors.append(result)
             result = result.format_msg()
+        if isinstance(report, reports.ReportBase):
+            self.reports.append(report)
+        elif isinstance(report, reports.ParseError):
+            self.parse_errors.append(report)
         if not result:
             # Don't print empty lines
             return
