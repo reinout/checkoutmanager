@@ -20,6 +20,7 @@ class DirInfo(object):
     """Wrapper for information on one directory"""
 
     vcs = 'xxx'
+    rev_type = str
 
     def __init__(self, directory, url):
         self.directory = directory
@@ -58,12 +59,24 @@ class DirInfo(object):
                 return reports.ReportExists(self, True)
             if parts[0].upper() == 'ABSENT':
                 return reports.ReportExists(self, False)
+        else:
+            raise reports.DirectoryMismatchError(self, parts[1])
 
     def cmd_rev(self):
         raise NotImplementedError()
 
     def parse_rev(self, output):
-        pass
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x]
+        if lines[0] == self.directory:
+            try:
+                return reports.ReportRevision(self, self.rev_type(lines[1]))
+            except IndexError:
+                raise reports.LineNotFoundError(self, 'Revision Line')
+            except ValueError:
+                raise reports.LineParseError(self, lines[1], self.rev_type)
+        else:
+            raise reports.DirectoryMismatchError(self, lines[0])
 
     def cmd_in(self):
         raise NotImplementedError()
@@ -113,6 +126,7 @@ class DirInfo(object):
 class SvnDirInfo(DirInfo):
 
     vcs = 'svn'
+    rev_type = int
 
     regex_last_changed = re.compile('last changed rev: (?P<rev>\d+)')
 
@@ -228,6 +242,7 @@ class SvnDirInfo(DirInfo):
 class BzrDirInfo(DirInfo):
 
     vcs = 'bzr'
+    rev_type = int
 
     @capture_stdout
     def cmd_rev(self):
@@ -303,6 +318,7 @@ class BzrDirInfo(DirInfo):
 class HgDirInfo(DirInfo):
 
     vcs = 'hg'
+    rev_type = str
 
     regex_changeset = re.compile('changeset:\s+((?P<num>\d+):(?P<digest>[0-9a-fA-F]+))')
 
@@ -391,6 +407,7 @@ class HgDirInfo(DirInfo):
 class GitDirInfo(DirInfo):
 
     vcs = 'git'
+    rev_type = str
 
     regex_commit_digest = re.compile('commit (?P<digest>[0-9a-fA-F]+)')
 

@@ -26,8 +26,24 @@ class _Executor(object):
     def _collector(self, returned):
         """Collect a result.
 
+        The returned parameter is a ``tuple`` of ``(result, report)``.
+
+        ``result`` is the output of the command executed as returned by
+        cmd_*.
+
         If the result is a CommandError, save it for later, and print it's
-        message.  else, just print the result directly.
+        message. Else, just print the result directly.
+
+        ``report`` is a report of :class:``checkoutmanager.reports.ReportBase``,
+        returned by the parse_* functions. ``report`` could be ``None`` if the
+        parse function is not implemented, or be an instance of
+        :class:``checkoutmanager.reports.ParseError`` if there an error was
+        detected during parsing.
+
+        If the report is a valid :class:``checkoutmanager.reports.ReportBase``
+        object, it is saved for later within the executor object passed
+        on back to the caller. ParseErrors are saved as well along the lines
+        of CommandErrors.
 
         """
         result, report = returned
