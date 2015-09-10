@@ -1,0 +1,37 @@
+# Sample config file.  Should be placed as
+# .checkoutmanager.cfg in your home directory.
+#
+# Different sections per base location
+# and version control system.  Splitting everything all over
+# the place in multiple directories is fine.
+
+[svn]
+vcs = svn
+basedir = ~/repos_svn/
+checkouts =
+    file:///{{ homedir }}/repos_svn/a_repo  wc1
+    file:///{{ homedir }}/repos_svn/a_repo  wc2
+
+[git]
+vcs = git
+basedir = ~/repos_git/
+checkouts =
+    /{{ homedir }}/repos_git/base
+    /{{ homedir }}/repos_git/base  follower
+    /{{ homedir }}/repos_git/base  leader
+
+[bzr]
+vcs = bzr
+basedir = ~/repos_bzr/
+checkouts =
+    /{{ homedir }}/repos_bzr/base
+    /{{ homedir }}/repos_bzr/base  follower
+    /{{ homedir }}/repos_bzr/base  leader
+
+[hg]
+vcs = hg
+basedir = ~/repos_hg/
+checkouts =
+    /{{ homedir }}/repos_hg/base
+    /{{ homedir }}/repos_hg/base  follower
+    /{{ homedir }}/repos_hg/base  leader

@@ -46,6 +46,7 @@ setup(name='checkoutmanager',
           'test': [
               'z3c.testsetup>=0.3',
               'zope.testing',
+              'jinja2',
               ],
           },
       entry_points={
