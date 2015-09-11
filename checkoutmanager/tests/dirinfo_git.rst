@@ -103,6 +103,41 @@ Create commit on leader to bring it ahead of the base:
 
 The follower - leader - base hierarchy is now setup.
 
+Tests for the 'rev' dirinfo action:
+
+    >>> from checkoutmanager import reports
+    >>> executor = runner.run_one('rev', directory=git_base, conf=conf)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportRevision)
+    >>> assert isinstance(executor.reports[0].revision, str)
+    >>> executor = runner.run_one('rev', directory=git_leader, conf=conf)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportRevision)
+    >>> assert isinstance(executor.reports[0].revision, str)
+    >>> executor = runner.run_one('rev', directory=git_follower, conf=conf)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportRevision)
+    >>> assert isinstance(executor.reports[0].revision, str)
+    >>> # TODO handle error conditons
+
+Tests for the 'in' dirinfo action:
+
+    >>> executor = runner.run_one('in', directory=git_follower, conf=conf)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.errors) == 0
+    >>> if len(executor.parse_errors):
+    ...     for error in executor.parse_errors:
+    ...         error.print_msg()
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportIncoming)
+    >>> assert isinstance(executor.reports[0].local_head, str)
+    >>> assert isinstance(executor.reports[0].remote_head, str)
+    >>> assert len(executor.reports[0].changesets) == 0
+
 Teardown:
 
     >>> os.chdir(orig_cwd)

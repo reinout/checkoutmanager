@@ -66,19 +66,35 @@ Create a file inside the first working copy and commit:
 
 Tests for the 'rev' dirinfo action:
 
-    >>> # TODO Reintroduce when merged with collectors branch
-    >>> # from checkoutmanager import reports
+    >>> from checkoutmanager import reports
     >>> executor = runner.run_one('rev', directory=svn_wc1, conf=conf)
-    >>> # assert isinstance(executor.reports, list)
-    >>> # assert len(executor.reports) == 1
-    >>> # assert isinstance(executor.reports[0], reports.ReportRevision)
-    >>> # assert executor.reports[0].revision == 1
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportRevision)
+    >>> assert executor.reports[0].revision == 1
     >>> executor = runner.run_one('rev', directory=svn_wc2, conf=conf)
-    >>> # assert isinstance(executor.reports, list)
-    >>> # assert len(executor.reports) == 1
-    >>> # assert isinstance(executor.reports[0], reports.ReportRevision)
-    >>> # assert executor.reports[0].revision == 0
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportRevision)
+    >>> assert executor.reports[0].revision == 0
     >>> # TODO handle error conditons
+
+Tests for the 'in' dirinfo action:
+
+    >>> executor = runner.run_one('in', directory=svn_wc2, conf=conf)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.errors) == 0
+    >>> if len(executor.parse_errors):
+    ...     for error in executor.parse_errors:
+    ...         error.print_msg()
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportIncoming)
+    >>> assert executor.reports[0].local_head == 0
+    >>> assert executor.reports[0].remote_head == 1
+    >>> assert len(executor.reports[0].changesets) == 1
+    >>> assert executor.reports[0].changesets[0] == 1
+
 
 Teardown:
 

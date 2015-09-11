@@ -16,7 +16,7 @@ checkouts =
 vcs = git
 basedir = ~/repos_git/
 checkouts =
-    /{{ homedir }}/repos_git/base
+    /{{ homedir }}/repos_git/base  base
     /{{ homedir }}/repos_git/base  follower
     /{{ homedir }}/repos_git/base  leader
 
@@ -24,7 +24,7 @@ checkouts =
 vcs = bzr
 basedir = ~/repos_bzr/
 checkouts =
-    /{{ homedir }}/repos_bzr/base
+    /{{ homedir }}/repos_bzr/base  base
     /{{ homedir }}/repos_bzr/base  follower
     /{{ homedir }}/repos_bzr/base  leader
 
@@ -32,6 +32,6 @@ checkouts =
 vcs = hg
 basedir = ~/repos_hg/
 checkouts =
-    /{{ homedir }}/repos_hg/base
-    /{{ homedir }}/repos_hg/base  follower
-    /{{ homedir }}/repos_hg/base  leader
+    file://{{ homedir }}/repos_hg/base  base
+    file://{{ homedir }}/repos_hg/base  follower
+    file://{{ homedir }}/repos_hg/base  leader

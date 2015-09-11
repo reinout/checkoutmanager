@@ -70,6 +70,15 @@ Create the other working copies using checkoutmanager:
     >>> assert executor.errors == []
     >>> executor = runner.run_one('co', directory=bzr_leader, conf=conf)
     >>> assert executor.errors == []
+    >>> # bzr checkouts are bound. There is probably some scope here
+    >>> # for a discussion about the consequences of bzr branch vs bzr checkout,
+    >>> # in terms of behavior of in, out, up. It seems bzr checkout is akin to a
+    >>> # poor man's SVN, while bzr branch is bzr-as-dvcs.
+    >>> cmd = ['bzr', 'unbind']
+    >>> os.chdir(bzr_follower)
+    >>> subprocess.call(cmd)
+    >>> os.chdir(bzr_leader)
+    >>> subprocess.call(cmd)
 
 Create commit on base to bring it ahead of the follower:
 
@@ -82,15 +91,17 @@ Create commit on base to bring it ahead of the follower:
     >>> cmd = ['bzr', 'commit', '-m', '\"second commit\"']
     >>> subprocess.call(cmd)
 
-Update leader to bring it alongside base:
-
-    >>> from checkoutmanager import runner
-    >>> executor = runner.run_one('up', directory=bzr_leader, conf=conf)
-    >>> # TODO Test Executor for UP Action
-
-Create commit on leader to bring it ahead of the base:
+Update leader to bring it alongside base. Since we unbound the repo, we need to
+``pull``, not ``up`` to get the commit here :
 
     >>> os.chdir(bzr_leader)
+    >>> cmd = ['bzr', 'pull', bzr_base]
+    >>> subprocess.call(cmd)
+
+Create another commit on leader to bring it ahead of the base:
+
+    >>> os.chdir(bzr_leader)
+    >>> assert os.getcwd() == '{0}/repos_bzr/leader'.format(homedir)
     >>> with open(os.path.join(bzr_leader, 'test_file_3'), 'w+') as f:
     ...     f.writelines('Foo')
     >>> # TODO Run and Test for ST Action
@@ -100,6 +111,26 @@ Create commit on leader to bring it ahead of the base:
     >>> subprocess.call(cmd)
 
 The follower - leader - base hierarchy is now setup.
+
+Tests for the 'rev' dirinfo action:
+
+    >>> from checkoutmanager import reports
+    >>> executor = runner.run_one('rev', directory=bzr_base, conf=conf)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportRevision)
+    >>> assert executor.reports[0].revision == 2
+    >>> executor = runner.run_one('rev', directory=bzr_leader, conf=conf)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportRevision)
+    >>> assert executor.reports[0].revision == 3
+    >>> executor = runner.run_one('rev', directory=bzr_follower, conf=conf)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportRevision)
+    >>> assert executor.reports[0].revision == 1
+    >>> # TODO handle error conditons
 
 Teardown:
 
