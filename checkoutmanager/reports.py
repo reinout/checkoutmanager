@@ -4,6 +4,13 @@ class ParseError(Exception):
         self.dir_info = dir_info
 
 
+class LogicalParseError(Exception):
+    def __init__(self, dir_info, output, message):
+        self.dir_info = dir_info
+        self.output = output
+        self.message = message
+
+
 class DirectoryMismatchError(ParseError):
     def __init__(self, dir_info, got_dir):
         super(DirectoryMismatchError, self).__init__(dir_info)
@@ -21,6 +28,19 @@ class LineParseError(ParseError):
         super(LineParseError, self).__init__(dir_info)
         self.got_line = got_line
         self.parser = parser
+
+    def format_msg(self):
+        lines = []
+        lines.append("LineParseError occured")
+        lines.append(repr(self.dir_info))
+        lines.append("Got :")
+        lines.append(self.got_line)
+        lines.append("Tried to parse with :")
+        lines.append(repr(self.parser))
+        return "\n".join(lines)
+
+    def print_msg(self):
+        print(self.format_msg())
 
 
 class ReportBase(object):
@@ -46,3 +66,16 @@ class ReportRevision(ReportBase):
     def __repr__(self):
         return '<ReportRevision {0} {1}>'.format(repr(self.revision),
                                                  self.dir_info.directory)
+
+
+class ReportIncoming(ReportBase):
+    def __init__(self, dir_info, local_head, remote_head, changesets):
+        super(ReportIncoming, self).__init__(dir_info)
+        self.local_head = local_head
+        self.remote_head = remote_head
+        self.changesets = changesets
+
+    def __repr__(self):
+        return '<ReportIncoming {0} -{3}-> {1} {2}>'.format(
+            repr(self.local_head), repr(self.remote_head),
+            self.dir_info.directory, repr(len(self.changesets)))

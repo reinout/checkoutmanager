@@ -128,7 +128,7 @@ class SvnDirInfo(DirInfo):
     vcs = 'svn'
     rev_type = int
 
-    regex_last_changed = re.compile('last changed rev: (?P<rev>\d+)')
+    regex_last_changed = re.compile(r'last changed rev: (?P<rev>\d+)')
 
     def _parse_last_changed(self, output):
         lines = [line.strip() for line in output.splitlines()
@@ -161,6 +161,30 @@ class SvnDirInfo(DirInfo):
             print("Could not connect to repository for " + self.directory)
             return
 
+    regex_incoming = re.compile(r'Revision (?P<local>\d+) to (?P<remote>\d+)')
+
+    def parse_in(self, output):
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x]
+        if lines[0] == self.directory:
+            try:
+                if lines[1].startswith("Incoming changes :"):
+                    m = self.regex_incoming.search(lines[1])
+                    if not m:
+                        raise reports.LineParseError(self, lines[1],
+                                                     self.regex_incoming.pattern)
+                    local_rev = int(m.group('local'))
+                    remote_rev = int(m.group('remote'))
+                    return reports.ReportIncoming(self, local_rev, remote_rev,
+                                                  range(local_rev+1,
+                                                        remote_rev+1))
+            except IndexError:
+                raise reports.LineNotFoundError(self, "Incoming Changes Line")
+        elif lines[0].startswith("Could not connect to repository for "):
+            return
+        else:
+            raise reports.DirectoryMismatchError(self, lines[0])
+
     @capture_stdout
     def cmd_up(self):
         print(self.directory)
@@ -191,7 +215,6 @@ class SvnDirInfo(DirInfo):
             os.chdir(self.parent)
             print(system("svn co %s %s" % (
                 self.url, self.directory)))
-
         print(' '.join([answer, self.directory]))
 
     @capture_stdout
@@ -269,6 +292,36 @@ class BzrDirInfo(DirInfo):
                 raise
         return
 
+    regex_revno = re.compile(r'^revno: (?P<revno>\d+)$')
+
+    def parse_in(self, output):
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x]
+        if lines[0] == self.directory:
+            try:
+                if lines[1].startswith("'bzr missing' reports incoming "
+                                       "changesets :"):
+                    local_rev = self.parse_rev(self.cmd_rev()).revision
+                    changesets = []
+                    for line in lines[2:]:
+                        m = self.regex_revno.match(line)
+                        if m:
+                            changesets.append(int(m.group('revno')))
+                    if not len(changesets):
+                        raise reports.LineParseError(
+                            self, lines[2:],
+                            'Unable to extract any incoming changesets')
+                    remote_rev = changesets[-1]
+                    return reports.ReportIncoming(self, local_rev, remote_rev,
+                                                  changesets)
+                else:
+                    raise reports.LineParseError(
+                        self, lines[1], "'bzr missing' reports incoming changesets :")
+            except IndexError:
+                raise reports.LineNotFoundError(self, "Incoming Changes Line")
+        else:
+            raise reports.DirectoryMismatchError(self, lines[0])
+
     @capture_stdout
     def cmd_up(self):
         print(self.directory)
@@ -320,7 +373,7 @@ class HgDirInfo(DirInfo):
     vcs = 'hg'
     rev_type = str
 
-    regex_changeset = re.compile('changeset:\s+((?P<num>\d+):(?P<digest>[0-9a-fA-F]+))')
+    regex_changeset = re.compile(r'changeset:\s+((?P<num>\d+):(?P<digest>[0-9a-fA-F]+))')
 
     @capture_stdout
     def cmd_rev(self):
@@ -341,8 +394,7 @@ class HgDirInfo(DirInfo):
         try:
             output = system("hg incoming")
             print(self.directory)
-            print("'hg incoming' reports incoming changesets :" % (
-                  self.directory))
+            print("'hg incoming' reports incoming changesets :")
             print(output)
         except CommandError as e:
             if e.returncode == 1:
@@ -354,6 +406,35 @@ class HgDirInfo(DirInfo):
             else:
                 raise
         return
+
+    def parse_in(self, output):
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x]
+        if lines[0] == self.directory:
+            try:
+                if lines[1].startswith("'hg incoming' reports incoming "
+                                       "changesets :"):
+                    local_rev = self.parse_rev(self.cmd_rev()).revision
+                    changesets = []
+                    for line in lines[2:]:
+                        m = self.regex_changeset.match(line)
+                        if m:
+                            changesets.append(m.group(1))
+                    if not len(changesets):
+                        raise reports.LineParseError(
+                            self, lines[2:],
+                            'Unable to extract any incoming changesets')
+                    remote_rev = changesets[-1]
+                    return reports.ReportIncoming(self, local_rev, remote_rev,
+                                                  changesets)
+                else:
+                    raise reports.LineParseError(
+                        self, lines[1],
+                        "'hg incoming' reports incoming changesets :")
+            except IndexError:
+                raise reports.LineNotFoundError(self, "Incoming Changes Line")
+        else:
+            raise reports.DirectoryMismatchError(self, lines[0])
 
     @capture_stdout
     def cmd_up(self):
@@ -409,7 +490,7 @@ class GitDirInfo(DirInfo):
     vcs = 'git'
     rev_type = str
 
-    regex_commit_digest = re.compile('commit (?P<digest>[0-9a-fA-F]+)')
+    regex_commit_digest = re.compile(r'commit (?P<digest>[0-9a-fA-F]+)')
 
     @capture_stdout
     def cmd_rev(self):
@@ -421,7 +502,7 @@ class GitDirInfo(DirInfo):
         for line in lines:
             m = self.regex_commit_digest.match(line.lower())
             if m:
-                print(m.group('object'))
+                print(m.group('digest'))
                 return
 
     @capture_stdout
@@ -430,9 +511,43 @@ class GitDirInfo(DirInfo):
         output = output.strip()
         output_lines = output.split('\n')
         if len(output_lines):
-            print("'git pull --dry-run' reports possible actions in %s:" % (
-                self.directory))
+            print(self.directory)
+            print("'git pull --dry-run' reports possible actions : ")
             print(output)
+
+    regex_pull_result = re.compile(r'(?P<start>[0-9a-fA-F]+)..(?P<end>[0-9a-fA-F]+)\s+(?P<local>[\w\/]+)\s+->\s+(?P<remote>[\w\/]+)')
+
+    def parse_in(self, output):
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x]
+        if lines[0] == self.directory:
+            try:
+                if lines[1].startswith("'git pull --dry-run' reports "
+                                       "possible actions :"):
+                    local_rev = None
+                    remote_rev = None
+                    # TODO see if the list of changesets can be obtained
+                    changesets = []
+                    for line in lines[2:]:
+                        m = self.regex_pull_result.match(line)
+                        if m:
+                            if not local_rev:
+                                local_rev = m.group('start')
+                                remote_rev = m.group('end')
+                            else:
+                                raise reports.LogicalParseError(
+                                    self, output,
+                                    "Got two pull results, expecting only one")
+                    return reports.ReportIncoming(self, local_rev, remote_rev,
+                                                  changesets)
+                else:
+                    raise reports.LineParseError(
+                        self, lines[1],
+                        "'git pull --dry-run' reports possible actions :")
+            except IndexError:
+                raise reports.LineNotFoundError(self, "Incoming Changes Line")
+        else:
+            raise reports.DirectoryMismatchError(self, lines[0])
 
     @capture_stdout
     def cmd_up(self):
