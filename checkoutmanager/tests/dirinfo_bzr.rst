@@ -65,11 +65,19 @@ Create the other working copies using checkoutmanager:
     >>> bzr_follower = os.path.join(bzr_repos_root, 'follower')
     >>> bzr_leader = os.path.join(bzr_repos_root, 'leader')
     >>> from checkoutmanager import runner
+    >>> from checkoutmanager import reports
     >>> executor = runner.run_one('co', directory=bzr_follower, conf=conf)
-    >>> # TODO Test Executor for CO Action
     >>> assert executor.errors == []
+    >>> assert executor.parse_errors == []
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportCheckout)
     >>> executor = runner.run_one('co', directory=bzr_leader, conf=conf)
     >>> assert executor.errors == []
+    >>> assert executor.parse_errors == []
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportCheckout)
     >>> # bzr checkouts are bound. There is probably some scope here
     >>> # for a discussion about the consequences of bzr branch vs bzr checkout,
     >>> # in terms of behavior of in, out, up. It seems bzr checkout is akin to a

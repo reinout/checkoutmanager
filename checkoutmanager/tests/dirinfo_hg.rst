@@ -64,11 +64,19 @@ Create the other working copies using checkoutmanager:
     >>> hg_follower = os.path.join(hg_repos_root, 'follower')
     >>> hg_leader = os.path.join(hg_repos_root, 'leader')
     >>> from checkoutmanager import runner
+    >>> from checkoutmanager import reports
     >>> executor = runner.run_one('co', directory=hg_follower, conf=conf)
-    >>> # TODO Test Executor for CO Action
     >>> assert executor.errors == []
+    >>> assert executor.parse_errors == []
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportCheckout)
     >>> executor = runner.run_one('co', directory=hg_leader, conf=conf)
     >>> assert executor.errors == []
+    >>> assert executor.parse_errors == []
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportCheckout)
 
 Create commit on base to bring it ahead of the follower:
 

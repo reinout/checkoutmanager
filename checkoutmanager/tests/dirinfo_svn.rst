@@ -45,10 +45,20 @@ Create the working copies using checkoutmanager:
     >>> svn_wc2 = os.path.join(svn_repos_root, 'wc2')
     >>> svn_wc1 = os.path.join(svn_repos_root, 'wc1')
     >>> from checkoutmanager import runner
+    >>> from checkoutmanager import reports
     >>> executor = runner.run_one('co', directory=svn_wc1, conf=conf)
     >>> assert executor.errors == []
+    >>> assert executor.parse_errors == []
+    >>> print(executor.parse_errors)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportCheckout)
     >>> executor = runner.run_one('co', directory=svn_wc2, conf=conf)
     >>> assert executor.errors == []
+    >>> assert executor.parse_errors == []
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportCheckout)
 
 Create a file inside the first working copy and commit:
 

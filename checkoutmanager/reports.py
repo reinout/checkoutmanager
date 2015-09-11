@@ -16,6 +16,10 @@ class DirectoryMismatchError(ParseError):
         super(DirectoryMismatchError, self).__init__(dir_info)
         self.got_dir = got_dir
 
+    def __repr__(self):
+        return '<DirectoryMismatchError expected:{0} got:{1}>'.format(
+            repr(self.dir_info.directory), repr(self.got_dir))
+
 
 class LineNotFoundError(ParseError):
     def __init__(self, dir_info, line_not_found):
@@ -79,3 +83,11 @@ class ReportIncoming(ReportBase):
         return '<ReportIncoming {0} -{3}-> {1} {2}>'.format(
             repr(self.local_head), repr(self.remote_head),
             self.dir_info.directory, repr(len(self.changesets)))
+
+
+class ReportCheckout(ReportBase):
+    def __init__(self, dir_info):
+        super(ReportCheckout, self).__init__(dir_info)
+
+    def __repr__(self):
+        return '<ReportCheckout {0}>'.format(self.dir_info.directory)

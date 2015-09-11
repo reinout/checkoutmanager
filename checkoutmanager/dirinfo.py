@@ -100,7 +100,24 @@ class DirInfo(object):
         raise NotImplementedError()
 
     def parse_co(self, output):
-        pass
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x.strip()]
+        try:
+            line = lines[-1]
+        except IndexError:
+            raise reports.LineNotFoundError(self, "Checkout Result")
+        result, path = line.split(' ', 1)
+        if path.strip() != self.directory:
+            raise reports.DirectoryMismatchError(self, path)
+        if result.upper() == 'PRESENT':
+            raise reports.LogicalParseError(
+                self, output, "We expected the checkout to not exist!"
+            )
+        elif result.upper() == 'CREATED':
+            return reports.ReportCheckout(self)
+        else:
+            raise reports.LogicalParseError(
+                self, output, "Result isn't where we expect it to be.")
 
     def cmd_out(self):
         raise NotImplementedError()
