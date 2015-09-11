@@ -40,7 +40,7 @@ Create an SVN repository:
     >>> subprocess.call(cmd)
     0
 
-Create the working copies using checkoutmanager:
+Test the 'co' dirinfo action. Create the working copies using checkoutmanager:
 
     >>> svn_wc2 = os.path.join(svn_repos_root, 'wc2')
     >>> svn_wc1 = os.path.join(svn_repos_root, 'wc1')
@@ -60,15 +60,43 @@ Create the working copies using checkoutmanager:
     >>> assert len(executor.reports) == 1
     >>> assert isinstance(executor.reports[0], reports.ReportCheckout)
 
-Create a file inside the first working copy and commit:
+Test the 'st' dirinfo action. Create a file inside the first working copy and commit:
 
     >>> os.chdir(svn_wc1)
     >>> with open(os.path.join(svn_wc1, 'test_file'), 'w+') as f:
     ...     f.writelines('Foo')
+    >>> executor = runner.run_one('st', directory=svn_wc1, conf=conf)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 1
+    >>> report = executor.reports[0]
+    >>> assert isinstance(report, reports.ReportStatus)
+    >>> assert len(report.changes) == 1
+    >>> change = report.changes[0]
+    >>> assert isinstance(change, reports.FileStatus)
+    >>> assert change.filepath == 'test_file'
+    >>> assert change.status == '?      '
+    >>> assert not change.moreinfo
     >>> cmd = ['svn', 'add', 'test_file']
     >>> subprocess.call(cmd)
+    >>> executor = runner.run_one('st', directory=svn_wc1, conf=conf)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 1
+    >>> report = executor.reports[0]
+    >>> assert isinstance(report, reports.ReportStatus)
+    >>> assert len(report.changes) == 1
+    >>> change = report.changes[0]
+    >>> assert isinstance(change, reports.FileStatus)
+    >>> assert change.filepath == 'test_file'
+    >>> assert change.status == 'A      '
+    >>> assert not change.moreinfo
     >>> cmd = ['svn', 'ci', '-m', '\"one commit\"']
     >>> subprocess.call(cmd)
+    >>> executor = runner.run_one('st', directory=svn_wc1, conf=conf)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 0
     >>> # SVN needs an up before the revision changes in the source
     >>> # working copy.
     >>> cmd = ['svn', 'up']

@@ -59,7 +59,7 @@ Create a file inside the base working copy and commit:
     >>> subprocess.call(cmd)
     0
 
-Create the other working copies using checkoutmanager:
+Test the 'co' dirinfo action. Create the other working copies using checkoutmanager:
 
     >>> hg_follower = os.path.join(hg_repos_root, 'follower')
     >>> hg_leader = os.path.join(hg_repos_root, 'leader')
@@ -78,16 +78,43 @@ Create the other working copies using checkoutmanager:
     >>> assert len(executor.reports) == 1
     >>> assert isinstance(executor.reports[0], reports.ReportCheckout)
 
-Create commit on base to bring it ahead of the follower:
+Test the 'st' dirinfo action. Create commit on base to bring it ahead of the follower:
 
     >>> os.chdir(hg_base)
     >>> with open(os.path.join(hg_base, 'test_file_2'), 'w+') as f:
     ...     f.writelines('Foo')
-    >>> # TODO Run and Test for ST Action
+    >>> executor = runner.run_one('st', directory=hg_base, conf=conf)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 1
+    >>> report = executor.reports[0]
+    >>> assert isinstance(report, reports.ReportStatus)
+    >>> assert len(report.changes) == 1
+    >>> change = report.changes[0]
+    >>> assert isinstance(change, reports.FileStatus)
+    >>> assert change.filepath == 'test_file_2'
+    >>> assert change.status == '?'
+    >>> assert not change.moreinfo
     >>> cmd = ['hg', 'add', 'test_file_2']
     >>> subprocess.call(cmd)
+    >>> executor = runner.run_one('st', directory=hg_base, conf=conf)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 1
+    >>> report = executor.reports[0]
+    >>> assert isinstance(report, reports.ReportStatus)
+    >>> assert len(report.changes) == 1
+    >>> change = report.changes[0]
+    >>> assert isinstance(change, reports.FileStatus)
+    >>> assert change.filepath == 'test_file_2'
+    >>> assert change.status == 'A'
+    >>> assert not change.moreinfo
     >>> cmd = ['hg', 'commit', '-m', '\"second commit\"']
     >>> subprocess.call(cmd)
+    >>> executor = runner.run_one('st', directory=hg_base, conf=conf)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 0
 
 Update leader to bring it alongside base:
 

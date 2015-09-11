@@ -91,3 +91,28 @@ class ReportCheckout(ReportBase):
 
     def __repr__(self):
         return '<ReportCheckout {0}>'.format(self.dir_info.directory)
+
+
+class FileStatus(object):
+    def __init__(self, filepath, status, moreinfo):
+        self.filepath = filepath
+        self.status = status
+        self.moreinfo = moreinfo
+
+    def __repr__(self):
+        if self.moreinfo is not None:
+            more = ' +'
+        else:
+            more = ''
+        return '<FileStatus {1} {0}{2}>'.format(self.filepath,
+                                                self.status, more)
+
+
+class ReportStatus(ReportBase):
+    def __init__(self, dir_info, changes):
+        super(ReportStatus, self).__init__(dir_info)
+        self.changes = [FileStatus(*x) for x in changes]
+
+    def __repr__(self):
+        return '<ReportStatus {0}: {1}>'.format(
+            self.dir_info.directory, repr(len(self.changes)))

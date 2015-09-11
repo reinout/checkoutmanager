@@ -60,7 +60,7 @@ Create a file inside the base working copy and commit:
     >>> subprocess.call(cmd)
     0
 
-Create the other working copies using checkoutmanager:
+Test the 'co' dirinfo action. Create the other working copies using checkoutmanager:
 
     >>> bzr_follower = os.path.join(bzr_repos_root, 'follower')
     >>> bzr_leader = os.path.join(bzr_repos_root, 'leader')
@@ -88,16 +88,43 @@ Create the other working copies using checkoutmanager:
     >>> os.chdir(bzr_leader)
     >>> subprocess.call(cmd)
 
-Create commit on base to bring it ahead of the follower:
+Test the 'st' dirinfo action. Create commit on base to bring it ahead of the follower:
 
     >>> os.chdir(bzr_base)
     >>> with open(os.path.join(bzr_base, 'test_file_2'), 'w+') as f:
     ...     f.writelines('Foo')
-    >>> # TODO Run and Test for ST Action
+    >>> executor = runner.run_one('st', directory=bzr_base, conf=conf)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 1
+    >>> report = executor.reports[0]
+    >>> assert isinstance(report, reports.ReportStatus)
+    >>> assert len(report.changes) == 1
+    >>> change = report.changes[0]
+    >>> assert isinstance(change, reports.FileStatus)
+    >>> assert change.filepath == 'test_file_2'
+    >>> assert change.status == 'unknown'
+    >>> assert not change.moreinfo
     >>> cmd = ['bzr', 'add', 'test_file_2']
     >>> subprocess.call(cmd)
+    >>> executor = runner.run_one('st', directory=bzr_base, conf=conf)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 1
+    >>> report = executor.reports[0]
+    >>> assert isinstance(report, reports.ReportStatus)
+    >>> assert len(report.changes) == 1
+    >>> change = report.changes[0]
+    >>> assert isinstance(change, reports.FileStatus)
+    >>> assert change.filepath == 'test_file_2'
+    >>> assert change.status == 'added'
+    >>> assert not change.moreinfo
     >>> cmd = ['bzr', 'commit', '-m', '\"second commit\"']
     >>> subprocess.call(cmd)
+    >>> executor = runner.run_one('st', directory=bzr_base, conf=conf)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 0
 
 Update leader to bring it alongside base. Since we unbound the repo, we need to
 ``pull``, not ``up`` to get the commit here :
@@ -120,7 +147,7 @@ Create another commit on leader to bring it ahead of the base:
 
 The follower - leader - base hierarchy is now setup.
 
-Tests for the 'rev' dirinfo action:
+Test for the 'rev' dirinfo action:
 
     >>> from checkoutmanager import reports
     >>> executor = runner.run_one('rev', directory=bzr_base, conf=conf)

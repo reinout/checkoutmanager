@@ -220,6 +220,35 @@ class SvnDirInfo(DirInfo):
             print(output)
             print()
 
+    regex_change = re.compile(r'^(?P<change>(?P<item>[ACDIMRX?!~ ])(?P<prop>[CM ])(?P<elock>[L ])(?P<sched>[+ ])(?P<sx>[SX ])(?P<lock>[ KOTB])(?P<conflict>[C ]))\s+(?P<path>.+)$')
+
+    def parse_st(self, output):
+        if not output.strip():
+            return
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x.strip()]
+        if not lines[0] == self.directory:
+            raise reports.DirectoryMismatchError(self, lines[0])
+        try:
+            changes = []
+            change_lines = lines[1:]
+            while len(change_lines):
+                line = change_lines.pop(0)
+                m = self.regex_change.match(line)
+                if not m:
+                    raise reports.LineParseError(self, line,
+                                                 self.regex_change.pattern)
+                path = m.group('path')
+                change = m.group('change')
+                if m.group('conflict') == 'C':
+                    moreinfo = change_lines.pop(0)
+                else:
+                    moreinfo = None
+                changes.append((path, change, moreinfo))
+            return reports.ReportStatus(self, changes)
+        except IndexError:
+            raise reports.LineNotFoundError(self, "No change line found")
+
     @capture_stdout
     def cmd_co(self):
         if not os.path.exists(self.parent):
@@ -354,6 +383,34 @@ class BzrDirInfo(DirInfo):
             print(output)
             print()
 
+    regex_change_head = re.compile(r'^(?P<change>[a-z]+):$')
+
+    def parse_st(self, output):
+        if not output.strip():
+            return
+        lines = output.splitlines()
+        if not lines[0].strip() == self.directory:
+            raise reports.DirectoryMismatchError(self, lines[0])
+        try:
+            changes = []
+            change_lines = lines[1:]
+            while len(change_lines):
+                line = change_lines.pop(0)
+                m = self.regex_change_head.match(line)
+                if m:
+                    change = m.group('change')
+                elif line:
+                    path = line.strip()
+                    if not change:
+                        raise reports.LogicalParseError(
+                            self, output, "Got file before change head.")
+                    changes.append((path, change, None))
+                else:
+                    pass
+            return reports.ReportStatus(self, changes)
+        except IndexError:
+            raise reports.LineNotFoundError(self, "No change line found")
+
     @capture_stdout
     def cmd_co(self):
         if not os.path.exists(self.parent):
@@ -468,6 +525,32 @@ class HgDirInfo(DirInfo):
             print(output)
             print()
 
+    regex_change = re.compile(r'^(?P<change>[MARC!?I ])\s+(?P<path>.+)$')
+
+    def parse_st(self, output):
+        if not output.strip():
+            return
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x.strip()]
+        if not lines[0] == self.directory:
+            raise reports.DirectoryMismatchError(self, lines[0])
+        try:
+            changes = []
+            change_lines = lines[1:]
+            while len(change_lines):
+                line = change_lines.pop(0)
+                m = self.regex_change.match(line)
+                if not m:
+                    raise reports.LineParseError(self, line,
+                                                 self.regex_change.pattern)
+                path = m.group('path')
+                change = m.group('change')
+                moreinfo = None
+                changes.append((path, change, moreinfo))
+            return reports.ReportStatus(self, changes)
+        except IndexError:
+            raise reports.LineNotFoundError(self, "No change line found")
+
     @capture_stdout
     def cmd_co(self):
         if not os.path.exists(self.parent):
@@ -575,11 +658,40 @@ class GitDirInfo(DirInfo):
     @capture_stdout
     def cmd_st(self):
         os.chdir(self.directory)
-        output = system("git status --short")
+        output = system("git status --porcelain")
         if output.strip():
             print(self.directory)
             print(output)
             print()
+
+    regex_change = re.compile(r'^(?P<change>[MADRCU?! ][MADRCU?! ])\s(?P<path>.+)$')
+
+    def parse_st(self, output):
+        if not output.strip():
+            return
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x.strip()]
+        if not lines[0] == self.directory:
+            raise reports.DirectoryMismatchError(self, lines[0])
+        try:
+            changes = []
+            change_lines = lines[1:]
+            while len(change_lines):
+                line = change_lines.pop(0)
+                m = self.regex_change.match(line)
+                if not m:
+                    raise reports.LineParseError(self, line,
+                                                 self.regex_change.pattern)
+                path = m.group('path')
+                try:
+                    path, moreinfo = path.split('->')
+                except ValueError:
+                    moreinfo = None
+                change = m.group('change')
+                changes.append((path, change, moreinfo))
+            return reports.ReportStatus(self, changes)
+        except IndexError:
+            raise reports.LineNotFoundError(self, "No change line found")
 
     @capture_stdout
     def cmd_co(self):
