@@ -173,6 +173,22 @@ Tests for the 'in' dirinfo action:
     >>> assert isinstance(executor.reports[0].remote_head, str)
     >>> assert len(executor.reports[0].changesets) == 0
 
+Tests for the 'out' dirinfo action:
+
+    >>> executor = runner.run_one('out', directory=git_leader, conf=conf)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.errors) == 0
+    >>> if len(executor.parse_errors):
+    ...     for error in executor.parse_errors:
+    ...         error.print_msg()
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportOutgoing)
+    >>> assert isinstance(executor.reports[0].local_head, str)
+    >>> assert isinstance(executor.reports[0].remote_head, str)
+    >>> assert len(executor.reports[0].changesets) == 0
+
+
 Teardown:
 
     >>> os.chdir(orig_cwd)

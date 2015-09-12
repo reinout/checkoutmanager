@@ -80,7 +80,20 @@ class ReportIncoming(ReportBase):
         self.changesets = changesets
 
     def __repr__(self):
-        return '<ReportIncoming {0} -{3}-> {1} {2}>'.format(
+        return '<ReportIncoming {0} <-{3}- {1} {2}>'.format(
+            repr(self.local_head), repr(self.remote_head),
+            self.dir_info.directory, repr(len(self.changesets)))
+
+
+class ReportOutgoing(ReportBase):
+    def __init__(self, dir_info, local_head, remote_head, changesets):
+        super(ReportOutgoing, self).__init__(dir_info)
+        self.local_head = local_head
+        self.remote_head = remote_head
+        self.changesets = changesets
+
+    def __repr__(self):
+        return '<ReportOutgoing {0} -{3}-> {1} {2}>'.format(
             repr(self.local_head), repr(self.remote_head),
             self.dir_info.directory, repr(len(self.changesets)))
 

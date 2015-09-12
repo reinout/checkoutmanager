@@ -149,7 +149,6 @@ The follower - leader - base hierarchy is now setup.
 
 Test for the 'rev' dirinfo action:
 
-    >>> from checkoutmanager import reports
     >>> executor = runner.run_one('rev', directory=bzr_base, conf=conf)
     >>> assert isinstance(executor.reports, list)
     >>> assert len(executor.reports) == 1
@@ -166,6 +165,19 @@ Test for the 'rev' dirinfo action:
     >>> assert isinstance(executor.reports[0], reports.ReportRevision)
     >>> assert executor.reports[0].revision == 1
     >>> # TODO handle error conditons
+
+Test for the 'out' dirinfo action:
+
+    >>> executor = runner.run_one('out', directory=bzr_leader, conf=conf)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.reports) == 1
+    >>> report = executor.reports[0]
+    >>> assert isinstance(report, reports.ReportOutgoing)
+    >>> assert report.local_head == 3
+    >>> assert not report.remote_head
+    >>> assert isinstance(report.changesets, list)
+    >>> assert len(report.changesets) == 1
+    >>> assert report.changesets[0] == 3
 
 Teardown:
 

@@ -133,6 +133,9 @@ Tests for the 'in' dirinfo action:
     >>> assert len(executor.reports[0].changesets) == 1
     >>> assert executor.reports[0].changesets[0] == 1
 
+Tests for the 'up' dirinfo action. Update the working copy:
+
+    >>> executor = runner.run_one('up', directory=svn_wc2, conf=conf)
 
 Teardown:
 
