@@ -97,13 +97,15 @@ def get_custom_actions():
     )
 
 
-def execute_action(dirinfo, custom_actions, action):
+def execute_action(dirinfo, custom_actions, action, report=True):
     (action_func, action_args_dict) = get_action(dirinfo, custom_actions, action)
-    (parser_func, parser_args_dict) = get_parser(dirinfo, custom_actions, action)
     try:
         output = action_func(**action_args_dict)
     except utils.CommandError as e:
         return e, None
+    if not report:
+        return output, None
+    (parser_func, parser_args_dict) = get_parser(dirinfo, custom_actions, action)
     try:
         result = parser_func(output=output, **parser_args_dict)
         return output, result
@@ -111,7 +113,7 @@ def execute_action(dirinfo, custom_actions, action):
         return output, e
 
 
-def run_one(action, directory=None, url=None, conf=None, allow_ancestors=True):
+def run_one(action, directory=None, url=None, conf=None, allow_ancestors=True, report=True):
     custom_actions = get_custom_actions()
     if not conf:
         conf = config.Config(os.path.expanduser(CONFIGFILE_NAME))
@@ -127,18 +129,18 @@ def run_one(action, directory=None, url=None, conf=None, allow_ancestors=True):
         raise RuntimeError(
             'Could not find the repository for %s!' % (directory or url))
     executor = get_executor(single=True)
-    executor.execute(execute_action, (dir_info, custom_actions, action))
+    executor.execute(execute_action, (dir_info, custom_actions, action, report))
     executor.wait_for_results()
     return executor
 
 
-def run(action, group=None, conf=None, single=False):
+def run(action, group=None, conf=None, single=False, report=True):
     custom_actions = get_custom_actions()
     if not conf:
         conf = config.Config(os.path.expanduser(CONFIGFILE_NAME))
     executor = get_executor(single)
     for dirinfo in conf.directories(group=group):
-        executor.execute(execute_action, (dirinfo, custom_actions, action))
+        executor.execute(execute_action, (dirinfo, custom_actions, action, report))
     executor.wait_for_results()
 
     return executor
@@ -212,7 +214,8 @@ def main():
     executor = run(action,
                    group=group,
                    conf=conf,
-                   single=options.single)
+                   single=options.single,
+                   report=False)
 
     if executor.errors:
         print()
