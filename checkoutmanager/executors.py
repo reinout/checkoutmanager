@@ -22,6 +22,7 @@ class _Executor(object):
         self.errors = []
         self.reports = []
         self.parse_errors = []
+        self.std_output = True
 
     def _collector(self, returned):
         """Collect a result.
@@ -57,7 +58,8 @@ class _Executor(object):
         if not result:
             # Don't print empty lines
             return
-        print(result)
+        if self.std_output:
+            print(result)
 
     def execute(self, func, args):
         """Execute the given function"""
@@ -66,6 +68,35 @@ class _Executor(object):
     def wait_for_results(self):
         """Make sure all results have been collected"""
         pass
+
+    def summarize(self, verbose=True):
+        print("checkoutmanager Run Summary : ")
+        print("----------------------------- ")
+        if len(self.errors):
+            if verbose:
+                print("Command Errors :")
+                print("----------------")
+            print("Encountered errors while running "
+                  "{0} commands".format(len(self.errors)))
+            if verbose:
+                for error in self.errors:
+                    print()
+                    print(error.print_msg())
+        if len(self.parse_errors):
+            if verbose:
+                print("Parse Errors :")
+                print("--------------")
+            print("Encountered errors while parsing output for "
+                  "{0} commands".format(len(self.parse_errors)))
+            if verbose:
+                for error in self.parse_errors:
+                    print()
+                    print(error.print_msg())
+        if len(self.reports):
+            if verbose:
+                print("Reports :")
+                print("---------")
+            print(reports.summarize(self.reports, reports))
 
 
 class _SingleExecutor(_Executor):

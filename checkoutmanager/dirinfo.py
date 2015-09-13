@@ -57,7 +57,7 @@ class DirInfo(object):
         if parts[1] == self.directory:
             if parts[0].upper() == 'PRESENT':
                 return reports.ReportExists(self, True)
-            if parts[0].upper() == 'ABSENT':
+            if parts[0].upper() == 'MISSING':
                 return reports.ReportExists(self, False)
         else:
             raise reports.DirectoryMismatchError(self, parts[1])

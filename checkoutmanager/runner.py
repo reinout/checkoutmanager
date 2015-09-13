@@ -113,7 +113,8 @@ def execute_action(dirinfo, custom_actions, action, report=True):
         return output, e
 
 
-def run_one(action, directory=None, url=None, conf=None, allow_ancestors=True, report=True):
+def run_one(action, directory=None, url=None, conf=None, allow_ancestors=True,
+            report=True, summarize=False, std_output=True, verbose=False):
     custom_actions = get_custom_actions()
     if not conf:
         conf = config.Config(os.path.expanduser(CONFIGFILE_NAME))
@@ -128,21 +129,41 @@ def run_one(action, directory=None, url=None, conf=None, allow_ancestors=True, r
     if not dir_info:
         raise RuntimeError(
             'Could not find the repository for %s!' % (directory or url))
+
+    if summarize is True or report is True:
+        # To summarize, reports must be generated
+        report = True
+    else:
+        report = False
+
     executor = get_executor(single=True)
+    executor.std_output = std_output
     executor.execute(execute_action, (dir_info, custom_actions, action, report))
     executor.wait_for_results()
+    if summarize is True:
+        executor.summarize(verbose)
     return executor
 
 
-def run(action, group=None, conf=None, single=False, report=True):
+def run(action, group=None, conf=None, single=False,
+        report=True, summarize=False, std_output=True, verbose=False):
     custom_actions = get_custom_actions()
     if not conf:
         conf = config.Config(os.path.expanduser(CONFIGFILE_NAME))
+
+    if summarize is True or report is True:
+        # To summarize, reports must be generated
+        report = True
+    else:
+        report = False
+
     executor = get_executor(single)
+    executor.std_output = std_output
     for dirinfo in conf.directories(group=group):
         executor.execute(execute_action, (dirinfo, custom_actions, action, report))
     executor.wait_for_results()
-
+    if summarize is True:
+        executor.summarize(verbose)
     return executor
 
 
@@ -215,7 +236,9 @@ def main():
                    group=group,
                    conf=conf,
                    single=options.single,
-                   report=False)
+                   summarize=True,
+                   std_output=True,
+                   verbose=False)
 
     if executor.errors:
         print()
