@@ -122,9 +122,6 @@ Tests for the 'in' dirinfo action:
     >>> executor = runner.run_one('in', directory=svn_wc2, conf=conf)
     >>> assert isinstance(executor.reports, list)
     >>> assert len(executor.errors) == 0
-    >>> if len(executor.parse_errors):
-    ...     for error in executor.parse_errors:
-    ...         error.print_msg()
     >>> assert len(executor.parse_errors) == 0
     >>> assert len(executor.reports) == 1
     >>> assert isinstance(executor.reports[0], reports.ReportIncoming)
@@ -136,6 +133,23 @@ Tests for the 'in' dirinfo action:
 Tests for the 'up' dirinfo action. Update the working copy:
 
     >>> executor = runner.run_one('up', directory=svn_wc2, conf=conf)
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> if len(executor.parse_errors):
+    ...     print(executor.parse_errors)
+    ...     for error in executor.parse_errors:
+    ...         error.print_msg()
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportUpdate)
+    >>> assert not executor.reports[0].initial_head
+    >>> assert executor.reports[0].final_head == 1
+    >>> assert len(executor.reports[0].changes) == 1
+    >>> change = executor.reports[0].changes[0]
+    >>> assert isinstance(change, reports.FileStatus)
+    >>> assert change.filepath == 'test_file'
+    >>> assert change.status == 'A   '
+    >>> assert not change.moreinfo
 
 Teardown:
 

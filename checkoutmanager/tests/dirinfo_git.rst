@@ -41,6 +41,9 @@ Initialize git:
     >>> cmd = ['git', 'config', '--global', 'user.name', '\"Some Tester\"']
     >>> subprocess.call(cmd)
     0
+    >>> cmd = ['git', 'config', '--global', 'push.default', 'simple']
+    >>> subprocess.call(cmd)
+    0
 
 Create a git repository:
 
@@ -123,14 +126,25 @@ Update leader to bring it alongside base:
 
     >>> from checkoutmanager import runner
     >>> executor = runner.run_one('up', directory=git_leader, conf=conf)
-    >>> # TODO Test Executor for UP Action
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportUpdate)
+    >>> assert isinstance(executor.reports[0].initial_head, str)
+    >>> assert isinstance(executor.reports[0].final_head, str)
+    >>> assert len(executor.reports[0].changes) == 1
+    >>> change = executor.reports[0].changes[0]
+    >>> assert isinstance(change, reports.FileStatus)
+    >>> assert change.filepath == 'test_file_2'
+    >>> assert change.status == '1 +'
+    >>> assert not change.moreinfo
 
 Create commit on leader to bring it ahead of the base:
 
     >>> os.chdir(git_leader)
     >>> with open(os.path.join(git_leader, 'test_file_3'), 'w+') as f:
     ...     f.writelines('Foo')
-    >>> # TODO Run and Test for ST Action
     >>> cmd = ['git', 'add', 'test_file_3']
     >>> subprocess.call(cmd)
     >>> cmd = ['git', 'commit', '-m', '\"third commit\"']
@@ -156,7 +170,6 @@ Tests for the 'rev' dirinfo action:
     >>> assert len(executor.reports) == 1
     >>> assert isinstance(executor.reports[0], reports.ReportRevision)
     >>> assert isinstance(executor.reports[0].revision, str)
-    >>> # TODO handle error conditons
 
 Tests for the 'in' dirinfo action:
 
@@ -187,7 +200,6 @@ Tests for the 'out' dirinfo action:
     >>> assert isinstance(executor.reports[0].local_head, str)
     >>> assert isinstance(executor.reports[0].remote_head, str)
     >>> assert len(executor.reports[0].changesets) == 0
-
 
 Teardown:
 

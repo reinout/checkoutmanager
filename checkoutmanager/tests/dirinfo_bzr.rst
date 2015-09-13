@@ -139,7 +139,6 @@ Create another commit on leader to bring it ahead of the base:
     >>> assert os.getcwd() == '{0}/repos_bzr/leader'.format(homedir)
     >>> with open(os.path.join(bzr_leader, 'test_file_3'), 'w+') as f:
     ...     f.writelines('Foo')
-    >>> # TODO Run and Test for ST Action
     >>> cmd = ['bzr', 'add', 'test_file_3']
     >>> subprocess.call(cmd)
     >>> cmd = ['bzr', 'commit', '-m', '\"third commit\"']

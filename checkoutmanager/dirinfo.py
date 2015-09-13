@@ -210,9 +210,32 @@ class SvnDirInfo(DirInfo):
         os.chdir(self.directory)
         print(system("svn up --non-interactive"))
 
+    regex_up_change = re.compile(r'^(?P<change>(?P<item>[ADUCGER ])(?P<prop>[ADUCGER ])(?P<lock>[B ])(?P<treeconflict>[C ])) (?P<path>.+)$')
+    regex_up_result = re.compile(r'^(Updated to revision (?P<final_rev>\d+).)|(At revision \d+.)$')
+
     def parse_up(self, output):
         if not output.strip():
             return
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x.strip()]
+        if not lines[0] == self.directory:
+            raise reports.DirectoryMismatchError(self, lines[0])
+        result = self.regex_up_result.match(lines[-1])
+        if not result:
+            raise reports.LineParseError(self, lines[-1], self.regex_up_result.pattern)
+        if not result.group('final_rev'):
+            return
+        final_head = self.rev_type(result.group('final_rev'))
+        initial_head = None
+        changes = []
+        for line in lines[1:-1]:
+            if line.startswith('Updating'):
+                continue
+            m = self.regex_up_change.match(line)
+            if not m:
+                raise reports.LineParseError(self, line, self.regex_up_change.pattern)
+            changes.append((m.group('path'), m.group('change'), None))
+        return reports.ReportUpdate(self, initial_head, final_head, changes)
 
     @capture_stdout
     def cmd_st(self):
@@ -386,8 +409,11 @@ class BzrDirInfo(DirInfo):
         print(system("bzr up"))
 
     def parse_up(self, output):
-        if not output.strip():
-            return
+        # cmd_up should first be changed to bzr pull if up on bzr
+        # is to behave as all the others. Since people seem to be
+        # using it as it is, I suppose I'm missing something. This
+        # implementation is therefore left empty for the moment.
+        return
 
     @capture_stdout
     def cmd_st(self):
@@ -565,6 +591,39 @@ class HgDirInfo(DirInfo):
         os.chdir(self.directory)
         print(system("hg pull -u %s" % self.url))
 
+    regex_pull_summary = re.compile(r'^((?P<nfiles>\d+) files updated, (?P<nmerged>\d+) files merged, (?P<nremoved>\d+) files removed, (?P<nunresolved>\d+) files unresolved)|(?P<nochange>no changes found)$')
+
+    def parse_up(self, output):
+        if not output.strip():
+            return
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x.strip()]
+        if not lines[0] == self.directory:
+            raise reports.DirectoryMismatchError(self, lines[0])
+        if not lines[2] == 'searching for changes':
+            raise reports.LineNotFoundError(self, "searching for changes")
+        result = self.regex_pull_summary.match(lines[-1])
+        if not result:
+            raise reports.LineParseError(self, lines[-1], self.regex_pull_summary.pattern)
+        if result.group('nochange'):
+            return
+        final_head = self.parse_rev(self.cmd_rev()).revision
+        initial_head = None
+        changes = []
+        if result.group('nfiles'):
+            for i in range(int(result.group('nfiles'))):
+                changes.append((None, 'updated', None))
+        if result.group('nmerged'):
+            for i in range(int(result.group('nmerged'))):
+                changes.append((None, 'merged', None))
+        if result.group('nremoved'):
+            for i in range(int(result.group('nremoved'))):
+                changes.append((None, 'removed', None))
+        if result.group('nunresolved'):
+            for i in range(int(result.group('nunresolved'))):
+                changes.append((None, 'unresolved', None))
+        return reports.ReportUpdate(self, initial_head, final_head, changes)
+
     @capture_stdout
     def cmd_st(self):
         os.chdir(self.directory)
@@ -731,6 +790,47 @@ class GitDirInfo(DirInfo):
         print(self.directory)
         os.chdir(self.directory)
         print(system("git pull"))
+
+    regex_pull_summary = p = re.compile(r'^(?P<nfiles>\d+) file(s)? changed(, (?P<ninsertions>\d+) insertion(s)?\(\+\))?(, (?P<ndeletions>\d+) deletion(s)?\(-\))?$')
+
+    def parse_up(self, output):
+        if not output.strip():
+            return
+        lines = output.splitlines()
+        lines = [x.strip() for x in lines if x.strip()]
+        if not lines[0] == self.directory:
+            raise reports.DirectoryMismatchError(self, lines[0])
+        if len(lines) == 2:
+            return
+        m = None
+        for line in lines:
+            m = self.regex_pull_result.match(line)
+            if m:
+                break
+        if not m:
+            raise reports.LineNotFoundError(self, "git pull result")
+        result = m
+        if not result:
+            raise reports.LineParseError(self, lines[2], self.regex_pull_result.pattern)
+        m = None
+        for line in lines:
+            m = self.regex_pull_summary.match(line)
+            if m:
+                break
+        if not m:
+            raise reports.LineNotFoundError(self, "git pull changes summary")
+        nchanges = int(m.group('nfiles'))
+        final_head = self.rev_type(result.group('end'))
+        initial_head = self.rev_type(result.group('start'))
+        changes = []
+        for line in lines:
+            if '|' in line:
+                path, change = line.split('|')
+                changes.append((path.strip(), change.strip(), None))
+        if nchanges != len(changes):
+            raise reports.LogicalParseError(
+                self, output, "Got change count differs from summary")
+        return reports.ReportUpdate(self, initial_head, final_head, changes)
 
     @capture_stdout
     def cmd_st(self):

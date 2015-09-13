@@ -47,6 +47,30 @@ class LineParseError(ParseError):
         print(self.format_msg())
 
 
+class FileStatus(object):
+    def __init__(self, filepath, status, moreinfo):
+        self.filepath = filepath
+        self.status = status
+        self.moreinfo = moreinfo
+
+    def __repr__(self):
+        if self.moreinfo is not None:
+            more = ' +'
+        else:
+            more = ''
+        return '<FileStatus {1} {0}{2}>'.format(self.filepath,
+                                                self.status, more)
+
+
+# class ChangeSet(object):
+#     def __init__(self, revision, changes=None):
+#         self.revision = revision
+#         self.changes = [FileStatus(*x) for x in changes]
+#
+#     def __repr__(self):
+#         return '<ChangeSet {0}>'.format(self.revision)
+
+
 class ReportBase(object):
     def __init__(self, dir_info):
         self.dir_info = dir_info
@@ -106,21 +130,6 @@ class ReportCheckout(ReportBase):
         return '<ReportCheckout {0}>'.format(self.dir_info.directory)
 
 
-class FileStatus(object):
-    def __init__(self, filepath, status, moreinfo):
-        self.filepath = filepath
-        self.status = status
-        self.moreinfo = moreinfo
-
-    def __repr__(self):
-        if self.moreinfo is not None:
-            more = ' +'
-        else:
-            more = ''
-        return '<FileStatus {1} {0}{2}>'.format(self.filepath,
-                                                self.status, more)
-
-
 class ReportStatus(ReportBase):
     def __init__(self, dir_info, changes):
         super(ReportStatus, self).__init__(dir_info)
@@ -128,4 +137,16 @@ class ReportStatus(ReportBase):
 
     def __repr__(self):
         return '<ReportStatus {0}: {1}>'.format(
+            self.dir_info.directory, repr(len(self.changes)))
+
+
+class ReportUpdate(ReportBase):
+    def __init__(self, dir_info, initial_head, final_head, changes):
+        super(ReportUpdate, self).__init__(dir_info)
+        self.initial_head = initial_head
+        self.final_head = final_head
+        self.changes = [FileStatus(*x) for x in changes]
+
+    def __repr__(self):
+        return '<ReportUpdate {0}: {1}>'.format(
             self.dir_info.directory, repr(len(self.changes)))

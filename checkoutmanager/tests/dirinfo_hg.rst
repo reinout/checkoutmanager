@@ -116,18 +116,29 @@ Test the 'st' dirinfo action. Create commit on base to bring it ahead of the fol
     >>> assert len(executor.parse_errors) == 0
     >>> assert len(executor.reports) == 0
 
-Update leader to bring it alongside base:
+Test the 'up' dirinfo action. Update leader to bring it alongside base:
 
     >>> from checkoutmanager import runner
     >>> executor = runner.run_one('up', directory=hg_leader, conf=conf)
-    >>> # TODO Test Executor for UP Action
+    >>> assert isinstance(executor.reports, list)
+    >>> assert len(executor.errors) == 0
+    >>> assert len(executor.parse_errors) == 0
+    >>> assert len(executor.reports) == 1
+    >>> assert isinstance(executor.reports[0], reports.ReportUpdate)
+    >>> assert not executor.reports[0].initial_head
+    >>> assert isinstance(executor.reports[0].final_head, str)
+    >>> assert len(executor.reports[0].changes) == 1
+    >>> change = executor.reports[0].changes[0]
+    >>> assert isinstance(change, reports.FileStatus)
+    >>> assert not change.filepath
+    >>> assert change.status == 'updated'
+    >>> assert not change.moreinfo
 
 Create commit on leader to bring it ahead of the base:
 
     >>> os.chdir(hg_leader)
     >>> with open(os.path.join(hg_leader, 'test_file_3'), 'w+') as f:
     ...     f.writelines('Foo')
-    >>> # TODO Run and Test for ST Action
     >>> cmd = ['hg', 'add', 'test_file_3']
     >>> subprocess.call(cmd)
     >>> cmd = ['hg', 'commit', '-m', '\"third commit\"']
@@ -160,9 +171,6 @@ Tests for the 'in' dirinfo action:
     >>> executor = runner.run_one('in', directory=hg_follower, conf=conf)
     >>> assert isinstance(executor.reports, list)
     >>> assert len(executor.errors) == 0
-    >>> if len(executor.parse_errors):
-    ...     for error in executor.parse_errors:
-    ...         error.print_msg()
     >>> assert len(executor.parse_errors) == 0
     >>> assert len(executor.reports) == 1
     >>> assert isinstance(executor.reports[0], reports.ReportIncoming)
@@ -176,9 +184,6 @@ Tests for the 'out' dirinfo action:
     >>> executor = runner.run_one('out', directory=hg_leader, conf=conf)
     >>> assert isinstance(executor.reports, list)
     >>> assert len(executor.errors) == 0
-    >>> if len(executor.parse_errors):
-    ...     for error in executor.parse_errors:
-    ...         error.print_msg()
     >>> assert len(executor.parse_errors) == 0
     >>> assert len(executor.reports) == 1
     >>> assert isinstance(executor.reports[0], reports.ReportOutgoing)
