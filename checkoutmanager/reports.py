@@ -3,12 +3,28 @@ class ParseError(Exception):
     def __init__(self, dir_info):
         self.dir_info = dir_info
 
+    def format_msg(self):
+        return []
+
+    def print_msg(self):
+        print(self.format_msg())
+
 
 class LogicalParseError(Exception):
     def __init__(self, dir_info, output, message):
         self.dir_info = dir_info
         self.output = output
         self.message = message
+
+    def format_msg(self):
+        lines = []
+        lines.append("LogicalParseError occured")
+        lines.append(repr(self.dir_info))
+        lines.append("Message :")
+        lines.append(self.message)
+        lines.append("Output :")
+        lines.append(self.output)
+        return "\n".join(lines)
 
 
 class DirectoryMismatchError(ParseError):
@@ -20,11 +36,29 @@ class DirectoryMismatchError(ParseError):
         return '<DirectoryMismatchError expected:{0} got:{1}>'.format(
             repr(self.dir_info.directory), repr(self.got_dir))
 
+    def format_msg(self):
+        lines = []
+        lines.append("DirectoryMismatchError occured")
+        lines.append(repr(self.dir_info))
+        lines.append("Expected :")
+        lines.append(self.dir_info.directory)
+        lines.append("Got :")
+        lines.append(self.got_dir)
+        return "\n".join(lines)
+
 
 class LineNotFoundError(ParseError):
     def __init__(self, dir_info, line_not_found):
         super(LineNotFoundError, self).__init__(dir_info)
         self.line_not_found = line_not_found
+
+    def format_msg(self):
+        lines = []
+        lines.append("LineNotFoundError occured")
+        lines.append(repr(self.dir_info))
+        lines.append("Could not find :")
+        lines.append(self.line_not_found)
+        return "\n".join(lines)
 
 
 class LineParseError(ParseError):
@@ -42,9 +76,6 @@ class LineParseError(ParseError):
         lines.append("Tried to parse with :")
         lines.append(repr(self.parser))
         return "\n".join(lines)
-
-    def print_msg(self):
-        print(self.format_msg())
 
 
 class FileStatus(object):
