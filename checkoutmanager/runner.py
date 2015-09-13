@@ -236,7 +236,8 @@ def main():
                    group=group,
                    conf=conf,
                    single=options.single,
-                   summarize=True,
+                   report=False,
+                   summarize=False,
                    std_output=True,
                    verbose=False)
 
