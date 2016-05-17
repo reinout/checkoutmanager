@@ -187,6 +187,9 @@ def main():
     parser.add_option("-s", "--single",
                       action="store_true", dest="single", default=False,
                       help="Execute actions in a single process")
+    parser.add_option("-l", "--full-output",
+                      action="store_true", dest="full_output", default=False,
+                      help="Don't summarize output")
     (options, args) = parser.parse_args()
     if options.verbose:
         utils.VERBOSE = True
@@ -232,13 +235,20 @@ def main():
         print("(Run 'checkoutmanager co' if found)")
         return
 
+    if options.full_output is True:
+        summarize = False
+        std_output = True
+    else:
+        summarize = True
+        std_output = False
+
     executor = run(action,
                    group=group,
                    conf=conf,
                    single=options.single,
                    report=False,
-                   summarize=False,
-                   std_output=True,
+                   summarize=summarize,
+                   std_output=std_output,
                    verbose=False)
 
     if executor.errors:
