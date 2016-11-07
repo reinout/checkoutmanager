@@ -4,7 +4,8 @@ Changelog of checkoutmanager
 2.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix #19: sometimes git remote changes were seen where there were none.
+  [reinout]
 
 
 2.4.1 (2015-09-10)
