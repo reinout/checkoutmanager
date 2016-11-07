@@ -378,7 +378,7 @@ class GitDirInfo(DirInfo):
         output = system("git pull --dry-run")
         output = output.strip()
         output_lines = output.split('\n')
-        if len(output_lines):
+        if output and len(output_lines):
             print("'git pull --dry-run' reports possible actions in %s:" % (
                 self.directory))
             print(output)
