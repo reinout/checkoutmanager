@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-2.5 (unreleased)
+2.5 (2016-11-07)
 ----------------
 
 - Fix #19: sometimes git remote changes were seen where there were none.
