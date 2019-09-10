@@ -18,11 +18,17 @@ The testsetup prepared a mock home directory for us:
     >>> print(homedir)
     HOMEDIR
 
-Make a directory in there and use that:
+Make an empty directory in there and use that:
 
     >>> import os
     >>> os.mkdir(os.path.join(homedir, 'exists'))
     >>> info = dirinfo.DirInfo(os.path.join(homedir, 'exists'), 'some/url')
+    >>> info.exists
+    False
+
+We need one of the ``.git``, ``.hg``-like directories in there:
+
+    >>> os.mkdir(os.path.join(homedir, 'exists', '.xxx'))
     >>> info.exists
     True
     >>> print(info.directory)
