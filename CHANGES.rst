@@ -4,7 +4,8 @@ Changelog of checkoutmanager
 2.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Updated the setup (mostly: buildout version pins) so that the project can be
+  developed/tested again.
 
 
 2.5 (2016-11-07)
