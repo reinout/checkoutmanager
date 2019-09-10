@@ -7,6 +7,10 @@ Changelog of checkoutmanager
 - Updated the setup (mostly: buildout version pins) so that the project can be
   developed/tested again.
 
+- The ``exists`` and ``co`` command used to check only if a directory
+  existed. Now it also checks if the dot directory (``.git``, ``.svn``)
+  exists. This way an empty directory also will get filled with a checkout.
+
 
 2.5 (2016-11-07)
 ----------------
