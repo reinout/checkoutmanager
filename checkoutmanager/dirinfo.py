@@ -37,7 +37,8 @@ class DirInfo(object):
 
     @property
     def exists(self):
-        return os.path.exists(self.directory)
+        expected_dot_dir = os.path.join(self.directory, "." + self.vcs)
+        return os.path.exists(expected_dot_dir)
 
     @capture_stdout
     def cmd_exists(self, report_only_missing=False):

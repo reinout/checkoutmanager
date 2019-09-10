@@ -28,7 +28,7 @@ Make an empty directory in there and use that:
 
 We need one of the ``.git``, ``.hg``-like directories in there:
 
-    >>> os.mkdir(os.path.join(homedir, 'exists', '.git'))
+    >>> os.mkdir(os.path.join(homedir, 'exists', '.xxx'))
     >>> info.exists
     True
     >>> print(info.directory)
