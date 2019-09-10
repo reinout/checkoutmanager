@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-2.6 (unreleased)
+2.6 (2019-09-10)
 ----------------
 
 - Updated the setup (mostly: buildout version pins) so that the project can be
