@@ -1,8 +1,8 @@
 Changelog of checkoutmanager
 ============================
 
-2.7 (unreleased)
-----------------
+2.6.1 (2019-09-23)
+------------------
 
 - Fixed small, but essential, README error.
 
