@@ -4,7 +4,7 @@ Changelog of checkoutmanager
 2.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed small, but essential, README error.
 
 
 2.6 (2019-09-10)
