@@ -194,5 +194,5 @@ def main():
         print("### %s ERRORS OCCURED ###" % len(executor.errors))
         for error in executor.errors:
             print()
-            print(error.format_msg())
+            utils.print_exception(error)
         sys.exit(1)

@@ -3,7 +3,6 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import traceback
 from multiprocessing.pool import Pool
 import time
 
@@ -39,14 +38,7 @@ class _Executor(object):
 
     def _error(self, exception):
         self.errors.append(exception)
-        if isinstance(exception, utils.CommandError):
-            result = exception.format_msg()
-        else:
-            result = "".join(traceback.format_exception_only(type(exception), exception))
-        if not result:
-            # Don't print empty lines
-            return
-        print(result)
+        utils.print_exception(exception)
 
     def execute(self, func, args):
         """Execute the given function"""
