@@ -4,7 +4,8 @@ Changelog of checkoutmanager
 2.7 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- More robust error handling.
+  [mortenlj]
 
 
 2.6.1 (2019-09-23)
