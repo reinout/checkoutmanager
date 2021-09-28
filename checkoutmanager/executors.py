@@ -2,6 +2,7 @@
 # -*- coding: utf-8
 from __future__ import print_function
 from __future__ import unicode_literals
+
 from multiprocessing.pool import Pool
 import time
 
@@ -35,6 +36,10 @@ class _Executor(object):
             return
         print(result)
 
+    def _error(self, exception):
+        self.errors.append(exception)
+        utils.print_exception(exception)
+
     def execute(self, func, args):
         """Execute the given function"""
         raise NotImplementedError("Sub-classes must implement this")
@@ -47,23 +52,21 @@ class _Executor(object):
 class _SingleExecutor(_Executor):
     """Execute functions in the same thread and process (sync)"""
     def execute(self, func, args):
-        self._collector(func(*args))
+        try:
+            self._collector(func(*args))
+        except Exception as e:
+            self._error(e)
 
 
 class _MultiExecutor(_Executor):
     """Execute functions async in a process pool"""
     def __init__(self):
         super(_MultiExecutor, self).__init__()
-        self._children = 0
+        self._async_results = []
         self.pool = Pool()
 
-    def _collector(self, result):
-        super(_MultiExecutor, self)._collector(result)
-        self._children -= 1
-
     def execute(self, func, args):
-        self._children += 1
-        self.pool.apply_async(func, args, callback=self._collector)
+        self._async_results.append(self.pool.apply_async(func, args, callback=self._collector, error_callback=self._error))
 
     def wait_for_results(self):
         self.pool.close()
@@ -71,6 +74,6 @@ class _MultiExecutor(_Executor):
         # apparently you need to first make sure that all your launched tasks
         # has returned their results properly, before calling join, or you
         # risk a deadlock.
-        while self._children > 0:
+        while any(not r.ready() for r in self._async_results):
             time.sleep(0.001)
         self.pool.join()

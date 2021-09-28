@@ -5,6 +5,7 @@ from functools import wraps
 import os
 import subprocess
 import sys
+import traceback
 
 # For zc.buildout's system() method:
 MUST_CLOSE_FDS = not sys.platform.startswith('win')
@@ -77,3 +78,13 @@ def capture_stdout(func):
         finally:
             sys.stdout = sys.__stdout__
     return newfunc
+
+
+def print_exception(exception):
+    if isinstance(exception, CommandError):
+        result = exception.format_msg()
+    else:
+        result = "".join(traceback.format_exception_only(type(exception), exception))
+    # Don't print empty lines
+    if result:
+        print(result)
