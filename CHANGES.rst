@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-2.7 (unreleased)
+2.7 (2021-09-28)
 ----------------
 
 - More robust error handling.
