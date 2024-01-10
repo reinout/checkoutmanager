@@ -9,3 +9,6 @@ ignore = ["UP031"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["checkoutmanager"]
+
+[tool.pytest.ini_options]
+doctest_optionflags = "NORMALIZE_WHITESPACE ELLIPSIS"
