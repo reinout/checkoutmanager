@@ -3,8 +3,7 @@ import subprocess
 import sys
 import traceback
 from functools import wraps
-
-from six.moves import cStringIO
+from io import StringIO
 
 # For zc.buildout's system() method:
 MUST_CLOSE_FDS = not sys.platform.startswith("win")
@@ -71,7 +70,7 @@ def capture_stdout(func):
 
     @wraps(func)
     def newfunc(*args, **kwargs):
-        sys.stdout = cStringIO()
+        sys.stdout = StringIO()
         try:
             func(*args, **kwargs)
             return sys.stdout.getvalue()

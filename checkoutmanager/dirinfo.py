@@ -275,7 +275,7 @@ class HgDirInfo(DirInfo):
         for line in lines:
             m = self.regex_changeset.match(line.lower())
             if m:
-                print("{0}:{1}".format(m.group("num"), m.group("digest")))
+                print(f"{m.group('num')}:{m.group('digest')}")
                 return
 
     @capture_stdout

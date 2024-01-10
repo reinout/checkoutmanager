@@ -60,7 +60,7 @@ class _MultiExecutor(_Executor):
     """Execute functions async in a process pool"""
 
     def __init__(self):
-        super(_MultiExecutor, self).__init__()
+        super()
         self._async_results = []
         self.pool = Pool()
 

@@ -1,8 +1,7 @@
 """Config file parsing and massaging"""
+import configparser
 import glob
 import os
-
-from six.moves import configparser
 
 from checkoutmanager import dirinfo
 
