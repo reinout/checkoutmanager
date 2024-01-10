@@ -10,6 +10,10 @@ venv/bin/checkoutmanager: setup.py
 	venv/bin/pip install -e .[test]
 
 
+test:
+	venv/bin/pytest checkoutmanager --doctest-glob="tests/*.txt"
+
+
 check:
 	ruff check checkoutmanager --fix
 

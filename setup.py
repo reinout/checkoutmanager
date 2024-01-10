@@ -46,8 +46,9 @@ setup(
     ],
     extras_require={
         "test": [
-            "z3c.testsetup>=0.3",
+            # "z3c.testsetup>=0.3",
             "zope.testing",
+            "pytest",
         ],
     },
     entry_points={
