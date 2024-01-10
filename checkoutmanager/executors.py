@@ -1,10 +1,7 @@
 #!/usr/bin/env python
-# -*- coding: utf-8
-from __future__ import print_function
-from __future__ import unicode_literals
 
-from multiprocessing.pool import Pool
 import time
+from multiprocessing.pool import Pool
 
 from checkoutmanager import utils
 
@@ -17,7 +14,7 @@ def get_executor(single):
         return _MultiExecutor()
 
 
-class _Executor(object):
+class _Executor:
     def __init__(self):
         self.errors = []
 

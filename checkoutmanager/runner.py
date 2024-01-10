@@ -1,19 +1,14 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-from functools import partial
-from optparse import OptionParser
 import os
 import shutil
 import sys
+from functools import partial
+from optparse import OptionParser
 
 import pkg_resources
 
-from checkoutmanager import config
-from checkoutmanager import utils
-from checkoutmanager.executors import get_executor
-
+from checkoutmanager import config, utils
 from checkoutmanager.dirinfo import DirInfo
-
+from checkoutmanager.executors import get_executor
 
 ACTIONS = ['exists', 'up', 'st', 'co', 'missing', 'out', 'in', 'rev']
 CONFIGFILE_NAME = '~/.checkoutmanager.cfg'

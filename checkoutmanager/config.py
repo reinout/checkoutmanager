@@ -1,12 +1,10 @@
 """Config file parsing and massaging"""
-from __future__ import print_function
-from __future__ import unicode_literals
-from six.moves import configparser
 import glob
 import os
 
-from checkoutmanager import dirinfo
+from six.moves import configparser
 
+from checkoutmanager import dirinfo
 
 DEFAULTS = {'report-missing': 'true',
             'ignore': '',
@@ -73,7 +71,7 @@ def extract_spec(spec, preserve_tree=None):
     return vcs_url, directory
 
 
-class Config(object):
+class Config:
     """Wrapper around config file for returning DirInfo objects"""
 
     def __init__(self, config_filename):

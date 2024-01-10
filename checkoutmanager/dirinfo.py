@@ -1,12 +1,8 @@
 """Information on one directory"""
-from __future__ import print_function
-from __future__ import unicode_literals
 import os
 import re
 
-from checkoutmanager.utils import CommandError
-from checkoutmanager.utils import capture_stdout
-from checkoutmanager.utils import system
+from checkoutmanager.utils import CommandError, capture_stdout, system
 
 # 8-char codes
 #         '12345678'
@@ -15,7 +11,7 @@ MISSING = 'missing '
 PRESENT = 'present '
 
 
-class DirInfo(object):
+class DirInfo:
     """Wrapper for information on one directory"""
 
     vcs = 'xxx'
@@ -109,7 +105,7 @@ class SvnDirInfo(DirInfo):
             if remote_rev > local_rev:
                 print(self.directory)
                 print("Incoming changes : "
-                      "Revision {0} to {1}".format(local_rev, remote_rev))
+                      f"Revision {local_rev} to {remote_rev}")
         except CommandError:
             print("Could not connect to repository for " + self.directory)
             return
