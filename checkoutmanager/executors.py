@@ -48,6 +48,7 @@ class _Executor:
 
 class _SingleExecutor(_Executor):
     """Execute functions in the same thread and process (sync)"""
+
     def execute(self, func, args):
         try:
             self._collector(func(*args))
@@ -57,13 +58,18 @@ class _SingleExecutor(_Executor):
 
 class _MultiExecutor(_Executor):
     """Execute functions async in a process pool"""
+
     def __init__(self):
         super(_MultiExecutor, self).__init__()
         self._async_results = []
         self.pool = Pool()
 
     def execute(self, func, args):
-        self._async_results.append(self.pool.apply_async(func, args, callback=self._collector, error_callback=self._error))
+        self._async_results.append(
+            self.pool.apply_async(
+                func, args, callback=self._collector, error_callback=self._error
+            )
+        )
 
     def wait_for_results(self):
         self.pool.close()

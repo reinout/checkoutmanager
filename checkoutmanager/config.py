@@ -6,18 +6,18 @@ from six.moves import configparser
 
 from checkoutmanager import dirinfo
 
-DEFAULTS = {'report-missing': 'true',
-            'ignore': '',
-            'preserve_tree': '',
-            }
+DEFAULTS = {
+    "report-missing": "true",
+    "ignore": "",
+    "preserve_tree": "",
+}
 
 
 def linesstring_as_list(string):
     """Return \n separated string as a list"""
-    lines = string.split('\n')
+    lines = string.split("\n")
     lines = [line.strip() for line in lines]
-    lines = [line for line in lines
-             if line and not line.startswith('#')]
+    lines = [line for line in lines if line and not line.startswith("#")]
     return lines
 
 
@@ -40,34 +40,33 @@ def extract_spec(spec, preserve_tree=None):
         server_roots = preserve_tree or []
         for server_root in server_roots:
             if vcs_url.startswith(server_root):
-                directory = vcs_url[len(server_root):]
+                directory = vcs_url[len(server_root) :]
                 break
         if directory is None:
-            parts = [part for part in vcs_url.split('/')
-                     if part]
+            parts = [part for part in vcs_url.split("/") if part]
             # Common structure: having a customer folder with a 'buildout'
             # directory in it.  Don't name it 'buildout'.
-            parts = [part for part in parts if part != 'buildout']
+            parts = [part for part in parts if part != "buildout"]
             directory = parts[-1]
             # Remove /trunk from the end.  We don't want that as a name.
-            if parts[-1] == 'trunk':
+            if parts[-1] == "trunk":
                 parts.pop()
                 directory = parts[-1]
             # If we have an svn branch, name it after the project *and* the
             # branch.
-            if (len(parts) > 3) and (parts[-2] == 'branches'):
+            if (len(parts) > 3) and (parts[-2] == "branches"):
                 branchname = parts[-1]
                 projectname = parts[-3]
-                directory = projectname + '-' + branchname
+                directory = projectname + "-" + branchname
         # Common for bzr projects hosted on launchpad: they're prefixed with
         # 'lp:'.  Remove that from the name.
-        if directory.startswith('lp:'):
+        if directory.startswith("lp:"):
             directory = directory[3:]
-        if directory.endswith('.git'):
+        if directory.endswith(".git"):
             directory = directory[:-4]
-        if ':' in directory:
+        if ":" in directory:
             # For example git@git.example.org:projectname
-            directory = directory.split(':')[-1]
+            directory = directory.split(":")[-1]
     return vcs_url, directory
 
 
@@ -92,21 +91,21 @@ class Config:
         else:
             sections = self.groupings
         for section in sections:
-            basedir = self.parser.get(section, 'basedir')
-            vcs = self.parser.get(section, 'vcs')
+            basedir = self.parser.get(section, "basedir")
+            vcs = self.parser.get(section, "vcs")
             preserve_tree = linesstring_as_list(
-                self.parser.get(section, 'preserve_tree'))
+                self.parser.get(section, "preserve_tree")
+            )
             dirinfoclass = dirinfo.DirInfo
-            if vcs == 'svn':
+            if vcs == "svn":
                 dirinfoclass = dirinfo.SvnDirInfo
-            if vcs == 'bzr':
+            if vcs == "bzr":
                 dirinfoclass = dirinfo.BzrDirInfo
-            if vcs == 'hg':
+            if vcs == "hg":
                 dirinfoclass = dirinfo.HgDirInfo
-            if vcs == 'git':
+            if vcs == "git":
                 dirinfoclass = dirinfo.GitDirInfo
-            checkouts = linesstring_as_list(
-                self.parser.get(section, 'checkouts'))
+            checkouts = linesstring_as_list(self.parser.get(section, "checkouts"))
             for checkout in checkouts:
                 url, directory = extract_spec(checkout, preserve_tree)
                 directory = os.path.join(basedir, directory)
@@ -138,28 +137,26 @@ class Config:
         base_configured = {}
         base_ignored = {}
         for section in sections:
-            checkouts = linesstring_as_list(
-                self.parser.get(section, 'checkouts'))
+            checkouts = linesstring_as_list(self.parser.get(section, "checkouts"))
             configured = []
             for checkout in checkouts:
                 url, directory = extract_spec(checkout)
                 configured.append(directory)
-            basedir = self.parser.get(section, 'basedir')
+            basedir = self.parser.get(section, "basedir")
             basedir = os.path.realpath(os.path.expanduser(basedir))
             if basedir not in base_configured:
                 base_configured[basedir] = []
             base_configured[basedir] += configured
-            ignore = linesstring_as_list(
-                self.parser.get(section, 'ignore'))
+            ignore = linesstring_as_list(self.parser.get(section, "ignore"))
             if basedir not in base_ignored:
                 base_ignored[basedir] = []
             base_ignored[basedir] += ignore
 
         # Now get present and missing items.
         for section in sections:
-            if not self.parser.getboolean(section, 'report-missing'):
+            if not self.parser.getboolean(section, "report-missing"):
                 continue
-            basedir = self.parser.get(section, 'basedir')
+            basedir = self.parser.get(section, "basedir")
             basedir = os.path.realpath(os.path.expanduser(basedir))
             present = set(os.listdir(basedir))
             configured = set(base_configured[basedir])
@@ -170,8 +167,7 @@ class Config:
             ignores = base_ignored[basedir]
             full_paths_to_ignore = []
             for ignore in ignores:
-                full_paths_to_ignore += glob.glob(
-                    os.path.join(basedir, ignore))
+                full_paths_to_ignore += glob.glob(os.path.join(basedir, ignore))
             real_missing = []
             for directory in missing:
                 full = os.path.join(basedir, directory)
@@ -183,7 +179,9 @@ class Config:
                     continue
                 real_missing.append(full)
             if real_missing:
-                print("Unconfigured items in %s [%s]:" % (
-                    basedir, self.parser.get(section, 'vcs')))
+                print(
+                    "Unconfigured items in %s [%s]:"
+                    % (basedir, self.parser.get(section, "vcs"))
+                )
                 for full in real_missing:
                     print("    " + full)
