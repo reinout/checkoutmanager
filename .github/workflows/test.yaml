@@ -1,0 +1,25 @@
+name: test
+
+# Run on pull requests and on the master branch itself.
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - name: Install dependencies
+        run: make install
+      - name: Check syntax (ruff)
+        run: make check && make beautiful
+      - name: Test (flake8...)
+        run: make test
