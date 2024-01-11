@@ -2,7 +2,7 @@ import os
 
 from setuptools import setup
 
-version = "3.1.dev0"
+version = "3.0.1"
 
 sample_config = open(os.path.join("checkoutmanager", "sample.cfg")).readlines()
 
