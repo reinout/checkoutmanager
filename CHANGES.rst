@@ -1,8 +1,8 @@
 Changelog of checkoutmanager
 ============================
 
-3.1 (unreleased)
-----------------
+3.0.2 (2024-01-11)
+------------------
 
 - Fixed super() call on the MultiExecutor that I messed up when
   modernizing the python 2.7 code :-)
