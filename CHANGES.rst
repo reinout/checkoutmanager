@@ -11,6 +11,9 @@ Changelog of checkoutmanager
 
 - Removed python 2.7 support, we're on 3.8+ now.
 
+- Achieved compatibility with python 3.12:
+  Safeconfigparser->ConfigParser.
+
 
 2.7 (2021-09-28)
 ----------------
