@@ -4,7 +4,12 @@ Changelog of checkoutmanager
 2.8 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Added github action for basic testing.
+
+- Removed ye olde buildout setup, including z3c.testsetup. Using
+  pytest now.
+
+- Removed python 2.7 support, we're on 3.8+ now.
 
 
 2.7 (2021-09-28)
