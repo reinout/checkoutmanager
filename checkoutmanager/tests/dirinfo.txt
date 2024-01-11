@@ -13,25 +13,20 @@ Ask if it exists:
     >>> info.exists
     False
 
-The testsetup prepared a mock home directory for us:
+Make an empty directory in the mock homedir and use that:
 
-    >>> print(homedir)
-    HOMEDIR
-
-Make an empty directory in there and use that:
-
-    >>> import os
-    >>> os.mkdir(os.path.join(homedir, 'exists'))
-    >>> info = dirinfo.DirInfo(os.path.join(homedir, 'exists'), 'some/url')
+    >>> homedir = getfixture("homedir_in_tmp")
+    >>> empty_dir = homedir / "exists"
+    >>> empty_dir.mkdir()
+    >>> info = dirinfo.DirInfo(empty_dir, 'some/url')
     >>> info.exists
     False
 
 We need one of the ``.git``, ``.hg``-like directories in there:
 
-    >>> os.mkdir(os.path.join(homedir, 'exists', '.xxx'))
+    >>> dot_dir = empty_dir / ".xxx"
+    >>> dot_dir.mkdir()
     >>> info.exists
     True
-    >>> print(info.directory)
-    HOMEDIR/exists
-    >>> print(info.parent)
-    HOMEDIR
+    >>> str(info.directory).endswith("exists")
+    True

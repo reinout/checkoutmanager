@@ -146,6 +146,7 @@ We can restrict to a certain group:
 We can ignore certain directories and support globbing to do so:
 
     >>> import os
+    >>> homedir = getfixture("homedir_in_tmp")
     >>> os.mkdir(os.path.join(homedir, 'svn'))
     >>> os.mkdir(os.path.join(homedir, 'svn', 'recipes'))
     >>> os.mkdir(os.path.join(homedir, 'svn', 'recipes', 'missing'))
