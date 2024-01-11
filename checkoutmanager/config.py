@@ -75,7 +75,7 @@ class Config:
     def __init__(self, config_filename):
         assert os.path.exists(config_filename)  # Just for me atm...
         self.config_filename = config_filename
-        self.parser = configparser.SafeConfigParser(DEFAULTS)
+        self.parser = configparser.ConfigParser(DEFAULTS)
         self.parser.read(config_filename)
 
     @property

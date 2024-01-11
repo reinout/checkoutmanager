@@ -29,7 +29,7 @@ Instantiate our config object with the config filename:
 The config file is loaded into a configparser instance:
 
     >>> conf.parser
-    <...SafeConfigParser ...>
+    <...ConfigParser ...>
 
 Query for found sections (which we call groupings).  Sorted, btw:
 
