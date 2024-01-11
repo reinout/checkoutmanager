@@ -178,6 +178,23 @@ Arguments are passed to the custom command using the following syntax:
    checkoutmanager action:arg1=val1,arg2=val2
 
 
+
+TODO
+----
+
+Temp list of stuff I want to fix:
+
+- Get HOMEDIR replacement in doctest working again. Or use ``...``.
+
+- Remove svn/hg/bzr support.
+
+- Fix `system()` command, I think a new subprocess.something can
+  replace it. Look at zest.releaser for inspiration.
+
+- Sample fixen.
+
+
+
 Config file
 -----------
 

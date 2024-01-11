@@ -1,0 +1,14 @@
+[tool.ruff]
+# See https://docs.astral.sh/ruff/configuration/ for defaults.
+target-version = "py38"
+
+[tool.ruff.lint]
+# Default select: ["E4", "E7", "E9", "F"]
+select = ["E4", "E7", "E9", "F", "I", "UP"]
+ignore = ["UP031"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["checkoutmanager"]
+
+[tool.pytest.ini_options]
+doctest_optionflags = "NORMALIZE_WHITESPACE ELLIPSIS"

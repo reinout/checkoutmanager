@@ -29,7 +29,7 @@ Instantiate our config object with the config filename:
 The config file is loaded into a configparser instance:
 
     >>> conf.parser
-    <...SafeConfigParser ...>
+    <...ConfigParser ...>
 
 Query for found sections (which we call groupings).  Sorted, btw:
 
@@ -125,40 +125,41 @@ Base purpose: return the wrapped directories:
 
     >>> for d in conf.directories():
     ...     print(d)
-    <DirInfo (bzr) for HOMEDIR/.emacs.d>
-    <DirInfo (bzr) for HOMEDIR/.subversion>
-    <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
-    <DirInfo (svn) for HOMEDIR/svn/recipes/customername>
-    <DirInfo (svn) for HOMEDIR/svn/recipes/differentname>
-    <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother-reinout-fix>
-    <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother>
+    <DirInfo (bzr) for .../.emacs.d>
+    <DirInfo (bzr) for .../.subversion>
+    <DirInfo (svn) for .../svn/recipes/blablabla>
+    <DirInfo (svn) for .../svn/recipes/customername>
+    <DirInfo (svn) for .../svn/recipes/differentname>
+    <DirInfo (svn) for .../svn/recipes/yetanother-reinout-fix>
+    <DirInfo (svn) for .../svn/recipes/yetanother>
 
 We can restrict to a certain group:
 
     >>> for d in conf.directories(group='recipes'):
     ...     print(d)
-    <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
-    <DirInfo (svn) for HOMEDIR/svn/recipes/customername>
-    <DirInfo (svn) for HOMEDIR/svn/recipes/differentname>
-    <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother-reinout-fix>
-    <DirInfo (svn) for HOMEDIR/svn/recipes/yetanother>
+    <DirInfo (svn) for .../svn/recipes/blablabla>
+    <DirInfo (svn) for .../svn/recipes/customername>
+    <DirInfo (svn) for .../svn/recipes/differentname>
+    <DirInfo (svn) for .../svn/recipes/yetanother-reinout-fix>
+    <DirInfo (svn) for .../svn/recipes/yetanother>
 
 We can ignore certain directories and support globbing to do so:
 
     >>> import os
+    >>> homedir = getfixture("homedir_in_tmp")
     >>> os.mkdir(os.path.join(homedir, 'svn'))
     >>> os.mkdir(os.path.join(homedir, 'svn', 'recipes'))
     >>> os.mkdir(os.path.join(homedir, 'svn', 'recipes', 'missing'))
     >>> os.mkdir(os.path.join(homedir, 'svn', 'recipes', 'ignored_missing'))
     >>> conf.report_missing(group='recipes') # doctest: +ELLIPSIS
-    Unconfigured items in HOMEDIR/svn/recipes [svn]:
-        HOMEDIR/svn/recipes/missing
+    Unconfigured items in .../svn/recipes [svn]:
+        .../svn/recipes/missing
 
 When used as a python module, DirInfo objects can be obtained programmatically:
 
     >>> conf.directory_from_url('svn://svn/blablabla/trunk')
-    <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
+    <DirInfo (svn) for .../svn/recipes/blablabla>
     >>> conf.directory_from_path('%s/svn/recipes/blablabla' % homedir)
-    <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
+    <DirInfo (svn) for .../svn/recipes/blablabla>
     >>> conf.directory_from_path('%s/svn/recipes/blablabla/somefolder' % homedir)
-    <DirInfo (svn) for HOMEDIR/svn/recipes/blablabla>
+    <DirInfo (svn) for .../svn/recipes/blablabla>

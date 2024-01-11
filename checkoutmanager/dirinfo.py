@@ -1,31 +1,27 @@
 """Information on one directory"""
-from __future__ import print_function
-from __future__ import unicode_literals
 import os
 import re
 
-from checkoutmanager.utils import CommandError
-from checkoutmanager.utils import capture_stdout
-from checkoutmanager.utils import system
+from checkoutmanager.utils import CommandError, capture_stdout, system
 
 # 8-char codes
 #         '12345678'
-CREATED = 'created '
-MISSING = 'missing '
-PRESENT = 'present '
+CREATED = "created "
+MISSING = "missing "
+PRESENT = "present "
 
 
-class DirInfo(object):
+class DirInfo:
     """Wrapper for information on one directory"""
 
-    vcs = 'xxx'
+    vcs = "xxx"
 
     def __init__(self, directory, url):
         self.directory = directory
         self.url = url
 
     def __repr__(self):
-        return '<DirInfo (%s) for %s>' % (self.vcs, self.directory)
+        return "<DirInfo (%s) for %s>" % (self.vcs, self.directory)
 
     def __lt__(self, other):
         # Easy sorting in tests
@@ -33,7 +29,7 @@ class DirInfo(object):
 
     @property
     def parent(self):
-        return os.path.abspath(os.path.join(self.directory, '..'))
+        return os.path.abspath(os.path.join(self.directory, ".."))
 
     @property
     def exists(self):
@@ -48,7 +44,7 @@ class DirInfo(object):
                 return
         else:
             answer = MISSING
-        print(' '.join([answer, self.directory]))
+        print(" ".join([answer, self.directory]))
 
     def cmd_rev(self):
         raise NotImplementedError()
@@ -78,18 +74,16 @@ class DirInfo(object):
 
 
 class SvnDirInfo(DirInfo):
+    vcs = "svn"
 
-    vcs = 'svn'
-
-    regex_last_changed = re.compile('last changed rev: (?P<rev>\d+)')
+    regex_last_changed = re.compile("last changed rev: (?P<rev>\d+)")
 
     def _parse_last_changed(self, output):
-        lines = [line.strip() for line in output.splitlines()
-                 if line.strip()]
+        lines = [line.strip() for line in output.splitlines() if line.strip()]
         for line in lines:
             m = self.regex_last_changed.match(line.lower())
             if m:
-                return m.group('rev')
+                return m.group("rev")
 
     @capture_stdout
     def cmd_rev(self):
@@ -108,8 +102,7 @@ class SvnDirInfo(DirInfo):
             remote_rev = self._parse_last_changed(output)
             if remote_rev > local_rev:
                 print(self.directory)
-                print("Incoming changes : "
-                      "Revision {0} to {1}".format(local_rev, remote_rev))
+                print("Incoming changes : " f"Revision {local_rev} to {remote_rev}")
         except CommandError:
             print("Could not connect to repository for " + self.directory)
             return
@@ -124,9 +117,11 @@ class SvnDirInfo(DirInfo):
     def cmd_st(self):
         os.chdir(self.directory)
         output = system("svn st --ignore-externals")
-        lines = [line.strip() for line in output.splitlines()
-                 if line.strip()
-                 and not line.startswith('X')]
+        lines = [
+            line.strip()
+            for line in output.splitlines()
+            if line.strip() and not line.startswith("X")
+        ]
         if lines:
             print(self.directory)
             print(output)
@@ -142,10 +137,9 @@ class SvnDirInfo(DirInfo):
         else:
             answer = CREATED
             os.chdir(self.parent)
-            print(system("svn co %s %s" % (
-                self.url, self.directory)))
+            print(system("svn co %s %s" % (self.url, self.directory)))
 
-        print(' '.join([answer, self.directory]))
+        print(" ".join([answer, self.directory]))
 
     @capture_stdout
     def cmd_out(self):
@@ -158,9 +152,11 @@ class SvnDirInfo(DirInfo):
         # new subversion 1.7 layout of the .svn directory.
         os.chdir(self.directory)
         output = system("svn upgrade --quiet")
-        lines = [line.strip() for line in output.splitlines()
-                 if line.strip()
-                 and not line.startswith('X')]
+        lines = [
+            line.strip()
+            for line in output.splitlines()
+            if line.strip() and not line.startswith("X")
+        ]
         print(self.directory)
         if lines:
             print(output)
@@ -193,8 +189,7 @@ class SvnDirInfo(DirInfo):
 
 
 class BzrDirInfo(DirInfo):
-
-    vcs = 'bzr'
+    vcs = "bzr"
 
     @capture_stdout
     def cmd_rev(self):
@@ -246,10 +241,9 @@ class BzrDirInfo(DirInfo):
         else:
             answer = CREATED
             os.chdir(self.parent)
-            print(system("bzr checkout %s %s" % (
-                self.url, self.directory)))
+            print(system("bzr checkout %s %s" % (self.url, self.directory)))
 
-        print(' '.join([answer, self.directory]))
+        print(" ".join([answer, self.directory]))
 
     @capture_stdout
     def cmd_out(self):
@@ -268,22 +262,20 @@ class BzrDirInfo(DirInfo):
 
 
 class HgDirInfo(DirInfo):
+    vcs = "hg"
 
-    vcs = 'hg'
-
-    regex_changeset = re.compile('changeset:\s+((?P<num>\d+):(?P<digest>[0-9a-fA-F]+))')
+    regex_changeset = re.compile("changeset:\s+((?P<num>\d+):(?P<digest>[0-9a-fA-F]+))")
 
     @capture_stdout
     def cmd_rev(self):
         print(self.directory)
         os.chdir(self.directory)
         output = system("hg log -l1")
-        lines = [line.strip() for line in output.splitlines()
-                 if line.strip()]
+        lines = [line.strip() for line in output.splitlines() if line.strip()]
         for line in lines:
             m = self.regex_changeset.match(line.lower())
             if m:
-                print("{0}:{1}".format(m.group('num'), m.group('digest')))
+                print(f"{m.group('num')}:{m.group('digest')}")
                 return
 
     @capture_stdout
@@ -292,8 +284,7 @@ class HgDirInfo(DirInfo):
         try:
             output = system("hg incoming")
             print(self.directory)
-            print("'hg incoming' reports incoming changesets :" % (
-                  self.directory))
+            print("'hg incoming' reports incoming changesets :" % (self.directory))
             print(output)
         except CommandError as e:
             if e.returncode == 1:
@@ -332,10 +323,9 @@ class HgDirInfo(DirInfo):
             answer = CREATED
             os.chdir(self.parent)
             # TODO: check!
-            print(system("hg clone %s %s" % (
-                self.url, self.directory)))
+            print(system("hg clone %s %s" % (self.url, self.directory)))
 
-        print(' '.join([answer, self.directory]))
+        print(" ".join([answer, self.directory]))
 
     @capture_stdout
     def cmd_out(self):
@@ -356,32 +346,32 @@ class HgDirInfo(DirInfo):
 
 
 class GitDirInfo(DirInfo):
+    vcs = "git"
 
-    vcs = 'git'
-
-    regex_commit_digest = re.compile('commit (?P<digest>[0-9a-fA-F]+)')
+    regex_commit_digest = re.compile("commit (?P<digest>[0-9a-fA-F]+)")
 
     @capture_stdout
     def cmd_rev(self):
         print(self.directory)
         os.chdir(self.directory)
         output = system("git show -q")
-        lines = [line.strip() for line in output.splitlines()
-                 if line.strip()]
+        lines = [line.strip() for line in output.splitlines() if line.strip()]
         for line in lines:
             m = self.regex_commit_digest.match(line.lower())
             if m:
-                print(m.group('object'))
+                print(m.group("object"))
                 return
 
     @capture_stdout
     def cmd_in(self):
         output = system("git pull --dry-run")
         output = output.strip()
-        output_lines = output.split('\n')
+        output_lines = output.split("\n")
         if output and len(output_lines):
-            print("'git pull --dry-run' reports possible actions in %s:" % (
-                self.directory))
+            print(
+                "'git pull --dry-run' reports possible actions in %s:"
+                % (self.directory)
+            )
             print(output)
 
     @capture_stdout
@@ -410,19 +400,20 @@ class GitDirInfo(DirInfo):
             answer = CREATED
             os.chdir(self.parent)
             # TODO: check!
-            print(system("git clone %s %s" % (
-                self.url, self.directory)))
+            print(system("git clone %s %s" % (self.url, self.directory)))
 
-        print(' '.join([answer, self.directory]))
+        print(" ".join([answer, self.directory]))
 
     @capture_stdout
     def cmd_out(self):
         os.chdir(self.directory)
         output = system("git push --dry-run")
         output = output.strip()
-        output_lines = output.split('\n')
+        output_lines = output.split("\n")
         if len(output_lines) > 1:
             # More than the 'everything up-to-date' one-liner.
-            print("'git push --dry-run' reports possible actions in %s:" % (
-                self.directory))
+            print(
+                "'git push --dry-run' reports possible actions in %s:"
+                % (self.directory)
+            )
             print(output)

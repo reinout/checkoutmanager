@@ -1,20 +1,17 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-from six.moves import cStringIO
-from functools import wraps
 import os
 import subprocess
 import sys
 import traceback
+from functools import wraps
+from io import StringIO
 
 # For zc.buildout's system() method:
-MUST_CLOSE_FDS = not sys.platform.startswith('win')
+MUST_CLOSE_FDS = not sys.platform.startswith("win")
 # When you set '-v', this constant is changed.  A bit hacky.
 VERBOSE = False
 
 
 class CommandError(Exception):
-
     def __init__(self, returncode=0, command="", output=""):
         self.returncode = returncode
         self.command = command
@@ -44,13 +41,15 @@ def system(command, input=None):
 
     """
     if VERBOSE:
-        print('[%s] %s' % (os.getcwd(), command))
-    p = subprocess.Popen(command,
-                         shell=True,
-                         stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE,
-                         close_fds=MUST_CLOSE_FDS)
+        print("[%s] %s" % (os.getcwd(), command))
+    p = subprocess.Popen(
+        command,
+        shell=True,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        close_fds=MUST_CLOSE_FDS,
+    )
     if input:
         input = input.encode()
     stdoutdata, stderrdata = p.communicate(input=input)
@@ -71,12 +70,13 @@ def capture_stdout(func):
 
     @wraps(func)
     def newfunc(*args, **kwargs):
-        sys.stdout = cStringIO()
+        sys.stdout = StringIO()
         try:
             func(*args, **kwargs)
             return sys.stdout.getvalue()
         finally:
             sys.stdout = sys.__stdout__
+
     return newfunc
 
 
