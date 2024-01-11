@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-2.8 (unreleased)
+3.0 (2024-01-11)
 ----------------
 
 - Added github action for basic testing.
