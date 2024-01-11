@@ -1,8 +1,10 @@
 import os
+from pathlib import Path
+
 # import re
 # import shutil
 import pytest
-from pathlib import Path
+
 # import z3c.testsetup
 # from zope.testing import renormalizing
 
@@ -15,6 +17,7 @@ def homedir_in_tmp(tmp_path: Path):
     os.environ["HOME"] = str(homedir)
     yield homedir
     os.environ["HOME"] = orig_home
+
 
 # checker = renormalizing.RENormalizing(
 #     [
