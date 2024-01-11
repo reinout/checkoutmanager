@@ -6,8 +6,8 @@ venv:
 	venv/bin/pip install --upgrade pip
 
 
-venv/bin/checkoutmanager: setup.py
-	venv/bin/pip install -e .[test]
+venv/bin/checkoutmanager: setup.py requirements.txt
+	venv/bin/pip install -r requirements.txt
 
 
 test:
@@ -15,11 +15,11 @@ test:
 
 
 check:
-	ruff check checkoutmanager --fix
+	venv/bin/ruff check checkoutmanager --fix
 
 
 beautiful:
-	ruff format checkoutmanager
+	venv/bin/ruff format checkoutmanager
 
 
 clean:
