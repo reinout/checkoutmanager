@@ -4,7 +4,7 @@ Changelog of checkoutmanager
 3.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Cleaned up left-over TODO comments in readme.
 
 
 3.0 (2024-01-11)
