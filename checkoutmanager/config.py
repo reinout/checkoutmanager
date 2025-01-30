@@ -1,4 +1,5 @@
 """Config file parsing and massaging"""
+
 import configparser
 import glob
 import os
