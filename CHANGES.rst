@@ -4,7 +4,8 @@ Changelog of checkoutmanager
 3.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fixed regex strings by making them 'raw' strings. A modern python would otherwise
+  complain (rightfully so) about invalid escape sequences (``\s``, ``\d``).
 
 
 3.0.2 (2024-01-11)
