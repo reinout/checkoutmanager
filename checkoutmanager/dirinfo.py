@@ -1,4 +1,5 @@
 """Information on one directory"""
+
 import os
 import re
 
@@ -76,7 +77,7 @@ class DirInfo:
 class SvnDirInfo(DirInfo):
     vcs = "svn"
 
-    regex_last_changed = re.compile("last changed rev: (?P<rev>\d+)")
+    regex_last_changed = re.compile(r"last changed rev: (?P<rev>\d+)")
 
     def _parse_last_changed(self, output):
         lines = [line.strip() for line in output.splitlines() if line.strip()]
@@ -102,7 +103,7 @@ class SvnDirInfo(DirInfo):
             remote_rev = self._parse_last_changed(output)
             if remote_rev > local_rev:
                 print(self.directory)
-                print("Incoming changes : " f"Revision {local_rev} to {remote_rev}")
+                print(f"Incoming changes : Revision {local_rev} to {remote_rev}")
         except CommandError:
             print("Could not connect to repository for " + self.directory)
             return
@@ -264,7 +265,9 @@ class BzrDirInfo(DirInfo):
 class HgDirInfo(DirInfo):
     vcs = "hg"
 
-    regex_changeset = re.compile("changeset:\s+((?P<num>\d+):(?P<digest>[0-9a-fA-F]+))")
+    regex_changeset = re.compile(
+        r"changeset:\s+((?P<num>\d+):(?P<digest>[0-9a-fA-F]+))"
+    )
 
     @capture_stdout
     def cmd_rev(self):
