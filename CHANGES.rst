@@ -7,6 +7,11 @@ Changelog of checkoutmanager
 - Fixed regex strings by making them 'raw' strings. A modern python would otherwise
   complain (rightfully so) about invalid escape sequences (``\s``, ``\d``).
 
+- Internal project change: ``.venv/`` instead of ``venv/``. And removed buildout config
+  as we've been using virtualenv via the makefile for a while now.
+
+- Testing on python 3.9 and 3.13 now, instead of ye olde 3.8.
+
 
 3.0.2 (2024-01-11)
 ------------------
