@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-3.1 (unreleased)
+3.1 (2025-01-30)
 ----------------
 
 - Fixed regex strings by making them 'raw' strings. A modern python would otherwise
