@@ -16,7 +16,9 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: ["3.9", "3.13"]
+          python-version:
+            - "3.9"
+            - "3.13"
       - name: Install dependencies
         run: make install
       - name: Check syntax (ruff)
