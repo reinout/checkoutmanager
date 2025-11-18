@@ -21,7 +21,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - uses: pre-commit/action@v3.0.1
-      - name: Install dependencies
-        run: make install
-      - name: Test (flake8...)
-        run: make test
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+      - name: Install python project
+        run: uv sync
+      - name: Test
+        run: uv run pytest
