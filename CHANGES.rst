@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-3.2 (unreleased)
+4.0 (unreleased)
 ----------------
 
 - Removed ``pkg_resources`` for compatibility with newer python versions.
