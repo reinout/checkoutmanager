@@ -34,7 +34,7 @@ known-first-party = ["checkoutmanager"]
 
 [tool.pytest.ini_options]
 doctest_optionflags = "NORMALIZE_WHITESPACE ELLIPSIS"
-addopts = "checkoutmanager --doctest-glob=tests/*.txt"
+addopts = "--doctest-glob=tests/*.txt"
 
 [tool.zest-releaser]
 release = true
