@@ -65,14 +65,6 @@ class DirInfo:
     def cmd_out(self):
         raise NotImplementedError()
 
-    def cmd_upgrade(self):
-        # This is only useful for subversion.
-        pass
-
-    def cmd_info(self):
-        # This is only known to be useful for subversion.
-        pass
-
 
 class SvnDirInfo(DirInfo):
     vcs = "svn"
@@ -146,47 +138,6 @@ class SvnDirInfo(DirInfo):
     def cmd_out(self):
         # Outgoing changes?  We're svn, not some new-fangled dvcs :-)
         pass
-
-    @capture_stdout
-    def cmd_upgrade(self):
-        # Run 'svn upgrade'.  This upgrades the working copy to the
-        # new subversion 1.7 layout of the .svn directory.
-        os.chdir(self.directory)
-        output = system("svn upgrade --quiet")
-        lines = [
-            line.strip()
-            for line in output.splitlines()
-            if line.strip() and not line.startswith("X")
-        ]
-        print(self.directory)
-        if lines:
-            print(output)
-            print()
-
-    @capture_stdout
-    def cmd_info(self):
-        # This is useful when your svn program has been updated and
-        # the security mechanisms on your OS now require you to
-        # explictly allow access to the stored credentials.  The other
-        # commands either do not access the internet or are
-        # non-interactive (like command up).  In fact, the reason for
-        # adding this command is that a non-interactive 'svn update'
-        # will fail when you have not granted access to your
-        # credentials yet for this new svn program.  This has happened
-        # a bit too often for me (Maurits).
-        os.chdir(self.directory)
-        # Determine the version.
-        output = system("svn --version --quiet")
-        try:
-            version = float(output[:3])
-        except (ValueError, TypeError, IndexError):
-            version = 0.0
-        # Since version 1.8 we must use --force-interactive, which is
-        # unavailable in earlier versions.
-        if version < 1.8:
-            print(system("svn info %s" % self.url))
-        else:
-            print(system("svn info --force-interactive %s" % self.url))
 
 
 class BzrDirInfo(DirInfo):
