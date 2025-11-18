@@ -80,7 +80,6 @@ in
   respective commands and is therefore inherently fragile.
 
 
-
 Output directory naming
 -----------------------
 
@@ -160,3 +159,13 @@ Config file
    it is in checkoutmanager/sample.cfg!
 
 Sample configuration file::
+
+
+Developing on this project itself
+---------------------------------
+
+Developing is pretty straightforward::
+
+  $ uv sync               # Install the project
+  $ pre-commit run --all  # Syntax checks and formatting
+  $ uv run pytest         # (Or activate the virtualenv and just run pytest)

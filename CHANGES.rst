@@ -8,6 +8,8 @@ Changelog of checkoutmanager
 
 - Updated the project itself to use ``uv`` and ``pre-commit``.
 
+- Removed two ancient svn-only commands.
+
 
 3.1 (2025-01-30)
 ----------------
