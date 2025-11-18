@@ -155,10 +155,62 @@ Arguments are passed to the custom command using the following syntax:
 Config file
 -----------
 
-.. Comment: the config file is included into the long description by setup.py,
-   it is in checkoutmanager/sample.cfg!
+.. Comment: copy/paste the sample config file from src/checkoutmanager/sample.cfg!
 
 Sample configuration file::
+
+    # Sample config file.  Should be placed as .checkoutmanager.cfg in your home
+    # directory.
+    #
+    # There are different sections per base location and version control
+    # system.
+    #
+    # ``checkoutmanager co`` checks them all out (or clones them).
+    # ``checkoutmanager up`` updates them all.
+    # ``checkoutmanager st`` to see if there are uncommitted changes.
+    # ``checkoutmanager out`` to see if there are unpushed git/hg commits.
+
+
+    [git-example]
+    vcs = git
+    basedir = ~/example/git
+    checkouts =
+        https://github.com/reinout/checkoutmanager
+        git@github.com:django/django.git
+
+
+    [recipes]
+    # Buildout recipes I work on.
+    vcs = svn
+    basedir = ~/example/svn
+    checkouts =
+        http://svn.zope.org/repos/main/z3c.recipe.usercrontab/trunk
+
+
+    [hg-example]
+    vcs = hg
+    basedir = ~/example/utilities
+    checkouts =
+        https://bitbucket.org/reinout/eolfixer
+        https://bitbucket.org/reinout/createcoverage
+
+
+    # [dotfolders]
+    # # Advanced usage!
+    # # Folders that end up as dotted configfolders in my home dir.
+    # # Note that there's a directory name behind the repository
+    # # location, separated by a space.
+    # vcs = bzr
+    # basedir = ~
+    # checkouts =
+    #     lp:emacsconfig/trunk .emacs.d
+    #     sftp://somewhere/subversion/trunk .subversion
+    # # By ignoring everything, we do not find missing import files but also
+    # # don't get warnings for every subdirectory in our home dir
+    # ignore =
+    #     *
+    #     .*
+
 
 
 Developing on this project itself
