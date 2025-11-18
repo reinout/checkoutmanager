@@ -1,4 +1,0 @@
-recursive-include checkoutmanager *.txt *.py *.cfg
-include *
-exclude .installed.cfg
-global-exclude *.pyc
