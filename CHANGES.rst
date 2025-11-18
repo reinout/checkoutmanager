@@ -1,7 +1,7 @@
 Changelog of checkoutmanager
 ============================
 
-4.0.1 (unreleased)
+4.0.1 (2025-11-18)
 ------------------
 
 - Fixed readme .rst syntax.
