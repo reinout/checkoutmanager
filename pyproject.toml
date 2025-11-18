@@ -1,9 +1,31 @@
+[project]
+name = "checkoutmanager"
+version = "0.2.dev0"
+description = "Gives you overview and control over your git/hg/svn checkouts/clones"
+readme = "README.rst"
+requires-python = ">=3.10"
+license = "GPL-2.0-or-later"
+authors = [
+  { name = "Reinout van Rees", email = "reinout@vanrees.org" },
+]
+keywords = []
+classifiers = ["Programming Language :: Python",
+               "Development Status :: 6 - Mature"]
+dependencies = [
+]
+
+[project.urls]
+homepage = "https://github.com/nens/climatescan"
+
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"
+
 [tool.ruff]
 # See https://docs.astral.sh/ruff/configuration/ for defaults.
-target-version = "py38"
+target-version = "py310"
 
 [tool.ruff.lint]
-# Default select: ["E4", "E7", "E9", "F"]
 select = ["E4", "E7", "E9", "F", "I", "UP"]
 ignore = ["UP031"]
 
@@ -12,3 +34,16 @@ known-first-party = ["checkoutmanager"]
 
 [tool.pytest.ini_options]
 doctest_optionflags = "NORMALIZE_WHITESPACE ELLIPSIS"
+addopts = "--doctest-glob=tests/*.txt --cov-report term --cov"
+
+[tool.zest-releaser]
+release = true
+
+[dependency-groups]
+dev = ["pytest>=8.4.2", "pytest-cov>=6.3.0", "pytest-sugar>=1.1.1"]
+
+[project.scripts]
+checkoutmanager = "checkoutmanager.runner:main"
+
+[project.entry-points."checkoutmanager.custom_actions"]
+test = "checkoutmanager.tests.custom_actions:test_action"

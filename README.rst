@@ -16,8 +16,8 @@ Checkoutmanager works on linux, osx and windows.
 Starting to use it
 ------------------
 
-Starting is easy.  Just ``pip install checkoutmanager`` and run
-``checkoutmanager``.
+Starting is easy. Just ``pip install checkoutmanager`` (or ``uv tool install
+checkoutmanager``) and run ``checkoutmanager``.
 
 - The first time, you'll get a sample configuration you can copy to
   ``.checkoutmanager.cfg`` in your home directory.
@@ -78,32 +78,6 @@ in
   Show incoming changesets that would be pulled in with 'up'. For some
   version control systems, this depends on the English output of the
   respective commands and is therefore inherently fragile.
-
-
-
-Hidden commands
----------------
-
-A few commands are hidden because they are seldom used and are only
-useful for subversion.
-
-upgrade
-  This upgrades the working copy to the new subversion 1.7 layout of
-  the .svn directory.  This should be done once after you have
-  upgraded your subversion to 1.7.  Note that when you accidentally
-  run this twice you get an error, but nothing breaks.  Since this
-  command is so rarely needed, it is not advertised in the command
-  line help.
-
-info
-  Display the svn info for the remote url.  This is useful when your
-  svn program has been updated and the security mechanisms on your OS
-  now require you to explictly allow access to the stored credentials.
-  The other commands either do not access the internet or are
-  non-interactive (like command up).  In fact, the reason for adding
-  this command is that a non-interactive 'svn update' will fail when
-  you have not granted access to your credentials yet for this new svn
-  program.  This has happened a bit too often for me (Maurits).
 
 
 Output directory naming
@@ -185,3 +159,13 @@ Config file
    it is in checkoutmanager/sample.cfg!
 
 Sample configuration file::
+
+
+Developing on this project itself
+---------------------------------
+
+Developing is pretty straightforward::
+
+  $ uv sync               # Install the project
+  $ pre-commit run --all  # Syntax checks and formatting
+  $ uv run pytest         # (Or activate the virtualenv and just run pytest)

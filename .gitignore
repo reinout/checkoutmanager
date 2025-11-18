@@ -1,17 +1,39 @@
+# Pyc/pyo/backup files.
+*.py[co]
+*~
+*.swp
 *.pyc
-*.pyo
-.Python
-.installed.cfg
-bin
-coverage
-develop-eggs
-dist
-eggs
-include
-lib
-parts
-checkoutmanager.egg-info
-.coverage
-htmlcov
+.DS_Store
+
+# Packages/buildout/pip/pipenv
+*.egg
+*.egg-info
+sdist
+pip-log.txt
+bower_components/
+node_modules/
 doc/build/
-/venv/
+ansible/*.retry
+.venv
+venv
+bin/
+lib/
+pyvenv.cfg
+dist/
+var/
+*.suggestion
+
+# Unit test / coverage reports
+.coverage
+.tox
+htmlcov
+.codeintel
+coverage.*
+.pytest_cache
+
+# Pycharm, visual studio
+.idea
+.vscode
+
+# Docker
+docker-compose.override.yml
