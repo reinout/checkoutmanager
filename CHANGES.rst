@@ -4,7 +4,9 @@ Changelog of checkoutmanager
 3.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Removed ``pkg_resources`` for compatibility with newer python versions.
+
+- Updated the project itself to use ``uv`` and ``pre-commit``.
 
 
 3.1 (2025-01-30)
