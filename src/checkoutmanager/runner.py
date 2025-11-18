@@ -1,10 +1,9 @@
+import importlib.metadata
 import os
 import shutil
 import sys
 from functools import partial
 from optparse import OptionParser
-
-import pkg_resources
 
 from checkoutmanager import config, utils
 from checkoutmanager.dirinfo import DirInfo
@@ -67,7 +66,7 @@ def get_action(dirinfo, custom_actions, action_name):
 def get_custom_actions():
     return dict(
         (entrypoint.name, entrypoint.load())
-        for entrypoint in pkg_resources.iter_entry_points(
+        for entrypoint in importlib.metadata.entry_points(
             group="checkoutmanager.custom_actions"
         )
     )
@@ -156,7 +155,7 @@ def main():
         print("Using config file %s" % configfile)
     if not os.path.exists(configfile):
         print("Config file %s does not exist." % configfile)
-        sample = pkg_resources.resource_filename("checkoutmanager", "sample.cfg")
+        sample = os.path.join(os.path.basename(__file__), "sample.cfg")
         shutil.copy(sample, configfile)
         print("Copied %s as a sample to %s" % (sample, configfile))
         print("Open it and adjust it to what you need.")

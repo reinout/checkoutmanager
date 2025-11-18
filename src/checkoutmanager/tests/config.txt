@@ -15,9 +15,7 @@ Instantiation with a non-exising config file raises and error:
 
 Grab the sample config file:
 
-    >>> import pkg_resources
-    >>> sample_config = pkg_resources.resource_filename(
-    ...     'checkoutmanager.tests', 'testconfig.cfg')
+    >>> sample_config = "src/checkoutmanager/tests/testconfig.cfg"
     >>> print(open(sample_config).read())
     # Sample config file.  Should be placed as
     ...
