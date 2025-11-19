@@ -22,7 +22,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: pre-commit/action@v3.0.1
       - name: Install uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
       - name: Install python project
         run: uv sync
       - name: Test
